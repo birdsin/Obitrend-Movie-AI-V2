@@ -1,4 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OBITREND Movie AI V2</title><style>body{margin:0;background:#07080d;color:#eee;font:15px system-ui}main{max-width:1000px;margin:auto;padding:24px}.card{background:#11131b;border:1px solid #292d39;border-radius:18px;padding:20px;margin:14px 0}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,textarea,button{border-radius:12px;border:1px solid #333847;background:#0c0e14;color:#fff;padding:12px}input,select,textarea{flex:1;min-width:180px}button{cursor:pointer;background:#d7ad5c;color:#080808;font-weight:700}button:disabled{opacity:.55;cursor:not-allowed}.muted{color:#9da3b3}.pill{padding:6px 10px;border-radius:99px;background:#18201a;color:#8ee0a0}.hidden{display:none}.status{padding:12px;border-radius:12px;background:#0c0e14;margin-top:12px;white-space:pre-wrap}video{width:100%;max-height:560px;border-radius:14px;margin-top:12px;background:#000}.buybar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.buybar select{min-width:230px}.small{font-size:13px}</style>
+<style id="phase12-style">
+.p12-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p12-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p12-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p12-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.p12-grid label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:#c9cdd6}.p12-grid input,.p12-grid select,.p12-grid textarea{width:100%;box-sizing:border-box}.p12-full{grid-column:1/-1}.p12-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}@media(max-width:700px){.p12-grid{grid-template-columns:1fr}.p12-full{grid-column:auto}}
+</style>
 <style id="phase11-style">
 .p11-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p11-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p11-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p11-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px;border:1px dashed rgba(255,255,255,.12);border-radius:14px}.p11-upload input{flex:1;min-width:220px}.p11-queue{display:flex;flex-direction:column;gap:8px;margin-top:10px}.p11-q{padding:9px 11px;border-radius:10px;background:rgba(255,255,255,.04);font-size:12px}.p11-tools{display:grid;grid-template-columns:1fr 170px;gap:10px;margin:14px 0}.p11-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.p11-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.12)}.p11-thumb{aspect-ratio:16/10;background:rgba(255,255,255,.035);display:flex;align-items:center;justify-content:center;overflow:hidden}.p11-thumb img,.p11-thumb video{width:100%;height:100%;object-fit:cover}.p11-info{padding:11px}.p11-name{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.p11-meta{font-size:11px;opacity:.7;margin-top:5px}.p11-empty{grid-column:1/-1;padding:22px;text-align:center;opacity:.7;border:1px dashed rgba(255,255,255,.1);border-radius:12px}@media(max-width:900px){.p11-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.p11-tools{grid-template-columns:1fr}.p11-list{grid-template-columns:1fr}}
 </style>
@@ -93,7 +96,20 @@
 <div class="p11-tools"><input id="p11Search" placeholder="Search reference files"><select id="p11Type"><option value="">All types</option><option value="image">Images</option><option value="video">Videos</option><option value="audio">Audio</option><option value="document">Documents</option></select><button id="p11Refresh" type="button">Refresh</button></div>
 <div id="p11Summary" class="p11-summary"></div><div id="p11List" class="p11-list"></div>
 </section>
-<section id="phase11References" class="p11-wrap">
+
+<section id="phase12Settings" class="p12-wrap">
+<div class="p12-head"><div><h2>Creator Settings</h2><p class="muted">Set your default movie-creation behavior without changing credit or provider controls.</p></div><span class="p12-badge">PHASE 12</span></div>
+<div class="p12-grid">
+<label>Default format<select id="p12Format"><option>16:9</option><option>9:16</option><option>1:1</option><option>4:5</option><option>5:4</option></select></label>
+<label>Default quality<select id="p12Quality"><option>Standard</option><option>High</option><option>Ultra</option></select></label>
+<label>Default motion<select id="p12Motion"><option>Cinematic</option><option>Natural</option><option>Dynamic</option><option>Subtle</option></select></label>
+<label>Default language<select id="p12Language"><option>English</option><option>French</option><option>Spanish</option><option>Portuguese</option></select></label>
+<label>Auto-save preferences<select id="p12Auto"><option value="on">On</option><option value="off">Off</option></select></label>
+<label>Confirm before generation<select id="p12Confirm"><option value="on">On</option><option value="off">Off</option></select></label>
+<label class="p12-full">Default creative notes<textarea id="p12Notes" rows="3" placeholder="Optional direction applied to your movie projects."></textarea></label>
+</div>
+<div class="p12-actions"><button id="p12Save" type="button">Save Creator Settings</button><button id="p12Reset" type="button">Reset Defaults</button><span id="p12Status" class="muted small"></span></div>
+</section><section id="phase11References" class="p11-wrap">
 <div class="p11-head"><div><h2>Upload / Reference Library</h2><p class="muted">Keep reusable image, video, audio and document references organized for movie creation.</p></div><span class="p11-badge">PHASE 11</span></div>
 <div class="p11-upload"><input id="p11Files" type="file" multiple accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx"><button id="p11Reload" type="button">Refresh Library</button></div>
 <div id="p11Queue" class="p11-queue"></div>
@@ -403,5 +419,19 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
  el("p11Reload")?.addEventListener("click",load);el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);
  window.obitrendReferenceLibrary={load,getLocal:()=>state.local.slice()};
  render();load();
+})();
+</script>
+<script id="phase12-script">
+(()=>{
+ const key="obitrend_creator_settings_v1",el=id=>document.getElementById(id);
+ const defaults={format:"16:9",quality:"Standard",motion:"Cinematic",language:"English",auto:"on",confirm:"on",notes:""};
+ const read=()=>{try{return {...defaults,...JSON.parse(localStorage.getItem(key)||"{}")}}catch{return {...defaults}}};
+ const write=x=>{try{localStorage.setItem(key,JSON.stringify(x));return true}catch{return false}};
+ const apply=x=>{el("p12Format").value=x.format;el("p12Quality").value=x.quality;el("p12Motion").value=x.motion;el("p12Language").value=x.language;el("p12Auto").value=x.auto;el("p12Confirm").value=x.confirm;el("p12Notes").value=x.notes};
+ const collect=()=>({format:el("p12Format").value,quality:el("p12Quality").value,motion:el("p12Motion").value,language:el("p12Language").value,auto:el("p12Auto").value,confirm:el("p12Confirm").value,notes:el("p12Notes").value});
+ window.obitrendCreatorSettings=()=>read();
+ el("p12Save")?.addEventListener("click",()=>{const ok=write(collect());el("p12Status").textContent=ok?"Creator settings saved on this device.":"Unable to save settings."});
+ el("p12Reset")?.addEventListener("click",()=>{apply(defaults);write(defaults);el("p12Status").textContent="Defaults restored."});
+ apply(read());
 })();
 </script></script>
