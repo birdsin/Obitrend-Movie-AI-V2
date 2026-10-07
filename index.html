@@ -171,6 +171,7 @@
 <div class="p13-card"><h3>Change Email</h3><label>New email<input id="p13NewEmail" type="email" autocomplete="email" placeholder="new@email.com"></label><div class="p13-actions"><button type="button" id="p13EmailBtn">Change Email</button></div><p id="p13EmailStatus" class="muted small p13-status"></p></div>
 <div class="p13-card"><h3>Change Password</h3><label>Current password<input id="p13CurrentPw" type="password" autocomplete="current-password" placeholder="Current password"></label><label style="margin-top:8px">New password<input id="p13NewPw" type="password" autocomplete="new-password" placeholder="At least 8 characters"></label><div class="p13-actions"><button type="button" id="p13PasswordBtn">Change Password</button></div><p id="p13PasswordStatus" class="muted small p13-status"></p></div>
 <div class="p13-card"><h3>Subscription</h3><div id="p13Subscription" class="muted">Loading subscription…</div></div>
+<div class="p13-card"><h3>Billing Status</h3><div id="p13BillingStatus" class="p13-list"><span class="muted">Loading billing status…</span></div></div>
 <div class="p13-card"><h3>Credit History</h3><div id="p13CreditHistory" class="p13-list"><span class="muted">Loading…</span></div></div>
 <div class="p13-card"><h3>Payment History</h3><div id="p13Payments" class="p13-list"><span class="muted">Loading…</span></div></div>
 <div class="p13-card p13-danger p13-full"><h3>Account Deletion</h3><p class="muted small">Account deletion is intentionally not wired to a client-side destructive action. A server-side deletion workflow must be completed before this control can safely remove authentication, credits, payments and stored media.</p><button type="button" disabled>Delete Account — Server Protection Required</button></div>
@@ -327,14 +328,24 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
    }catch(e){box.innerHTML='<div class="p13-item muted">Billing details could not be loaded right now.</div>'}
  }
  async function loadPayments(uid){
-   const box=$("p13Payments"); if(!box)return;
+   const box=$("p13Payments"), billing=$("p13BillingStatus"); if(!box)return;
    try{
-     const r=await S.from("credit_orders").select("reference,amount_ngn,credits,status,provider,created_at,credit_products(name)").eq("user_id",uid).order("created_at",{ascending:false}).limit(20);
+     const r=await S.from("credit_orders").select("reference,amount_ngn,credits,status,provider,created_at,credit_products(name,product_type)").eq("user_id",uid).order("created_at",{ascending:false}).limit(20);
      if(r.error)throw r.error;
      const rows=r.data||[];
+     const pending=rows.filter(x=>String(x.status||"").toLowerCase()==="pending");
+     const paid=rows.filter(x=>String(x.status||"").toLowerCase()==="paid");
+     if(billing){
+       const parts=[];
+       parts.push('<div class="p13-item"><b>Active subscription</b><br><span class="muted">No active subscription entitlement is currently recorded.</span></div>');
+       if(pending.length) parts.push('<div class="p13-item"><b>Pending payments</b><br><span class="muted">'+pending.length+' payment'+(pending.length===1?"":"s")+' awaiting Paystack confirmation. Pending payments do not add credits or activate a subscription.</span></div>');
+       if(paid.length) parts.push('<div class="p13-item"><b>Completed purchases</b><br><span class="muted">'+paid.length+' completed credit purchase'+(paid.length===1?"":"s")+'.</span></div>');
+       billing.innerHTML=parts.join("");
+     }
      box.innerHTML=rows.length?rows.map(x=>{
-       const p=x.credit_products||{};
-       return '<div class="p13-item"><b>'+String(p.name||"Credit purchase")+'</b><br><span class="muted">₦'+Number(x.amount_ngn||0).toLocaleString()+" · "+Number(x.credits||0)+" credits · "+String(x.status||"")+' · '+fmtDate(x.created_at)+'</span></div>';
+       const p=x.credit_products||{}, st=String(x.status||"").toLowerCase();
+       const label=st==="pending"?"Pending payment":st==="paid"?"Paid purchase":String(p.name||"Credit purchase");
+       return '<div class="p13-item"><b>'+label+'</b><br><span class="muted">₦'+Number(x.amount_ngn||0).toLocaleString()+" · "+Number(x.credits||0)+" credits · "+String(x.status||"")+' · '+fmtDate(x.created_at)+'</span></div>';
      }).join(""):'<div class="p13-item muted">No payment history found.</div>';
    }catch(e){box.innerHTML='<div class="p13-item muted">Payment history could not be loaded right now.</div>'}
  }
