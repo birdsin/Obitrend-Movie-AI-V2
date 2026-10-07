@@ -136,7 +136,7 @@
 
 <section id="phase11Library" class="p11-wrap obitrend-route">
 <div class="p11-head"><div><h2>Upload / Reference Library</h2><p class="muted">Store private reference images, videos, audio and documents for your movie projects.</p></div><span class="p11-badge">PHASE 11</span><button type="button" class="workspace-back" id="p11LibraryBack">Back</button></div>
-<div class="p11-upload"><label class="p11-drop" for="p11File"><strong>＋ Upload Reference</strong><span>Private to your account · up to 50 MB per file</span></label><input id="p11File" type="file" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" hidden><span id="p11UploadStatus" class="muted small">Ready.</span></div>
+<div class="p11-upload"><label class="p11-drop" for="p11File"><strong>＋ Upload Reference</strong><span>Private to your account · up to 50 MB per file</span></label><input id="p11File" type="file" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" hidden onchange="window.obitrendUploadReference&&window.obitrendUploadReference(this.files&&this.files[0])"><span id="p11UploadStatus" class="muted small">Ready.</span></div>
 <div class="p11-tools"><input id="p11Search" placeholder="Search reference files"><select id="p11Type"><option value="">All types</option><option value="image">Images</option><option value="video">Videos</option><option value="audio">Audio</option><option value="document">Documents</option></select><button id="p11Refresh" type="button">Refresh</button></div>
 <div id="p11Summary" class="p11-summary"></div><div id="p11List" class="p11-list"></div>
 </section>
@@ -737,7 +737,7 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
   }catch(e){el("p11UploadStatus").textContent=e?.message||"Upload failed."}
   finally{loading(false)}
  };
- el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
+ window.obitrendUploadReference=upload;el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
  el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);el("p11Refresh")?.addEventListener("click",load);
  el("p11List")?.addEventListener("click",async e=>{\n  const openRef=e.target.getAttribute("data-open-reference");\n  if(openRef){const x=state.items.find(a=>a.id===openRef);if(x?._url){window.obitrendOpenMediaViewer?.(x._url,x.name,x.mime_type?.startsWith("image/")?"image":"video")}return;}
   const use=e.target.getAttribute("data-use"),del=e.target.getAttribute("data-del");
