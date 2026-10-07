@@ -443,6 +443,7 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
    $("phase13AccountPage")?.classList.add("hidden");
    $("app")?.classList.remove("hidden");
    $("creditSummary")?.classList.remove("hidden");
+   window.obitrendNavigate?.("home");
    window.scrollTo({top:0,behavior:"smooth"});
  });
  $("p13SignOutCurrent")?.addEventListener("click",async()=>{await S.auth.signOut({scope:"local"});location.reload()});
