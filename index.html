@@ -252,7 +252,7 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
    const show=input.type==="password"; input.type=show?"text":"password"; btn.textContent=show?"◉":"◌"; btn.setAttribute("aria-label",show?"Hide password":"Show password");
  }));
  $("p3AccountBack").addEventListener("click",closeAccount);
- window.addEventListener("phase3-open-account",openAccount);
+ window.addEventListener("phase3-open-account",openAccount); window.addEventListener("phase3-open-account",()=>setTimeout(()=>window.obitrendPhase13?.refresh(),0));
  const resend=$("resendBtn"),save=$("savePwBtn"),newPw=$("newPw");
  const obs=new MutationObserver(()=>{
    const visible=!newPw.classList.contains("hidden");
