@@ -255,7 +255,99 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
       : "Creator settings applied. Use the existing Generate Movie button to start generation.";
   };
 })();
-</script><script id="phase3-account-script">
+</script><script id="phase13-script">
+(()=>{
+ const $=id=>document.getElementById(id);
+ const panel=$("p13AccountPanel");
+ const setStatus=(id,msg,ok)=>{const x=$(id);if(x){x.textContent=msg;x.style.color=ok?"#8ee0a0":""}};
+ const session=async()=>{try{return (await S.auth.getSession()).data.session}catch{return null}};
+ const fmtDate=v=>{try{return new Date(v).toLocaleString()}catch{return String(v||"")}};
+ async function refresh(){
+   const s=await session(), user=s?.user;
+   if(!user){panel?.classList.add("hidden");return}
+   panel?.classList.remove("hidden");
+   $("p13CurrentEmail").textContent=user.email||"—";
+   $("p13Name").value=user.user_metadata?.display_name||"";
+   await Promise.all([loadEntitlements(user.id),loadPayments(user.id)]);
+ }
+ async function loadEntitlements(uid){
+   const box=$("p13Entitlements"); if(!box)return;
+   try{
+     const r=await S.from("credit_entitlements").select("status,starts_at,expires_at,credit_products(name,product_type,credits)").eq("user_id",uid).order("created_at",{ascending:false}).limit(20);
+     if(r.error)throw r.error;
+     const rows=r.data||[];
+     box.innerHTML=rows.length?rows.map(x=>{
+       const p=x.credit_products||{};
+       return '<div class="p13-item"><b>'+String(p.name||"Credit entitlement")+'</b><br><span class="muted">'+String(x.status||"")+' · '+Number(p.credits||0)+' credits · '+fmtDate(x.starts_at)+(x.expires_at?" → "+fmtDate(x.expires_at):"")+'</span></div>';
+     }).join(""):'<div class="p13-item muted">No active or previous subscription entitlement found.</div>';
+   }catch(e){box.innerHTML='<div class="p13-item muted">Billing details could not be loaded right now.</div>'}
+ }
+ async function loadPayments(uid){
+   const box=$("p13Payments"); if(!box)return;
+   try{
+     const r=await S.from("credit_orders").select("reference,amount_ngn,credits,status,provider,created_at,credit_products(name)").eq("user_id",uid).order("created_at",{ascending:false}).limit(20);
+     if(r.error)throw r.error;
+     const rows=r.data||[];
+     box.innerHTML=rows.length?rows.map(x=>{
+       const p=x.credit_products||{};
+       return '<div class="p13-item"><b>'+String(p.name||"Credit purchase")+'</b><br><span class="muted">₦'+Number(x.amount_ngn||0).toLocaleString()+" · "+Number(x.credits||0)+" credits · "+String(x.status||"")+' · '+fmtDate(x.created_at)+'</span></div>';
+     }).join(""):'<div class="p13-item muted">No payment history found.</div>';
+   }catch(e){box.innerHTML='<div class="p13-item muted">Payment history could not be loaded right now.</div>'}
+ }
+ async function saveProfile(){
+   const btn=$("p13SaveProfile"), name=$("p13Name").value.trim();
+   if(name.length>80){setStatus("p13ProfileStatus","Display name is too long.",false);return}
+   btn.disabled=true;
+   try{
+     const r=await S.auth.updateUser({data:{display_name:name}});
+     if(r.error)throw r.error;
+     u=r.data?.user||u;
+     setStatus("p13ProfileStatus","Profile saved securely.",true);
+   }catch(e){setStatus("p13ProfileStatus",e?.message||"Profile could not be saved.",false)}
+   finally{btn.disabled=false}
+ }
+ async function saveEmail(){
+   const btn=$("p13SaveEmail"), input=$("p13Email"), email=input.value.trim().toLowerCase(), current=(await session())?.user?.email?.toLowerCase();
+   if(!email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){setStatus("p13EmailStatus","Enter a valid email address.",false);return}
+   if(email===current){setStatus("p13EmailStatus","That is already your current email.",false);return}
+   btn.disabled=true;setStatus("p13EmailStatus","Submitting secure email change…",true);
+   try{
+     const r=await S.auth.updateUser({email,options:{emailRedirectTo:location.origin+location.pathname}});
+     if(r.error)throw r.error;
+     input.value="";
+     setStatus("p13EmailStatus","Email change requested. Check the required confirmation email(s) before the new address becomes active.",true);
+     await refresh();
+   }catch(e){setStatus("p13EmailStatus",e?.message||"Email change could not be completed.",false)}
+   finally{btn.disabled=false}
+ }
+ async function savePassword(){
+   const btn=$("p13SavePassword"), pw=$("p13Password").value;
+   if(!pw||pw.length<6){setStatus("p13PasswordStatus","Password must be at least 6 characters.",false);return}
+   btn.disabled=true;setStatus("p13PasswordStatus","Updating password securely…",true);
+   try{
+     const r=await S.auth.updateUser({password:pw});
+     if(r.error)throw r.error;
+     $("p13Password").value="";
+     setStatus("p13PasswordStatus","Password updated successfully.",true);
+   }catch(e){setStatus("p13PasswordStatus",e?.message||"Password could not be updated.",false)}
+   finally{btn.disabled=false}
+ }
+ async function signoutAll(){
+   const btn=$("p13SignoutAll");btn.disabled=true;setStatus("p13SessionStatus","Signing out all active sessions…",true);
+   try{
+     const r=await S.auth.signOut({scope:"global"});
+     if(r.error)throw r.error;
+     location.reload();
+   }catch(e){setStatus("p13SessionStatus",e?.message||"Could not invalidate all sessions.",false);btn.disabled=false}
+ }
+ $("p13SaveProfile")?.addEventListener("click",saveProfile);
+ $("p13SaveEmail")?.addEventListener("click",saveEmail);
+ $("p13SavePassword")?.addEventListener("click",savePassword);
+ $("p13SignoutAll")?.addEventListener("click",signoutAll);
+ window.obitrendPhase13={refresh};
+})();
+</script>
+<script id="phase3-account-script">
 (()=> {
  const $=id=>document.getElementById(id), panel=$("auth"), drawer=$("phase3Drawer"), shade=$("phase3Shade");
  function openAccount(){panel.classList.remove("hidden");panel.scrollIntoView({behavior:"smooth",block:"start"});drawer.classList.remove("open");shade.classList.remove("open");}
