@@ -78,8 +78,9 @@
     <div class="p6-field"><label for="p6Motion">MOTION</label><select id="p6Motion"><option value="natural">Natural</option><option value="subtle">Subtle</option><option value="dynamic">Dynamic</option><option value="fast cinematic">Fast cinematic</option></select></div>
     <div class="p6-field full"><label for="p6Continuity">CONTINUITY / NEGATIVE CONSTRAINTS</label><textarea id="p6Continuity" rows="2" placeholder="Keep character identity, wardrobe, location and visual continuity consistent."></textarea></div>
   </div>
-  <div class="p6-actions"><button id="p6Apply" type="button">Apply Advanced Settings</button><button id="p6Reset" type="button">Reset Advanced Settings</button></div>
+  <div class="p6-actions"><button id="p6Apply" type="button">Apply Advanced Settings</button><button id="p6Reset" type="button">Reset Advanced Settings</button><button id="p6Assemble" type="button">Assemble Production → Creator</button></div>
   <p id="p6Status" class="muted small">Advanced settings are optional and remain client-side until a generation is submitted.</p>
+  <div id="p6ProductionSummary" class="p6-wrap" style="margin-top:12px;padding:14px;display:none"><b>Production Brief</b><div id="p6ProductionText" class="muted small" style="margin-top:6px;white-space:pre-wrap"></div></div>
 </section>
 <section id="phase7Director" class="p7-wrap obitrend-route">
   <div class="p7-head"><div><h2>Director Controls</h2><p class="muted">Professional camera direction and shot controls for the next generation.</p></div><span class="p7-badge">PHASE 7</span></div>
@@ -455,6 +456,38 @@ const load=async()=>{const s=await session();if(!s){state.items=[];render();retu
 const save=async jobId=>{const s=await session();if(!s)return;const card=document.querySelector('[data-job-id="'+CSS.escape(jobId)+'"]'),video=card?.querySelector("video"),url=video?.getAttribute("src")||"",title=(card?.querySelector(".p10-title")?.textContent||"Untitled Movie").trim(),provider=(card?.querySelector(".p10-meta")?.textContent||"").split(" · ")[0].trim(),btn=card?.querySelector('[data-save-video="'+CSS.escape(jobId)+'"]');if(btn){btn.disabled=true;btn.textContent="Saving…"}try{const r=await S.rpc("save_video_to_folder",{p_user_id:s.user.id,p_job_id:jobId,p_title:title,p_video_url:url,p_provider:provider});if(r.error)throw r.error;if(btn){btn.textContent="Saved ✓";btn.disabled=true}await load()}catch(e){if(btn){btn.disabled=false;btn.textContent="Save to Folder"}alert(e?.message||"Could not save this video.")}};
 document.addEventListener("click",e=>{const b=e.target.closest?.("[data-save-video]");if(b){save(b.getAttribute("data-save-video"));return}const d=e.target.closest?.("[data-delete-saved]");if(d){const id=d.getAttribute("data-delete-saved");if(!confirm("Delete this saved video from your folder?"))return;S.from("saved_videos").delete().eq("id",id).then(()=>load())}});
 load();window.obitrendSavedVideoFolder={load}})();
+</script><script id="obitrend-production-builder">
+(()=>{
+ const $=id=>document.getElementById(id);
+ const clean=x=>String(x??"").trim();
+ const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+ function build(){
+   const adv=window.obitrendAdvancedSettings?.()||{};
+   const dir=window.obitrendDirectorSettings?.()||{};
+   const tl=window.obitrendTimelineSettings?.()||{scenes:[],total_duration_seconds:0};
+   const ch=window.obitrendCharacterSettings?.()||{characters:[]};
+   const base=clean($("prompt")?.value)||clean(adv.story)||"Cinematic movie production";
+   const parts=[base];
+   if(clean(adv.characters)) parts.push("Character direction: "+clean(adv.characters));
+   if(clean(adv.scenes)) parts.push("Scene direction: "+clean(adv.scenes));
+   if(clean(adv.shots)) parts.push("Shot direction: "+clean(adv.shots));
+   parts.push("Camera: "+clean(adv.camera||"natural cinematic")+". Lighting: "+clean(adv.lighting||"cinematic natural")+". Visual style: "+clean(adv.style||"photorealistic cinematic")+".");
+   if(clean(dir.director_note)) parts.push("Director's note: "+clean(dir.director_note));
+   if(clean(dir.camera_movement)) parts.push("Camera movement: "+clean(dir.camera_movement)+", framing "+clean(dir.framing)+", angle "+clean(dir.angle)+", focus "+clean(dir.focus)+".");
+   if(ch.characters?.length) parts.push("Character continuity: "+ch.characters.map(x=>[x.name,x.role,x.appearance,x.wardrobe,x.continuity].filter(Boolean).join(" — ")).join(" | "));
+   if(tl.scenes?.length) parts.push("Timeline: "+tl.scenes.map(s=>"Scene "+s.index+(s.title?": "+s.title:"")+(s.description?" — "+s.description:"")+" ["+s.shots.map(x=>(x.type||"shot")+(x.note?": "+x.note:"")+" "+x.duration+"s").join(", ")+"]").join(" "));
+   const final=parts.join("\n\n");
+   if($("prompt")) $("prompt").value=final;
+   const summary=$("p6ProductionSummary"),text=$("p6ProductionText");
+   if(summary&&text){summary.style.display="block";text.textContent="Production assembled from Advanced Creator, Director Controls, Movie Timeline and Characters. "+(tl.total_duration_seconds?("Timeline: "+tl.total_duration_seconds+"s. "):"")+"Review the Creator settings before generating."; }
+   sessionStorage.setItem("obitrendProductionBrief",final);
+   if(window.obitrendNavigate) window.obitrendNavigate("creator");
+   setTimeout(()=>{ $("p3Status") && ($("p3Status").textContent="Production assembled. Review the Creator settings and prompt before generating."); $("prompt")?.focus(); },80);
+ }
+ $("p6Assemble")?.addEventListener("click",build);
+ const saved=sessionStorage.getItem("obitrendProductionBrief");
+ if(saved && $("prompt") && !$("prompt").value) $("prompt").value=saved;
+})();
 </script></body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
