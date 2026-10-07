@@ -1,4 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OBITREND Movie AI V2</title><style>body{margin:0;background:#07080d;color:#eee;font:15px system-ui}main{max-width:1000px;margin:auto;padding:24px}.card{background:#11131b;border:1px solid #292d39;border-radius:18px;padding:20px;margin:14px 0}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,textarea,button{border-radius:12px;border:1px solid #333847;background:#0c0e14;color:#fff;padding:12px}input,select,textarea{flex:1;min-width:180px}button{cursor:pointer;background:#d7ad5c;color:#080808;font-weight:700}button:disabled{opacity:.55;cursor:not-allowed}.muted{color:#9da3b3}.pill{padding:6px 10px;border-radius:99px;background:#18201a;color:#8ee0a0}.hidden{display:none}.status{padding:12px;border-radius:12px;background:#0c0e14;margin-top:12px;white-space:pre-wrap}video{width:100%;max-height:560px;border-radius:14px;margin-top:12px;background:#000}.buybar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.buybar select{min-width:230px}.small{font-size:13px}</style>
+<style id="phase11-style">
+.p11-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p11-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p11-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p11-upload{border:1px dashed rgba(255,255,255,.14);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}.p11-drop{display:flex;flex-direction:column;gap:4px;cursor:pointer;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.05)}.p11-drop span{font-size:11px;opacity:.65}.p11-tools{display:grid;grid-template-columns:minmax(180px,1fr) 170px auto;gap:10px;margin-bottom:12px}.p11-tools input,.p11-tools select{width:100%;box-sizing:border-box}.p11-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.p11-stat{padding:9px 12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:12px}.p11-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.p11-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.14)}.p11-preview{aspect-ratio:16/10;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;overflow:hidden}.p11-preview img,.p11-preview video{width:100%;height:100%;object-fit:cover}.p11-icon{font-size:28px;opacity:.7}.p11-body{padding:12px}.p11-name{font-weight:800;word-break:break-word}.p11-meta{font-size:11px;opacity:.65;margin-top:5px}.p11-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.p11-empty{padding:22px;text-align:center;opacity:.7;border:1px dashed rgba(255,255,255,.1);border-radius:12px;grid-column:1/-1}@media(max-width:900px){.p11-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.p11-tools{grid-template-columns:1fr}.p11-list{grid-template-columns:1fr}}
+</style>
 <style id="phase10-style">
 .p10-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p10-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p10-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p10-tools{display:grid;grid-template-columns:minmax(180px,1fr) 170px auto;gap:10px;margin-bottom:12px}.p10-tools input,.p10-tools select{width:100%;box-sizing:border-box}.p10-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.p10-stat{padding:9px 12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:12px}.p10-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.p10-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.14)}.p10-preview{aspect-ratio:16/9;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center}.p10-preview video{width:100%;height:100%;object-fit:cover}.p10-body{padding:13px}.p10-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.p10-title{font-weight:800}.p10-meta{font-size:12px;opacity:.7;margin-top:6px}.p10-prompt{font-size:12px;line-height:1.45;margin-top:9px;opacity:.85}.p10-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.p10-empty{padding:22px;text-align:center;opacity:.7;border:1px dashed rgba(255,255,255,.1);border-radius:12px;grid-column:1/-1}.p10-pill{font-size:11px;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.07)}@media(max-width:760px){.p10-tools{grid-template-columns:1fr}.p10-list{grid-template-columns:1fr}}
 </style>
@@ -80,7 +83,13 @@
   <p id="p8Status" class="muted small">Timeline is optional. It will be attached to the next generation request.</p>
 </section>
 
-<section id="phase10Movies" class="p10-wrap">
+
+<section id="phase11Library" class="p11-wrap">
+<div class="p11-head"><div><h2>Upload / Reference Library</h2><p class="muted">Store private reference images, videos, audio and documents for your movie projects.</p></div><span class="p11-badge">PHASE 11</span></div>
+<div class="p11-upload"><label class="p11-drop" for="p11File"><strong>＋ Upload Reference</strong><span>Private to your account · up to 50 MB per file</span></label><input id="p11File" type="file" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" hidden><span id="p11UploadStatus" class="muted small">Ready.</span></div>
+<div class="p11-tools"><input id="p11Search" placeholder="Search reference files"><select id="p11Type"><option value="">All types</option><option value="image">Images</option><option value="video">Videos</option><option value="audio">Audio</option><option value="document">Documents</option></select><button id="p11Refresh" type="button">Refresh</button></div>
+<div id="p11Summary" class="p11-summary"></div><div id="p11List" class="p11-list"></div>
+</section><section id="phase10Movies" class="p10-wrap">
 <div class="p10-head"><div><h2>My Movies</h2><p class="muted">Manage generated movies, inspect status, prompts and outputs.</p></div><span class="p10-badge">PHASE 10</span></div>
 <div class="p10-tools"><input id="p10Search" placeholder="Search movies, prompts or models"><select id="p10Status"><option value="all">All statuses</option><option value="succeeded">Succeeded</option><option value="processing">Processing</option><option value="failed">Failed</option><option value="queued">Queued</option></select><button id="p10Refresh" type="button">Refresh</button></div>
 <div id="p10Summary" class="p10-summary"></div><div id="p10List" class="p10-list"></div>
@@ -300,5 +309,54 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
  el("p10Search")?.addEventListener("input",render);el("p10Status")?.addEventListener("change",render);el("p10Refresh")?.addEventListener("click",load);
  window.obitrendLoadMovies=load;
  render(); load();
+})();
+</script>
+<script id="phase11-script">
+(()=>{
+ const el=id=>document.getElementById(id), state={items:[]};
+ const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+ const getSession=async()=>{const x=await S.auth.getSession();return x.data.session};
+ const typeOf=m=>m?.startsWith("image/")?"image":m?.startsWith("video/")?"video":m?.startsWith("audio/")?"audio":"document";
+ const bytes=n=>{n=Number(n||0);if(!n)return "0 B";const u=["B","KB","MB","GB"],i=Math.min(Math.floor(Math.log(n)/Math.log(1024)),3);return (n/Math.pow(1024,i)).toFixed(i?1:0)+" "+u[i]};
+ const render=()=>{
+  const q=(el("p11Search")?.value||"").toLowerCase(),t=el("p11Type")?.value||"";
+  const all=state.items||[],shown=all.filter(x=>(!t||x.asset_type===t)&&((x.name||"")+" "+(x.mime_type||"")).toLowerCase().includes(q));
+  const counts=all.reduce((a,x)=>(a[x.asset_type]=(a[x.asset_type]||0)+1,a),{});
+  el("p11Summary").innerHTML='<span class="p11-stat">Total '+all.length+'</span><span class="p11-stat">Images '+(counts.image||0)+'</span><span class="p11-stat">Videos '+(counts.video||0)+'</span><span class="p11-stat">Other '+((counts.audio||0)+(counts.document||0))+'</span>';
+  el("p11List").innerHTML=shown.length?shown.map(x=>{const preview=x.mime_type?.startsWith("image/")?'<img src="'+esc(x._url||"")+'" alt="">':x.mime_type?.startsWith("video/")?'<video controls preload="metadata" src="'+esc(x._url||"")+'"></video>':'<span class="p11-icon">◈</span>';return '<article class="p11-card"><div class="p11-preview">'+preview+'</div><div class="p11-body"><div class="p11-name">'+esc(x.name)+'</div><div class="p11-meta">'+esc(x.asset_type)+' · '+bytes(x.size_bytes)+'</div><div class="p11-actions">'+(x._url?'<a href="'+esc(x._url)+'" target="_blank" rel="noopener">Open</a>':"")+'<button type="button" data-use="'+esc(x.id)+'">Use as Reference</button><button type="button" data-del="'+esc(x.id)+'">Delete</button></div></div></article>'}).join(""):'<div class="p11-empty">No reference files match your filters.</div>';
+ };
+ const load=async()=>{
+  try{
+   const s=await getSession();if(!s){state.items=[];render();return}
+   const {data,error}=await S.from("movie_reference_assets").select("*").order("created_at",{ascending:false}).limit(100);
+   if(error)throw error;
+   state.items=data||[];
+   await Promise.all(state.items.map(async x=>{const z=await S.storage.from("movie-reference").createSignedUrl(x.storage_path,3600);if(!z.error)x._url=z.data.signedUrl}));
+  }catch(e){state.items=[]}
+  render();
+ };
+ const upload=async file=>{
+  if(!file)return;
+  if(file.size>50*1024*1024){el("p11UploadStatus").textContent="File exceeds 50 MB.";return}
+  const s=await getSession();if(!s){el("p11UploadStatus").textContent="Sign in to upload references.";return}
+  const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path=s.user.id+"/"+crypto.randomUUID()+"-"+safe;
+  el("p11UploadStatus").textContent="Uploading "+file.name+"…";
+  try{
+   const up=await S.storage.from("movie-reference").upload(path,file,{contentType:file.type||"application/octet-stream",upsert:false});
+   if(up.error)throw up.error;
+   const ins=await S.from("movie_reference_assets").insert({user_id:s.user.id,name:file.name,asset_type:typeOf(file.type),storage_path:path,mime_type:file.type||null,size_bytes:file.size}).select().single();
+   if(ins.error){await S.storage.from("movie-reference").remove([path]);throw ins.error}
+   el("p11UploadStatus").textContent="Uploaded securely: "+file.name;el("p11File").value="";await load();
+  }catch(e){el("p11UploadStatus").textContent=e?.message||"Upload failed."}
+ };
+ el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
+ el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);el("p11Refresh")?.addEventListener("click",load);
+ el("p11List")?.addEventListener("click",async e=>{
+  const use=e.target.getAttribute("data-use"),del=e.target.getAttribute("data-del");
+  if(use){const x=state.items.find(a=>a.id===use);if(x){creatorInputAssets=[{url:x._url,name:x.name,mime_type:x.mime_type,asset_id:x.id}];el("p11UploadStatus").textContent=x.name+" attached as the next generation reference."}}
+  if(del){const x=state.items.find(a=>a.id===del);if(!x)return;if(!confirm("Delete this reference file?"))return;const s=await getSession();if(!s)return;await S.storage.from("movie-reference").remove([x.storage_path]);await S.from("movie_reference_assets").delete().eq("id",x.id);await load()}
+ });
+ window.obitrendReferenceLibrary={load,attach:id=>{const x=state.items.find(a=>a.id===id);if(x){creatorInputAssets=[{url:x._url,name:x.name,mime_type:x.mime_type,asset_id:x.id}]}}};
+ load();
 })();
 </script></script>
