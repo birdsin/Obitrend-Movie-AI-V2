@@ -1,4 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OBITREND Movie AI V2</title><style>body{margin:0;background:#07080d;color:#eee;font:15px system-ui}main{max-width:1000px;margin:auto;padding:24px}.card{background:#11131b;border:1px solid #292d39;border-radius:18px;padding:20px;margin:14px 0}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,textarea,button{border-radius:12px;border:1px solid #333847;background:#0c0e14;color:#fff;padding:12px}input,select,textarea{flex:1;min-width:180px}button{cursor:pointer;background:#d7ad5c;color:#080808;font-weight:700}button:disabled{opacity:.55;cursor:not-allowed}.muted{color:#9da3b3}.pill{padding:6px 10px;border-radius:99px;background:#18201a;color:#8ee0a0}.hidden{display:none}.status{padding:12px;border-radius:12px;background:#0c0e14;margin-top:12px;white-space:pre-wrap}video{width:100%;max-height:560px;border-radius:14px;margin-top:12px;background:#000}.buybar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.buybar select{min-width:230px}.small{font-size:13px}</style>
+<style id="phase10-style">
+.p10-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p10-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p10-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p10-tools{display:grid;grid-template-columns:minmax(180px,1fr) 170px auto;gap:10px;margin-bottom:12px}.p10-tools input,.p10-tools select{width:100%;box-sizing:border-box}.p10-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.p10-stat{padding:9px 12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:12px}.p10-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.p10-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.14)}.p10-preview{aspect-ratio:16/9;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center}.p10-preview video{width:100%;height:100%;object-fit:cover}.p10-body{padding:13px}.p10-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.p10-title{font-weight:800}.p10-meta{font-size:12px;opacity:.7;margin-top:6px}.p10-prompt{font-size:12px;line-height:1.45;margin-top:9px;opacity:.85}.p10-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.p10-empty{padding:22px;text-align:center;opacity:.7;border:1px dashed rgba(255,255,255,.1);border-radius:12px;grid-column:1/-1}.p10-pill{font-size:11px;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.07)}@media(max-width:760px){.p10-tools{grid-template-columns:1fr}.p10-list{grid-template-columns:1fr}}
+</style>
 <style id="phase9-style">
 .p9-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}
 .p9-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.p9-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}
@@ -76,7 +79,12 @@
   <div id="p8Scenes" class="p8-scenes"></div>
   <p id="p8Status" class="muted small">Timeline is optional. It will be attached to the next generation request.</p>
 </section>
-<section id="phase9Characters" class="p9-wrap">
+
+<section id="phase10Movies" class="p10-wrap">
+<div class="p10-head"><div><h2>My Movies</h2><p class="muted">Manage generated movies, inspect status, prompts and outputs.</p></div><span class="p10-badge">PHASE 10</span></div>
+<div class="p10-tools"><input id="p10Search" placeholder="Search movies, prompts or models"><select id="p10Status"><option value="all">All statuses</option><option value="succeeded">Succeeded</option><option value="processing">Processing</option><option value="failed">Failed</option><option value="queued">Queued</option></select><button id="p10Refresh" type="button">Refresh</button></div>
+<div id="p10Summary" class="p10-summary"></div><div id="p10List" class="p10-list"></div>
+</section><section id="phase9Characters" class="p9-wrap">
 <div class="p9-head"><div><h2>Character Consistency</h2><p class="muted">Create reusable character profiles and attach them to the next movie generation.</p></div><span class="p9-badge">PHASE 9</span></div>
 <div class="p9-toolbar"><button id="p9Add" type="button">+ Add Character</button><button id="p9Clear" type="button">Clear Characters</button><span id="p9Count" class="p9-total">0 characters</span></div>
 <div id="p9List" class="p9-list"></div>
@@ -261,5 +269,36 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
  el("p9List")?.addEventListener("input",e=>{const t=e.target,i=t.getAttribute("data-i"),k=t.getAttribute("data-k");if(i!==null&&k)chars[+i][k]=t.value});
  el("p9List")?.addEventListener("click",e=>{const i=e.target.getAttribute("data-r");if(i!==null){chars.splice(+i,1);render()}});
  render();
+})();
+</script>
+<script id="phase10-script">
+(()=>{
+ const el=id=>document.getElementById(id), state={jobs:[],loading:false};
+ const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+ const getSession=async()=>{try{return window.supabaseClient?.auth?.getSession?await window.supabaseClient.auth.getSession():null}catch{return null}};
+ const render=()=>{
+  const q=(el("p10Search")?.value||"").toLowerCase(), st=el("p10Status")?.value||"all";
+  const all=state.jobs||[], shown=all.filter(j=>(st==="all"||j.status===st)&&((j.prompt||"")+" "+(j.model||"")+" "+(j.id||"")).toLowerCase().includes(q));
+  const counts=all.reduce((a,j)=>(a[j.status]=(a[j.status]||0)+1,a),{});
+  el("p10Summary").innerHTML='<span class="p10-stat">Total '+all.length+'</span><span class="p10-stat">Succeeded '+(counts.succeeded||0)+'</span><span class="p10-stat">Processing '+(counts.processing||0)+'</span><span class="p10-stat">Failed '+(counts.failed||0)+'</span>';
+  el("p10List").innerHTML=shown.length?shown.map(j=>{const out=Array.isArray(j.output_assets)?j.output_assets[0]:null, url=out?.url||j.output_url||"";return '<article class="p10-card"><div class="p10-preview">'+(url?'<video controls preload="metadata" src="'+esc(url)+'"></video>':'<span class="muted">'+esc(j.status||"No output")+'</span>')+'</div><div class="p10-body"><div class="p10-row"><span class="p10-title">'+esc(j.title||j.prompt?.slice(0,48)||"Untitled Movie")+'</span><span class="p10-pill">'+esc(j.status||"unknown")+'</span></div><div class="p10-meta">'+esc(j.model||j.provider||"Movie generation")+' · '+esc(j.created_at||"")+'</div><div class="p10-prompt">'+esc(j.prompt||"No prompt recorded.")+'</div><div class="p10-actions">'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener">Open Output</a>':"")+'</div></div></article>'}).join(""):'<div class="p10-empty">No movies match the current filters.</div>';
+ };
+ const load=async()=>{
+  state.loading=true; render();
+  try{
+   const s=await getSession(), token=s?.data?.session?.access_token||s?.session?.access_token;
+   if(!token){state.jobs=[];el("p10List").innerHTML='<div class="p10-empty">Sign in to load your movies.</div>';return}
+   const base=window.OBITREND_SUPABASE_URL||window.SUPABASE_URL||"";
+   const url=base?base.replace(/\/$/,"")+"/rest/v1/ai_jobs?select=id,title,prompt,status,model,provider,created_at,output_url,output_assets&order=created_at.desc&limit=100":"";
+   if(!url){state.jobs=[];return}
+   const res=await fetch(url,{headers:{apikey:window.OBITREND_SUPABASE_ANON_KEY||window.SUPABASE_ANON_KEY||"",Authorization:"Bearer "+token}});
+   if(!res.ok)throw new Error("Unable to load movies");
+   state.jobs=await res.json();
+  }catch(e){state.jobs=[];el("p10List").innerHTML='<div class="p10-empty">Movies could not be loaded. Refresh and try again.</div>'}
+  finally{state.loading=false;render()}
+ };
+ el("p10Search")?.addEventListener("input",render);el("p10Status")?.addEventListener("change",render);el("p10Refresh")?.addEventListener("click",load);
+ window.obitrendLoadMovies=load;
+ render(); load();
 })();
 </script></script>
