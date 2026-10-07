@@ -1,5 +1,8 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OBITREND Movie AI V2</title><style>body{margin:0;background:#07080d;color:#eee;font:15px system-ui}main{max-width:1000px;margin:auto;padding:24px}.card{background:#11131b;border:1px solid #292d39;border-radius:18px;padding:20px;margin:14px 0}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,textarea,button{border-radius:12px;border:1px solid #333847;background:#0c0e14;color:#fff;padding:12px}input,select,textarea{flex:1;min-width:180px}button{cursor:pointer;background:#d7ad5c;color:#080808;font-weight:700}button:disabled{opacity:.55;cursor:not-allowed}.muted{color:#9da3b3}.pill{padding:6px 10px;border-radius:99px;background:#18201a;color:#8ee0a0}.hidden{display:none}.status{padding:12px;border-radius:12px;background:#0c0e14;margin-top:12px;white-space:pre-wrap}video{width:100%;max-height:560px;border-radius:14px;margin-top:12px;background:#000}.buybar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}.buybar select{min-width:230px}.small{font-size:13px}</style>
 <style id="phase11-style">
+.p11-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p11-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p11-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p11-upload{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px;border:1px dashed rgba(255,255,255,.12);border-radius:14px}.p11-upload input{flex:1;min-width:220px}.p11-queue{display:flex;flex-direction:column;gap:8px;margin-top:10px}.p11-q{padding:9px 11px;border-radius:10px;background:rgba(255,255,255,.04);font-size:12px}.p11-tools{display:grid;grid-template-columns:1fr 170px;gap:10px;margin:14px 0}.p11-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.p11-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.12)}.p11-thumb{aspect-ratio:16/10;background:rgba(255,255,255,.035);display:flex;align-items:center;justify-content:center;overflow:hidden}.p11-thumb img,.p11-thumb video{width:100%;height:100%;object-fit:cover}.p11-info{padding:11px}.p11-name{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.p11-meta{font-size:11px;opacity:.7;margin-top:5px}.p11-empty{grid-column:1/-1;padding:22px;text-align:center;opacity:.7;border:1px dashed rgba(255,255,255,.1);border-radius:12px}@media(max-width:900px){.p11-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.p11-tools{grid-template-columns:1fr}.p11-list{grid-template-columns:1fr}}
+</style>
+<style id="phase11-style">
 .p11-wrap{margin-top:18px;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.p11-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.p11-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 9px;border-radius:999px;background:rgba(201,168,106,.14);color:#e6b95e}.p11-upload{border:1px dashed rgba(255,255,255,.14);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}.p11-drop{display:flex;flex-direction:column;gap:4px;cursor:pointer;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.05)}.p11-drop span{font-size:11px;opacity:.65}.p11-tools{display:grid;grid-template-columns:minmax(180px,1fr) 170px auto;gap:10px;margin-bottom:12px}.p11-tools input,.p11-tools select{width:100%;box-sizing:border-box}.p11-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}.p11-stat{padding:9px 12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;font-size:12px}.p11-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.p11-card{border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.14)}.p11-preview{aspect-ratio:16/10;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;overflow:hidden}.p11-preview img,.p11-preview video{width:100%;height:100%;object-fit:cover}.p11-icon{font-size:28px;opacity:.7}.p11-body{padding:12px}.p11-name{font-weight:800;word-break:break-word}.p11-meta{font-size:11px;opacity:.65;margin-top:5px}.p11-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.p11-empty{padding:22px;text-align:center;opacity:.7;border:1px dashed rgba(255,255,255,.1);border-radius:12px;grid-column:1/-1}@media(max-width:900px){.p11-list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.p11-tools{grid-template-columns:1fr}.p11-list{grid-template-columns:1fr}}
 </style>
 <style id="phase10-style">
@@ -89,6 +92,13 @@
 <div class="p11-upload"><label class="p11-drop" for="p11File"><strong>＋ Upload Reference</strong><span>Private to your account · up to 50 MB per file</span></label><input id="p11File" type="file" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" hidden><span id="p11UploadStatus" class="muted small">Ready.</span></div>
 <div class="p11-tools"><input id="p11Search" placeholder="Search reference files"><select id="p11Type"><option value="">All types</option><option value="image">Images</option><option value="video">Videos</option><option value="audio">Audio</option><option value="document">Documents</option></select><button id="p11Refresh" type="button">Refresh</button></div>
 <div id="p11Summary" class="p11-summary"></div><div id="p11List" class="p11-list"></div>
+</section>
+<section id="phase11References" class="p11-wrap">
+<div class="p11-head"><div><h2>Upload / Reference Library</h2><p class="muted">Keep reusable image, video, audio and document references organized for movie creation.</p></div><span class="p11-badge">PHASE 11</span></div>
+<div class="p11-upload"><input id="p11Files" type="file" multiple accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx"><button id="p11Reload" type="button">Refresh Library</button></div>
+<div id="p11Queue" class="p11-queue"></div>
+<div class="p11-tools"><input id="p11Search" placeholder="Search reference assets"><select id="p11Type"><option value="all">All types</option><option value="image">Images</option><option value="video">Videos</option><option value="audio">Audio</option><option value="document">Documents</option></select></div>
+<div id="p11List" class="p11-list"></div>
 </section><section id="phase10Movies" class="p10-wrap">
 <div class="p10-head"><div><h2>My Movies</h2><p class="muted">Manage generated movies, inspect status, prompts and outputs.</p></div><span class="p10-badge">PHASE 10</span></div>
 <div class="p10-tools"><input id="p10Search" placeholder="Search movies, prompts or models"><select id="p10Status"><option value="all">All statuses</option><option value="succeeded">Succeeded</option><option value="processing">Processing</option><option value="failed">Failed</option><option value="queued">Queued</option></select><button id="p10Refresh" type="button">Refresh</button></div>
@@ -358,5 +368,40 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
  });
  window.obitrendReferenceLibrary={load,attach:id=>{const x=state.items.find(a=>a.id===id);if(x){creatorInputAssets=[{url:x._url,name:x.name,mime_type:x.mime_type,asset_id:x.id}]}}};
  load();
+})();
+</script>
+<script id="phase11-script">
+(()=>{
+ const el=id=>document.getElementById(id), state={assets:[],local:[]};
+ const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+ const typeOf=m=>m?.startsWith("image/")?"image":m?.startsWith("video/")?"video":m?.startsWith("audio/")?"audio":"document";
+ const fmt=n=>n<1048576?(n/1024).toFixed(0)+" KB":(n/1048576).toFixed(1)+" MB";
+ const session=async()=>{try{return window.supabaseClient?.auth?.getSession?await window.supabaseClient.auth.getSession():null}catch{return null}};
+ const render=()=>{
+  const q=(el("p11Search")?.value||"").toLowerCase(),t=el("p11Type")?.value||"all";
+  const list=state.assets.filter(a=>(t==="all"||a.asset_type===t)&&(a.name||"").toLowerCase().includes(q));
+  const local=state.local.map(a=>({id:"local-"+a.name,name:a.name,asset_type:typeOf(a.type),mime_type:a.type,size_bytes:a.size,local:true,url:a.url}));
+  const all=[...local,...list];
+  el("p11Queue").innerHTML=local.length?local.map(a=>'<div class="p11-q">Ready: '+esc(a.name)+' · '+fmt(a.size_bytes)+' · '+esc(a.asset_type)+' — select it in your generation reference picker when supported.</div>').join(""):"";
+  el("p11List").innerHTML=all.length?all.map(a=>'<article class="p11-card"><div class="p11-thumb">'+(a.url&&a.asset_type==="image"?'<img src="'+esc(a.url)+'" alt="">':a.url&&a.asset_type==="video"?'<video controls preload="metadata" src="'+esc(a.url)+'"></video>':'<span>'+esc((a.asset_type||"asset").toUpperCase())+'</span>')+'</div><div class="p11-info"><div class="p11-name">'+esc(a.name)+'</div><div class="p11-meta">'+esc(a.asset_type||"")+' · '+(a.size_bytes?fmt(a.size_bytes):"")+'</div></div></article>').join(""):'<div class="p11-empty">No reference assets found.</div>';
+ };
+ const load=async()=>{
+  try{
+   const s=await session(),token=s?.data?.session?.access_token||s?.session?.access_token;
+   if(!token){state.assets=[];render();return}
+   const base=window.OBITREND_SUPABASE_URL||window.SUPABASE_URL||"", key=window.OBITREND_SUPABASE_ANON_KEY||window.SUPABASE_ANON_KEY||"";
+   if(!base)return;
+   const u=base.replace(/\/$/,"")+"/rest/v1/movie_reference_assets?select=id,name,asset_type,mime_type,size_bytes,created_at,storage_path&order=created_at.desc&limit=100";
+   const res=await fetch(u,{headers:{apikey:key,Authorization:"Bearer "+token}});
+   if(res.ok)state.assets=await res.json();
+  }catch{} finally{render()}
+ };
+ el("p11Files")?.addEventListener("change",e=>{
+  state.local.forEach(x=>URL.revokeObjectURL(x.url));state.local=[];
+  [...(e.target.files||[])].forEach(f=>state.local.push({name:f.name,type:f.type,size:f.size,url:URL.createObjectURL(f)}));render();
+ });
+ el("p11Reload")?.addEventListener("click",load);el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);
+ window.obitrendReferenceLibrary={load,getLocal:()=>state.local.slice()};
+ render();load();
 })();
 </script></script>
