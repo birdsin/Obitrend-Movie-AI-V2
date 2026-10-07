@@ -440,9 +440,9 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
    }catch{if(payments)payments.innerHTML='<span class="muted">Payment history could not be loaded right now.</span>'}
  });
  $("p13AccountBack")?.addEventListener("click",()=>{
-   $("phase13AccountPage")?.classList.add("hidden");
-   $("app")?.classList.remove("hidden");
-   $("creditSummary")?.classList.remove("hidden");
+   const page=$("phase13AccountPage");
+   page?.classList.add("hidden");
+   page?.classList.remove("obitrend-active");
    window.obitrendNavigate?.("home");
    window.scrollTo({top:0,behavior:"smooth"});
  });
