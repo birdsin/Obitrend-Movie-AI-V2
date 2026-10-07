@@ -221,7 +221,7 @@
   <div id="mpStatus" class="mp-status muted"></div>
   <div id="mpList" class="mp-list"><div class="mp-empty">Sign in to load your movie projects.</div></div>
 </section><section id="savedVideoFolder" class="saved-folder obitrend-route">
-<div class="saved-folder-head"><div><h2 style="margin:0">📁 Saved Video Folder</h2><p class="muted" style="margin:6px 0 0">Your private movie library. Maximum 100 saved videos.</p></div><span id="savedFolderBadge" class="saved-folder-badge">0 / 100</span></div>
+<div class="saved-folder-head"><div><h2 style="margin:0">📁 Saved Video Folder</h2><p class="muted" style="margin:6px 0 0">Your private movie library. Maximum 100 saved videos.</p></div><span id="savedFolderBadge" class="saved-folder-badge">0 / 100</span><button type="button" id="savedFolderBack">Back</button></div>
 <div id="savedFolderSummary" class="saved-folder-summary"></div>
 <div id="savedFolderList" class="saved-folder-list"><div class="saved-folder-empty">Sign in to load your saved videos.</div></div>
 </section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
@@ -468,7 +468,7 @@ const render=()=>{const list=el("savedFolderList"),badge=el("savedFolderBadge"),
 const load=async()=>{const s=await session();if(!s){state.items=[];render();return}try{const r=await S.from("saved_videos").select("id,job_id,title,prompt,provider,video_url,created_at").order("created_at",{ascending:false}).limit(100);if(r.error)throw r.error;state.items=r.data||[]}catch{state.items=[]}render()};
 const save=async jobId=>{const s=await session();if(!s)return;const card=document.querySelector('[data-job-id="'+CSS.escape(jobId)+'"]'),video=card?.querySelector("video"),url=video?.getAttribute("src")||"",title=(card?.querySelector(".p10-title")?.textContent||"Untitled Movie").trim(),provider=(card?.querySelector(".p10-meta")?.textContent||"").split(" · ")[0].trim(),btn=card?.querySelector('[data-save-video="'+CSS.escape(jobId)+'"]');if(btn){btn.disabled=true;btn.textContent="Saving…"}try{const r=await S.rpc("save_video_to_folder",{p_user_id:s.user.id,p_job_id:jobId,p_title:title,p_video_url:url,p_provider:provider});if(r.error)throw r.error;if(btn){btn.textContent="Saved ✓";btn.disabled=true}await load()}catch(e){if(btn){btn.disabled=false;btn.textContent="Save to Folder"}alert(e?.message||"Could not save this video.")}};
 document.addEventListener("click",e=>{const b=e.target.closest?.("[data-save-video]");if(b){save(b.getAttribute("data-save-video"));return}const d=e.target.closest?.("[data-delete-saved]");if(d){const id=d.getAttribute("data-delete-saved");if(!confirm("Delete this saved video from your folder?"))return;S.from("saved_videos").delete().eq("id",id).then(()=>load())}});
-load();window.obitrendSavedVideoFolder={load}})();
+load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>window.obitrendNavigate?.("home"));window.obitrendSavedVideoFolder={load}})();
 </script><script id="obitrend-production-builder">
 (()=>{
  const $=id=>document.getElementById(id);
