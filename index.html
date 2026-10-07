@@ -343,6 +343,68 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
  $("p13SavePassword")?.addEventListener("click",savePassword);
  $("p13SignoutAll")?.addEventListener("click",signoutAll);
  window.obitrendPhase13={refresh};
+ // Phase 13 account page navigation: the menu dispatches phase13-open-account.
+ window.addEventListener("phase13-open-account", async ()=>{
+   const page=$("phase13AccountPage"), app=$("app"), summary=$("creditSummary"), auth=$("auth");
+   const s=await session(), user=s?.user;
+   if(!user){
+     page?.classList.add("hidden");
+     auth?.classList.remove("hidden");
+     return;
+   }
+   auth?.classList.add("hidden");
+   app?.classList.add("hidden");
+   summary?.classList.add("hidden");
+   page?.classList.remove("hidden");
+   $("p13Email").textContent=user.email||"—";
+   $("p13Created").textContent=fmtDate(user.created_at)||"—";
+   $("p13Session").textContent="Active on this device";
+   const sub=$("p13Subscription"), hist=$("p13CreditHistory"), payments=$("p13Payments");
+   if(sub)sub.textContent="Loading subscription…";
+   if(hist)hist.innerHTML='<span class="muted">Loading…</span>';
+   if(payments)payments.innerHTML='<span class="muted">Loading…</span>';
+   try{
+     const r=await S.from("credit_entitlements").select("status,starts_at,expires_at,credit_products(name,product_type,credits)").eq("user_id",user.id).order("created_at",{ascending:false}).limit(20);
+     if(r.error)throw r.error;
+     const rows=r.data||[];
+     if(sub)sub.innerHTML=rows.length?rows.map(x=>{const p=x.credit_products||{};return '<div class="p13-item"><b>'+String(p.name||"Credit entitlement")+'</b><br><span class="muted">'+String(x.status||"")+' · '+Number(p.credits||0)+' credits · '+fmtDate(x.starts_at)+(x.expires_at?" → "+fmtDate(x.expires_at):"")+'</span></div>'}).join(""):'No active or previous subscription entitlement found.';
+   }catch{if(sub)sub.textContent="Subscription details could not be loaded right now."}
+   try{
+     const r=await S.from("credit_ledger").select("type,amount,balance_after,reference,created_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(20);
+     if(r.error)throw r.error;
+     const rows=r.data||[];
+     if(hist)hist.innerHTML=rows.length?rows.map(x=>'<div class="p13-item"><b>'+String(x.type||"credit")+'</b><br><span class="muted">'+(Number(x.amount)>=0?"+":"")+Number(x.amount||0)+' credits · balance '+Number(x.balance_after||0)+' · '+fmtDate(x.created_at)+'</span></div>').join(""):'No credit history found.';
+   }catch{if(hist)hist.innerHTML='<span class="muted">Credit history could not be loaded right now.</span>'}
+   try{
+     const r=await S.from("credit_orders").select("reference,amount_ngn,credits,status,provider,created_at,credit_products(name)").eq("user_id",user.id).order("created_at",{ascending:false}).limit(20);
+     if(r.error)throw r.error;
+     const rows=r.data||[];
+     if(payments)payments.innerHTML=rows.length?rows.map(x=>{const p=x.credit_products||{};return '<div class="p13-item"><b>'+String(p.name||"Credit purchase")+'</b><br><span class="muted">₦'+Number(x.amount_ngn||0).toLocaleString()+" · "+Number(x.credits||0)+" credits · "+String(x.status||"")+' · '+fmtDate(x.created_at)+'</span></div>'}).join(""):'No payment history found.';
+   }catch{if(payments)payments.innerHTML='<span class="muted">Payment history could not be loaded right now.</span>'}
+ });
+ $("p13AccountBack")?.addEventListener("click",()=>{
+   $("phase13AccountPage")?.classList.add("hidden");
+   $("app")?.classList.remove("hidden");
+   $("creditSummary")?.classList.remove("hidden");
+   window.scrollTo({top:0,behavior:"smooth"});
+ });
+ $("p13SignOutCurrent")?.addEventListener("click",async()=>{await S.auth.signOut({scope:"local"});location.reload()});
+ $("p13SignOutOthers")?.addEventListener("click",async()=>{const b=$("p13SignOutOthers");if(b)b.disabled=true;const r=await S.auth.signOut({scope:"others"});if(r.error){if(b)b.disabled=false;return}if(b)b.textContent="Other sessions signed out"});
+ $("p13EmailBtn")?.addEventListener("click",async()=>{
+   const input=$("p13NewEmail"), status=$("p13EmailStatus"), email=input?.value.trim().toLowerCase(), current=(await session())?.user?.email?.toLowerCase();
+   if(!email||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){if(status)status.textContent="Enter a valid email address.";return}
+   if(email===current){if(status)status.textContent="That is already your current email.";return}
+   const r=await S.auth.updateUser({email,options:{emailRedirectTo:location.origin+location.pathname}});
+   if(r.error){if(status)status.textContent=r.error.message;return}
+   input.value="";if(status)status.textContent="Email change requested. Check the confirmation email(s).";
+ });
+ $("p13PasswordBtn")?.addEventListener("click",async()=>{
+   const pw=$("p13NewPassword")?.value||"",status=$("p13PasswordStatus");
+   if(pw.length<8){if(status)status.textContent="Password must be at least 8 characters.";return}
+   const r=await S.auth.updateUser({password:pw});
+   if(r.error){if(status)status.textContent=r.error.message;return}
+   $("p13NewPassword").value="";$("p13CurrentPassword").value="";if(status)status.textContent="Password updated successfully.";
+ });
 })();
 </script>
 <script id="phase3-account-script">
