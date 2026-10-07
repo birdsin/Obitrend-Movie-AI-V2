@@ -399,11 +399,11 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
    input.value="";if(status)status.textContent="Email change requested. Check the confirmation email(s).";
  });
  $("p13PasswordBtn")?.addEventListener("click",async()=>{
-   const pw=$("p13NewPassword")?.value||"",status=$("p13PasswordStatus");
+   const pw=$("p13NewPw")?.value||"",status=$("p13PasswordStatus");
    if(pw.length<8){if(status)status.textContent="Password must be at least 8 characters.";return}
    const r=await S.auth.updateUser({password:pw});
    if(r.error){if(status)status.textContent=r.error.message;return}
-   $("p13NewPassword").value="";$("p13CurrentPassword").value="";if(status)status.textContent="Password updated successfully.";
+   $("p13NewPw").value="";$("p13CurrentPw").value="";if(status)status.textContent="Password updated successfully.";
  });
 })();
 </script>
