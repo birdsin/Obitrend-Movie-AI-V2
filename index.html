@@ -136,7 +136,7 @@
 
 <section id="phase11Library" class="p11-wrap obitrend-route">
 <div class="p11-head"><div><h2>Upload / Reference Library</h2><p class="muted">Store private reference images, videos, audio and documents for your movie projects.</p></div><span class="p11-badge">PHASE 11</span><button type="button" class="workspace-back" id="p11LibraryBack">Back</button></div>
-<div class="p11-upload"><label class="p11-drop" for="p11File"><strong>＋ Upload Reference</strong><span>Private to your account · up to 50 MB per file</span></label><input id="p11File" type="file" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" hidden onchange="window.obitrendUploadReference&&window.obitrendUploadReference(this.files&&this.files[0])"><span id="p11UploadStatus" class="muted small">Ready.</span></div>
+<div class="p11-upload"><button type="button" class="p11-drop" id="p11UploadButton"><strong>＋ Upload Reference</strong><span>Private to your account · up to 50 MB per file</span></button><input id="p11File" type="file" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" hidden><span id="p11UploadStatus" class="muted small">Ready.</span></div>
 <div class="p11-tools"><input id="p11Search" placeholder="Search reference files"><select id="p11Type"><option value="">All types</option><option value="image">Images</option><option value="video">Videos</option><option value="audio">Audio</option><option value="document">Documents</option></select><button id="p11Refresh" type="button">Refresh</button></div>
 <div id="p11Summary" class="p11-summary"></div><div id="p11List" class="p11-list"></div>
 </section>
@@ -721,11 +721,10 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
   render();
   loading(false);
  };
- const upload=async file=>{
-  loading(true,"Uploading reference securely…");
-  if(!file)return;
-  if(file.size>50*1024*1024){el("p11UploadStatus").textContent="File exceeds 50 MB.";return}
-  const s=await getSession();if(!s){el("p11UploadStatus").textContent="Sign in to upload references.";return}
+ let uploading=false; const upload=async file=>{
+  if(!file||uploading)return; uploading=true; loading(true,"Uploading reference securely…");
+  if(file.size>50*1024*1024){el("p11UploadStatus").textContent="File exceeds 50 MB.";loading(false);uploading=false;return}
+  const s=await getSession();if(!s){el("p11UploadStatus").textContent="Sign in to upload references.";loading(false);uploading=false;return}
   const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path=s.user.id+"/"+crypto.randomUUID()+"-"+safe;
   el("p11UploadStatus").textContent="Uploading "+file.name+"…";
   try{
@@ -735,9 +734,9 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
    if(ins.error){await S.storage.from("movie-reference").remove([path]);throw ins.error}
    el("p11UploadStatus").textContent="Uploaded securely: "+file.name;el("p11File").value="";await load();
   }catch(e){el("p11UploadStatus").textContent=e?.message||"Upload failed."}
-  finally{loading(false)}
+  finally{loading(false);uploading=false}
  };
- window.obitrendUploadReference=upload;el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
+ window.obitrendUploadReference=upload;el("p11UploadButton")?.addEventListener("click",()=>el("p11File")?.click());el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
  el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);el("p11Refresh")?.addEventListener("click",load);
  el("p11List")?.addEventListener("click",async e=>{\n  const openRef=e.target.getAttribute("data-open-reference");\n  if(openRef){const x=state.items.find(a=>a.id===openRef);if(x?._url){window.obitrendOpenMediaViewer?.(x._url,x.name,x.mime_type?.startsWith("image/")?"image":"video")}return;}
   const use=e.target.getAttribute("data-use"),del=e.target.getAttribute("data-del");
