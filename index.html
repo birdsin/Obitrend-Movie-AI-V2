@@ -629,6 +629,25 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
  setTimeout(decorate,1200);
 })();
 </script>
+
+<style id="movie-draft-recovery-css">
+.mp-draft-recovery{display:inline-flex;align-items:center;gap:7px;font-size:11px;padding:7px 10px;border:1px solid rgba(201,168,106,.28);border-radius:10px;background:rgba(201,168,106,.07);color:#e6b95e}.mp-draft-recovery.hidden{display:none}.mp-draft-dot{width:6px;height:6px;border-radius:50%;background:#e6b95e;display:inline-block}
+</style>
+<script id="movie-draft-recovery">
+(()=>{
+ const KEY="obitrend_movie_local_draft_v1",el=id=>document.getElementById(id);
+ let timer=null;
+ const safeRead=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"null")}catch{return null}};
+ const collect=()=>({saved_at:new Date().toISOString(),project_id:window.obitrendCurrentProjectId||null,name:(el("mpName")?.value||"").trim(),prompt:(el("prompt")?.value||"").trim(),mode:el("mode")?.value||"",duration:el("p3Duration")?.value||el("duration")?.value||"5",resolution:el("p3Resolution")?.value||"480p",model_id:el("model")?.value||el("p3ModelSelect")?.value||"",advanced:window.obitrendAdvancedSettings?.()||{},director:window.obitrendDirectorSettings?.()||{},timeline:window.obitrendTimelineSettings?.()||{scenes:[]},characters:window.obitrendCharacterSettings?.()||{characters:[]}});
+ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(collect()));show()}catch{}};
+ const queue=()=>{clearTimeout(timer);timer=setTimeout(save,1200)};
+ const show=()=>{const box=el("mpDraftRecovery");if(!box)return;const d=safeRead();box.classList.toggle("hidden",!d);if(d)box.title="Local draft saved "+new Date(d.saved_at).toLocaleString()};
+ const recover=async()=>{const d=safeRead();if(!d)return;el("mpName")&&(el("mpName").value=d.name||"");el("prompt")&&(el("prompt").value=d.prompt||"");el("mode")&&(el("mode").value=d.mode||"");el("duration")&&(el("duration").value=d.duration||"5");el("p3Duration")&&(el("p3Duration").value=d.duration||"5");el("p3Resolution")&&(el("p3Resolution").value=d.resolution||"480p");if(d.model_id){if(el("model"))el("model").value=d.model_id;if(el("p3ModelSelect"))el("p3ModelSelect").value=d.model_id}window.obitrendLoadAdvancedSettings?.(d.advanced||{});window.obitrendLoadDirectorSettings?.(d.director||{});window.obitrendLoadTimelineSettings?.(d.timeline||{scenes:[]});window.obitrendLoadCharacterSettings?.(d.characters||{characters:[]});el("mpStatus")&&(el("mpStatus").textContent="Local draft recovered from "+new Date(d.saved_at).toLocaleString()+". Review it before saving.");show()};
+ const clear=()=>{try{localStorage.removeItem(KEY)}catch{}show()};
+ const init=()=>{const form=el("mpName")?.parentElement;if(form&&!el("mpDraftRecovery")){const b=document.createElement("button");b.type="button";b.id="mpDraftRecovery";b.className="mp-draft-recovery hidden";b.innerHTML='<span class="mp-draft-dot"></span> Recover local draft';b.onclick=recover;form.appendChild(b)};["mpName","prompt","mode","duration","p3Duration","p3Resolution","model","p3ModelSelect"].forEach(id=>el(id)?.addEventListener("input",queue));["mode","duration","p3Duration","p3Resolution","model","p3ModelSelect"].forEach(id=>el(id)?.addEventListener("change",queue));window.addEventListener("beforeunload",save);el("mpNew")?.addEventListener("click",()=>setTimeout(clear,50));el("mpSave")?.addEventListener("click",()=>setTimeout(clear,800));show()};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
 </body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
