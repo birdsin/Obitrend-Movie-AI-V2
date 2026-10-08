@@ -684,15 +684,24 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
  const viewer=document.getElementById("obitrendMediaViewer"), body=document.getElementById("obitrendMediaViewerBody"), title=document.getElementById("obitrendMediaViewerTitle"), back=document.getElementById("obitrendMediaViewerBack");
  if(!viewer||!body||!back)return;
  const isImage=url=>/\.(png|jpe?g|webp|gif|avif|bmp)(?:[?#]|$)/i.test(String(url||""));
- const open=(url,label,kind)=>{
+ const open=(url,label,mime)=>{
    if(!url)return;
    body.innerHTML="";
    title.textContent=label||"Media Preview";
-   const el=document.createElement(kind==="image"||isImage(url)?"img":"video");
-   el.src=url;
-   if(el.tagName==="VIDEO"){el.controls=true;el.playsInline=true;el.preload="metadata";el.setAttribute("controlsList","nodownload");}
-   el.onerror=()=>{body.innerHTML='<div class="obitrend-media-viewer-status">This media could not be loaded. Use Refresh and try again.</div>'};
-   body.appendChild(el);
+   const type=String(mime||"").toLowerCase();
+   let node;
+   if(type.startsWith("image/")||(!type&&isImage(url))){
+     node=document.createElement("img");node.src=url;node.alt=label||"Reference image";
+   }else if(type.startsWith("audio/")){
+     node=document.createElement("audio");node.src=url;node.controls=true;node.preload="metadata";
+   }else if(type.startsWith("video/")||!type){
+     node=document.createElement("video");node.src=url;node.controls=true;node.playsInline=true;node.preload="metadata";node.setAttribute("controlsList","nodownload");
+   }else{
+     node=document.createElement("div");node.className="obitrend-media-viewer-file";
+     node.innerHTML='<div class="obitrend-media-viewer-file-icon">◈</div><strong>'+String(label||"Reference file").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))+'</strong><a href="'+String(url).replace(/"/g,"%22")+'" target="_blank" rel="noopener">Open file</a>';
+   }
+   node.onerror=()=>{body.innerHTML='<div class="obitrend-media-viewer-status">This media could not be loaded. Use Refresh and try again.</div>'};
+   body.appendChild(node);
    viewer.classList.add("open");viewer.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
  };
  const close=()=>{viewer.classList.remove("open");viewer.setAttribute("aria-hidden","true");body.innerHTML="";document.body.style.overflow=""};
@@ -715,7 +724,7 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
  });
  window.obitrendOpenMediaViewer=open;
 })();
-</script><style id="provider-usage-style">
+</script><style id="reference-viewer-file-style">.obitrend-media-viewer-file{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:220px;padding:24px;text-align:center}.obitrend-media-viewer-file-icon{font-size:44px;color:#e6b95e}.obitrend-media-viewer-file a{display:inline-flex;padding:10px 14px;border-radius:10px;background:#e6b95e;color:#07080d;text-decoration:none;font-weight:800}</style><style id="provider-usage-style">
 .provider-usage{margin-top:9px;padding:10px 12px;border:1px solid rgba(230,185,94,.18);border-radius:10px;background:rgba(230,185,94,.04);font-size:12px;line-height:1.45}
 .provider-usage strong{color:#e6b95e}.provider-usage.ok{border-color:rgba(142,224,160,.22)}.provider-usage.pending{opacity:.8}
 </style>
@@ -1005,7 +1014,7 @@ setTimeout(mount,250);
  el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);el("p11Refresh")?.addEventListener("click",load);
  el("p11List")?.addEventListener("click",async e=>{
   const openRef=e.target.getAttribute("data-open-reference");
-  if(openRef){const x=state.items.find(a=>a.id===openRef);if(x?._url){window.obitrendOpenMediaViewer?.(x._url,x.name,x.mime_type?.startsWith("image/")?"image":"video")}return;}
+  if(openRef){const x=state.items.find(a=>a.id===openRef);if(x?._url){window.obitrendOpenMediaViewer?.(x._url,x.name,x.mime_type)}return;}
   const use=e.target.getAttribute("data-use"),del=e.target.getAttribute("data-del");
   if(use){const x=state.items.find(a=>a.id===use);if(x){const ref={url:x._url,name:x.name,mime_type:x.mime_type,asset_id:x.id};creatorInputAssets=[ref];window.creatorInputAssets=creatorInputAssets;try{localStorage.setItem("obitrend_selected_reference",JSON.stringify({asset_id:x.id,name:x.name,mime_type:x.mime_type}))}catch{};const n=document.getElementById("p3MediaName");if(n)n.textContent="Attached library reference: "+x.name;const st=document.getElementById("p3Status");if(st)st.textContent="Reference library asset attached to the next generation.";el("p11UploadStatus").textContent=x.name+" attached as the next generation reference.";window.obitrendNavigate?.("creator");}}
   if(del){const x=state.items.find(a=>a.id===del);if(!x)return;if(!confirm("Delete this reference file?"))return;loading(true,"Deleting reference…");try{const s=await getSession();if(!s)return;await S.storage.from("movie-reference").remove([x.storage_path]);await S.from("movie_reference_assets").delete().eq("id",x.id);await load()}finally{loading(false)}}
