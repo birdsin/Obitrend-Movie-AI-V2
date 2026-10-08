@@ -605,8 +605,8 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
     if(prompt){
       prompt.value=text;
       prompt.dispatchEvent(new Event("input",{bubbles:true}));
-      el("p3Status")&&(el("p3Status").textContent="Idea added to Creator. Review your settings, then use Generate Movie.");
-      el("app")?.scrollIntoView({behavior:"smooth",block:"start"});
+      el("p3Status")&&(el("p3Status").textContent="Idea added to Creator. Review your settings, then generate your movie.");
+      el("phase3Creator")?.scrollIntoView({behavior:"smooth",block:"start"});
       setTimeout(()=>prompt.focus(),250);
     }
   });
