@@ -991,13 +991,12 @@ setTimeout(mount,250);
   if(!file||uploading)return; uploading=true; loading(true,"Uploading reference securely…");
   if(file.size>50*1024*1024){el("p11UploadStatus").textContent="File exceeds 50 MB.";loading(false);uploading=false;return}
   const s=await getSession();if(!s){el("p11UploadStatus").textContent="Sign in to upload references.";loading(false);uploading=false;return}
-  const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"),path=s.user.id+"/"+crypto.randomUUID()+"-"+safe;
   el("p11UploadStatus").textContent="Uploading "+file.name+"…";
   try{
-   const up=await S.storage.from("movie-reference").upload(path,file,{contentType:file.type||"application/octet-stream",upsert:false});
-   if(up.error)throw up.error;
-   const ins=await S.from("movie_reference_assets").insert({user_id:s.user.id,name:file.name,asset_type:typeOf(file.type),storage_path:path,mime_type:file.type||null,size_bytes:file.size}).select().single();
-   if(ins.error){await S.storage.from("movie-reference").remove([path]);throw ins.error}
+   const form=new FormData();form.append("file",file,file.name);form.append("library","true");
+   const r=await fetch(BASE+"/ai-media-upload",{method:"POST",headers:{Authorization:"Bearer "+s.access_token},body:form});
+   const x=await r.json().catch(()=>({}));
+   if(!r.ok||!x?.asset?.asset_id)throw new Error(x?.detail||x?.error||"Reference upload failed.");
    el("p11UploadStatus").textContent="Uploaded securely: "+file.name;el("p11File").value="";await load();
   }catch(e){el("p11UploadStatus").textContent=e?.message||"Upload failed."}
   finally{loading(false);uploading=false}
