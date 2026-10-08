@@ -254,6 +254,32 @@ body{background:#07090e}
  #phase3Creator .p3-actions{grid-template-columns:1fr}
  #phase3Creator #p3Generate{grid-column:auto}
 }
+</style><style id="responsive-device-layout">
+/* OBITREND responsive studio: desktop-site width shows the full workspace; Android width stays compact. */
+@media(min-width:900px){
+  body{min-width:0}
+  #main{max-width:1440px;padding:0 28px 52px}
+  #creditSummary.live-wallet{margin:12px 0 18px;min-height:78px;padding:14px 20px}
+  .live-wallet-brand{min-width:240px}
+  .live-wallet-brand strong{font-size:15px}
+  .live-wallet-brand small{font-size:11px}
+  .live-wallet-stats{gap:32px}
+  .wallet-stat b{font-size:25px}
+  #phase3Creator .p3grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #phase3Creator .p3-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #phase3Creator .p3-results{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  #phase3Creator .p3-results h3{grid-column:1/-1}
+  .ob-demo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:1200px){
+  #main{max-width:1520px;padding-left:36px;padding-right:36px}
+  #creditSummary.live-wallet{min-height:82px}
+}
+@media(max-width:899px){
+  #main{width:auto;max-width:none}
+  #creditSummary.live-wallet{margin-left:0;margin-right:0;max-width:100%;box-sizing:border-box}
+  .live-wallet-brand{min-width:0}
+}
 </style><style id="live-wallet-style">
 #creditSummary.live-wallet{display:flex;align-items:center;gap:16px;margin:10px 0 14px;padding:12px 14px;border:1px solid #2b2f3a;border-radius:18px;background:linear-gradient(135deg,#0d1017,#11131b);box-shadow:0 10px 30px rgba(0,0,0,.18);position:relative;overflow:hidden}
 #creditSummary.live-wallet:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(#e6b95e,#8f6bd6)}
