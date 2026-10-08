@@ -10,5 +10,13 @@
   "theme_color": "#07080d",
   "orientation": "portrait-primary",
   "categories": ["video", "entertainment", "multimedia"],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icons/obitrend-movie-ai.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
