@@ -587,7 +587,49 @@ load();document.getElementById("savedFolderBack")?.addEventListener("click",()=>
  });
  window.obitrendOpenMediaViewer=open;
 })();
-</script></body></html><script id="phase6-script">
+</script><style id="provider-usage-style">
+.provider-usage{margin-top:9px;padding:10px 12px;border:1px solid rgba(230,185,94,.18);border-radius:10px;background:rgba(230,185,94,.04);font-size:12px;line-height:1.45}
+.provider-usage strong{color:#e6b95e}.provider-usage.ok{border-color:rgba(142,224,160,.22)}.provider-usage.pending{opacity:.8}
+</style>
+<script id="provider-usage-ui">
+(()=> {
+ const BASE="https://gclshpaipluhvlsznugl.supabase.co/functions/v1";
+ const cache=new Map();
+ const money=n=>Number.isFinite(Number(n))?Number(n).toLocaleString():"—";
+ async function loadUsage(ids){
+   if(!ids.length)return;
+   try{
+     const s=await S.auth.getSession(),token=s?.data?.session?.access_token;
+     if(!token)return;
+     const r=await fetch(BASE+"/movie-provider-usage",{method:"POST",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify({job_ids:ids})});
+     const x=await r.json().catch(()=>({}));
+     if(!r.ok)return;
+     (x.executions||[]).forEach(v=>cache.set(v.job_id,v));
+   }catch{}
+ }
+ function decorate(){
+   const root=el("p10List"); if(!root)return;
+   const cards=[...root.querySelectorAll("[data-job-id]")],ids=cards.map(c=>c.getAttribute("data-job-id")).filter(Boolean);
+   loadUsage(ids).then(()=>{
+     cards.forEach(card=>{
+       const id=card.getAttribute("data-job-id"),u=cache.get(id);
+       if(!u||card.querySelector("[data-provider-usage]"))return;
+       const usage=u.provider_usage||{},charged=usage.credits_charged??usage.creditsCharged??usage.provider_credits;
+       const box=document.createElement("div");box.className="provider-usage "+(charged!=null?"ok":"pending");box.setAttribute("data-provider-usage","1");
+       if(charged!=null)box.innerHTML="<strong>Provider usage:</strong> "+money(charged)+" Flixly credits · "+String(u.status||"completed");
+       else box.textContent="Provider usage recorded; provider credit amount is not available yet.";
+       card.querySelector(".p10-body")?.appendChild(box);
+     });
+   });
+ }
+ const hook=()=>setTimeout(decorate,100);
+ const original=window.obitrendLoadMovies;
+ if(typeof original==="function")window.obitrendLoadMovies=async(...a)=>{const r=await original(...a);hook();return r};
+ document.addEventListener("click",e=>{if(e.target.closest("#p10Refresh"))hook()});
+ setTimeout(decorate,1200);
+})();
+</script>
+</body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
