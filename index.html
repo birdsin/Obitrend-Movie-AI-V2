@@ -49,7 +49,7 @@
 .p3-idea:hover{border-color:#d7ad5c!important}
 .p3-quick-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
 .p3-quick-primary{background:#d7ad5c!important;color:#080808!important;border:0!important;font-weight:800}
-.p3-quick-note{font-size:11px;color:#8f96a6}
+.p3-quick-note{font-size:11px;color:#8f96a6}.p3-coach{margin-top:12px;padding:11px 12px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(255,255,255,.018)}.p3-coach-head{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px}.p3-coach-head span{font-size:10px;opacity:.55}.p3-coach-items{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.p3-coach-items span{font-size:10px;padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.07);opacity:.62}.p3-coach-items span.ready{border-color:rgba(201,168,106,.38);color:#e6b95e;opacity:1;background:rgba(201,168,106,.07)}
 .p3-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
 .p3-flow-step{padding:9px 10px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(255,255,255,.025);font-size:11px;color:#aeb4c1}
 .p3-flow-step b{display:block;color:#fff;font-size:12px;margin-bottom:3px}
@@ -191,6 +191,7 @@ body{background:radial-gradient(circle at 75% 5%,rgba(116,78,210,.16),transparen
   </div>
   <textarea id="p3QuickPrompt" rows="3" placeholder="Example: A woman walks through a luxury hotel lobby at sunset while the camera slowly tracks beside her…"></textarea>
   <div class="p3-quick-actions"><button type="button" id="p3UseIdea" class="p3-quick-primary">Use this idea in Creator</button><span class="p3-quick-note">Your existing generation button and credit protection stay unchanged.</span></div>
+  <div class="p3-coach" id="p3PromptCoach" aria-live="polite"><div class="p3-coach-head"><b>Prompt Coach</b><span>Stronger direction = easier refinement</span></div><div class="p3-coach-items"><span data-coach="subject">○ Subject</span><span data-coach="action">○ Action</span><span data-coach="camera">○ Camera</span><span data-coach="look">○ Lighting / look</span></div></div>
 </div>
 <div class="p3grid"><div class="p3field"><b>MODEL SEARCH / FILTER</b><input id="p3ModelFilter" placeholder="Search enabled video models"></div><div class="p3field"><b>MODEL</b><select id="p3ModelSelect"></select></div><div class="p3field"><b>DURATION</b><select id="p3Duration"><option value="4">4 seconds</option><option value="5" selected>5 seconds</option><option value="6">6 seconds</option><option value="7">7 seconds</option><option value="8">8 seconds</option><option value="9">9 seconds</option><option value="10">10 seconds</option><option value="11">11 seconds</option><option value="12">12 seconds</option><option value="13">13 seconds</option><option value="14">14 seconds</option><option value="15">15 seconds</option></select></div><div class="p3field"><b>RESOLUTION</b><select id="p3Resolution"><option value="480p" selected>480p</option><option value="720p">720p</option></select></div><div class="p3field"><b>REFERENCE MEDIA</b><input id="p3Media" type="file" accept="image/*,video/*"><div id="p3MediaName"></div></div></div><div class="p3-actions"><button id="p3Apply">Apply Creator Settings</button><button id="p3Clear" type="button">Clear Media</button></div><div class="p3-results"><h3>Flixly Pricing</h3><div id="p3Quote" class="p3-result">Checking live Flixly catalog quote…</div><div class="p3-price-note">OBITREND customer credits and Flixly provider credits are tracked separately. The 300-credit value is the live Flixly catalog value, not the customer charge. Flixly's documented API does not expose a separate pre-generation quote endpoint, so no unverified duration-specific provider price is guessed.</div><h3>Generation Status</h3><div id="p3Status" class="p3-result">Ready. Existing generation workflow is unchanged.</div></div></section>
 <section id="phase6Advanced" class="p6-wrap obitrend-route">
@@ -595,8 +596,8 @@ async function logout(){await S.auth.signOut();location.reload()}boot();
 (()=> {
   const el=id=>document.getElementById(id);
   const quick=el("p3QuickPrompt"), use=el("p3UseIdea");
-  const setIdea=text=>{if(quick){quick.value=text;quick.focus()}};
-  document.querySelectorAll("[data-quick-idea]").forEach(b=>b.addEventListener("click",()=>setIdea(b.getAttribute("data-quick-idea")||"")));
+  const updateCoach=()=>{const t=(quick?.value||"").toLowerCase();const tests={subject:t.length>18,action:/\b(walk|run|move|turn|dance|drive|stand|sit|look|hold|enter|exit|chase|show|place|reveal|rise|fall)\b/.test(t),camera:/\b(camera|close-up|closeup|wide|tracking|dolly|pan|zoom|angle|shot|lens)\b/.test(t),look:/\b(light|lighting|cinematic|golden hour|neon|dramatic|soft|studio|sunset|night|day|realistic|photorealistic)\b/.test(t)};document.querySelectorAll("[data-coach]").forEach(x=>{const k=x.getAttribute("data-coach"),ok=!!tests[k];x.classList.toggle("ready",ok);x.textContent=(ok?"✓ ":"○ ")+({subject:"Subject",action:"Action",camera:"Camera",look:"Lighting / look"}[k]||k)})};const setIdea=text=>{if(quick){quick.value=text;quick.focus();updateCoach()}};
+  document.querySelectorAll("[data-quick-idea]").forEach(b=>b.addEventListener("click",()=>setIdea(b.getAttribute("data-quick-idea")||"")));quick?.addEventListener("input",updateCoach);updateCoach();
   use?.addEventListener("click",()=>{
     const text=quick?.value?.trim()||"";
     if(!text){el("p3Status")&&(el("p3Status").textContent="Write or choose an idea first.");quick?.focus();return}
