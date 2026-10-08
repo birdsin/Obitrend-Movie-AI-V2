@@ -921,7 +921,7 @@ setTimeout(mount,250);
 (()=>{
  const el=id=>document.getElementById(id), state={jobs:[],loading:false};
  const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
- const getSession=async()=>{try{return window.supabaseClient?.auth?.getSession?await window.supabaseClient.auth.getSession():null}catch{return null}};
+ const getSession=async()=>{try{return await S.auth.getSession()}catch{return null}};
  const render=()=>{
   const q=(el("p10Search")?.value||"").toLowerCase(), st=el("p10Status")?.value||"all";
   const all=state.jobs||[], shown=all.filter(j=>(st==="all"||j.status===st)&&((j.prompt||"")+" "+(j.model||"")+" "+(j.id||"")).toLowerCase().includes(q));
@@ -937,12 +937,9 @@ setTimeout(mount,250);
   try{
    const s=await getSession(), token=s?.data?.session?.access_token||s?.session?.access_token;
    if(!token){state.jobs=[];el("p10List").innerHTML='<div class="p10-empty">Sign in to load your movies.</div>';return}
-   const base=window.OBITREND_SUPABASE_URL||window.SUPABASE_URL||"";
-   const url=base?base.replace(/\/$/,"")+"/rest/v1/ai_jobs?select=id,title,prompt,status,model,provider,created_at,output_url,output_assets&order=created_at.desc&limit=100":"";
-   if(!url){state.jobs=[];return}
-   const res=await fetch(url,{headers:{apikey:window.OBITREND_SUPABASE_ANON_KEY||window.SUPABASE_ANON_KEY||"",Authorization:"Bearer "+token}});
-   if(!res.ok)throw new Error("Unable to load movies");
-   state.jobs=await res.json();
+   const r=await S.from("ai_jobs").select("id,title,prompt,status,model,provider,created_at,output_url,output_assets").order("created_at",{ascending:false}).limit(100);
+   if(r.error)throw r.error;
+   state.jobs=r.data||[];
   }catch(e){state.jobs=[];el("p10List").innerHTML='<div class="p10-empty">Movies could not be loaded. Refresh and try again.</div>'}
   finally{state.loading=false;render()}
  };
