@@ -154,7 +154,7 @@ body{background:radial-gradient(circle at 75% 5%,rgba(116,78,210,.16),transparen
 .ob-growth-chips{display:flex;gap:8px;flex-wrap:wrap}
 .ob-growth-chip{cursor:pointer;border:1px solid rgba(255,255,255,.09);background:#10121a;color:#d9dde5;border-radius:999px;padding:9px 11px;font-size:12px}
 .ob-growth-chip:hover{border-color:rgba(230,185,94,.45);color:#fff}
-.ob-growth-final{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px;border-radius:20px;border:1px solid rgba(230,185,94,.2);background:linear-gradient(110deg,rgba(230,185,94,.08),rgba(255,255,255,.025))}
+.ob-growth-final{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px;border-radius:20px;border:1px solid rgba(230,185,94,.2);background:linear-gradient(110deg,rgba(230,185,94,.08),rgba(255,255,255,.025))}.ob-live-showcase{margin-top:18px}.ob-live-showcase-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.ob-live-showcase-card{overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#0d1017}.ob-live-showcase-media{aspect-ratio:16/9;background:#05070b;position:relative}.ob-live-showcase-media video{width:100%;height:100%;object-fit:cover;display:block;margin:0}.ob-live-showcase-body{padding:12px}.ob-live-showcase-title{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ob-live-showcase-meta{margin-top:5px;color:#9299a8;font-size:11px}.ob-live-live{display:inline-flex;margin-top:8px;padding:5px 8px;border-radius:999px;border:1px solid rgba(230,185,94,.28);background:rgba(230,185,94,.07);color:#e6b95e;font-size:9px;font-weight:800;letter-spacing:.08em}.ob-live-showcase-empty{padding:20px;border:1px dashed rgba(255,255,255,.1);border-radius:16px;text-align:center;color:#9da3b3}.ob-live-showcase-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.ob-live-showcase-actions button{font-size:11px;padding:8px 10px}@media(max-width:760px){.ob-live-showcase-grid{grid-template-columns:1fr}.ob-live-showcase-card video{max-height:none}}
 .ob-growth-final h2{margin:0 0 5px;font-size:20px}.ob-growth-final p{margin:0;color:#999fac;font-size:12px}
 @media(max-width:760px){.ob-growth-showcase{grid-template-columns:1fr}.ob-growth-card{min-height:150px}.ob-growth-hero{border-radius:22px}.ob-growth-hero h1{font-size:40px}}
 </style><style id="p3-hide-legacy-creator">#app{display:none!important}.obi-growth{display:none!important}#obitrendGrowthExperience{display:block!important}#obitrendHomeDashboard .obi-final button,#obitrendHomeDashboard .obitrend-home-card:first-child button{display:none!important}.ob-growth-final-note{font-size:12px;color:#aeb4c1;padding:11px 14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.03)}<style id="obitrend-flixly-inspired-polish">
@@ -1054,6 +1054,13 @@ function mount(){
    </div>
    <div class="ob-growth-trust"><span>Text → Video</span><span>Director Controls</span><span>Movie Projects</span><span>Save & Download</span></div>
  </section>
+ <section class="ob-growth-section ob-live-showcase" id="obLiveShowcase">
+   <div class="ob-growth-section-head">
+     <div><h2>See it in action</h2><p>Real completed OBITREND movie outputs from your account.</p></div>
+     <button type="button" data-live-refresh>Refresh</button>
+   </div>
+   <div id="obLiveShowcaseGrid" class="ob-live-showcase-grid"><div class="ob-live-showcase-empty">Loading your completed movies…</div></div>
+ </section>
  <section class="ob-growth-section">
    <div class="ob-growth-section-head"><div><h2>What can you create?</h2><p>Choose a starting point. You can refine everything later.</p></div></div>
    <div class="ob-growth-showcase">
@@ -1076,6 +1083,38 @@ function mount(){
    <span class="ob-growth-final-note">Your workspace is ready whenever you are.</span>
  </section>`;
  home.prepend(wrap);
+ async function loadLiveShowcase(){
+   const root=document.getElementById("obLiveShowcaseGrid"); if(!root)return;
+   try{
+     const auth=await S.auth.getSession();
+     const user=auth?.data?.session?.user;
+     if(!user){
+       root.innerHTML='<div class="ob-live-showcase-empty">Sign in to see your completed OBITREND movies.</div>';
+       return;
+     }
+     const r=await S.from("ai_jobs")
+       .select("id,mode,prompt,status,output_assets,created_at,completed_at")
+       .eq("status","succeeded")
+       .order("created_at",{ascending:false})
+       .limit(6);
+     if(r.error)throw r.error;
+     const jobs=(r.data||[]).filter(j=>Array.isArray(j.output_assets)&&j.output_assets.some(a=>a&&a.url)).slice(0,3);
+     if(!jobs.length){
+       root.innerHTML='<div class="ob-live-showcase-empty"><b>No completed movies yet.</b><br>Create your first movie and it will appear here automatically.</div>';
+       return;
+     }
+     root.innerHTML='<div class="ob-live-showcase-grid">'+jobs.map(j=>{
+       const asset=(j.output_assets||[]).find(a=>a&&a.url)||{};
+       const title=String(j.prompt||"OBITREND Movie").trim().slice(0,72).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+       const mode=String(j.mode||"Movie").replace(/[&<>"]/g,"");
+       const url=String(asset.url||"").replace(/"/g,"&quot;");
+       const date=j.completed_at?new Date(j.completed_at).toLocaleDateString():new Date(j.created_at).toLocaleDateString();
+       return '<article class="ob-live-showcase-card"><div class="ob-live-showcase-media"><video controls playsinline preload="metadata" src="'+url+'"></video></div><div class="ob-live-showcase-body"><div class="ob-live-showcase-title">'+title+'</div><div class="ob-live-showcase-meta">'+mode+' · '+date+'</div><span class="ob-live-live">LIVE OUTPUT</span></div></article>';
+     }).join('')+'</div>';
+   }catch(e){
+     root.innerHTML='<div class="ob-live-showcase-empty">Completed movies could not be loaded right now. Tap Refresh to try again.</div>';
+   }
+ }
  const go=()=>{
    wrap.querySelectorAll("[data-growth-create]").forEach(b=>{b.disabled=true;b.dataset.originalText=b.textContent;b.textContent="Opening Creator…"});
    window.obitrendNavigate?.("creator");
@@ -1088,7 +1127,8 @@ function mount(){
    },180);
  };
  wrap.querySelectorAll("[data-growth-create]").forEach(b=>b.addEventListener("click",go));
- wrap.querySelector("[data-growth-explore]")?.addEventListener("click",go);
+ wrap.querySelector("[data-growth-explore]")?.addEventListener("click",go); wrap.querySelector("[data-live-refresh]")?.addEventListener("click",loadLiveShowcase);
+ loadLiveShowcase();
  wrap.querySelectorAll("[data-growth-prompt]").forEach(b=>b.addEventListener("click",()=>{
    const p=b.getAttribute("data-growth-prompt")||"";
    window.obitrendNavigate?.("creator");
