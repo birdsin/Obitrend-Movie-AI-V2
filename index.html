@@ -413,7 +413,7 @@ html.ob-android-desktop #creditSummary.live-wallet #walletRefresh{margin-left:10
 .obitrend-visual-controls{position:absolute;z-index:4;right:20px;bottom:20px;display:flex;gap:7px;align-items:center}
 .obitrend-visual-dot{width:9px;height:9px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.25);cursor:pointer}
 .obitrend-visual-dot.active{width:24px;border-radius:99px;background:#e7bd63;border-color:#e7bd63}
-.obitrend-visual-pause{min-width:34px;height:34px;padding:0;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.35);color:#fff;cursor:pointer}
+.obitrend-visual-pause,.obitrend-visual-speed{min-width:34px;height:34px;padding:0 9px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.35);color:#fff;cursor:pointer}.obitrend-visual-speed{font-size:11px;font-weight:800}
 .obitrend-visual-progress{position:absolute;z-index:4;left:0;bottom:0;height:2px;width:100%;transform-origin:left;background:#e7bd63;animation:obitrendVisualProgress 6s linear infinite}
 @keyframes obitrendVisualProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media(max-width:760px){.obitrend-rotating-visuals{padding:0 20px 20px}.obitrend-visual-shell{min-height:300px}.obitrend-visual-copy{left:20px;right:20px;bottom:22px}.obitrend-visual-copy h3{font-size:23px}.obitrend-visual-controls{right:14px;bottom:14px}}
@@ -1215,7 +1215,7 @@ setTimeout(mount,250);
 <div class="obitrend-visual-slide"><img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1600&q=82" alt="Clothing collection in a studio" loading="lazy"><div class="obitrend-visual-copy"><div class="obitrend-visual-icon">🎨</div><div class="obitrend-visual-kicker">DIRECTOR CONTROLS</div><h3>Direct every shot with purpose.</h3><p>Move from broad story direction to scene-level and shot-level control.</p></div></div>
 <div class="obitrend-visual-slide"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&q=82" alt="Model in a fashion editorial" loading="lazy"><div class="obitrend-visual-copy"><div class="obitrend-visual-icon">📽️</div><div class="obitrend-visual-kicker">CINEMATIC OUTPUT</div><h3>See your finished scenes come alive.</h3><p>Open, download and save completed movie outputs directly from your workspace.</p></div></div>
 <div class="obitrend-visual-controls" role="group" aria-label="Visual carousel controls">
-<button class="obitrend-visual-pause" type="button" aria-label="Pause visual rotation" aria-pressed="false">Ⅱ</button>
+<button class="obitrend-visual-pause" type="button" aria-label="Pause visual rotation" aria-pressed="false">Ⅱ</button><button class="obitrend-visual-speed" type="button" aria-label="Change visual rotation speed" title="Rotation: 6 seconds">6s</button>
 <button class="obitrend-visual-dot active" type="button" aria-label="Show visual 1" aria-current="true"></button>
 <button class="obitrend-visual-dot" type="button" aria-label="Show visual 2"></button>
 <button class="obitrend-visual-dot" type="button" aria-label="Show visual 3"></button>
@@ -1225,7 +1225,7 @@ setTimeout(mount,250);
 </div></section><script id="obitrend-rotating-visuals"><(()=>{
 const root=document.getElementById("obitrend-rotating-visuals");if(!root)return;
 const slides=[...root.querySelectorAll(".obitrend-visual-slide")],dots=[...root.querySelectorAll(".obitrend-visual-dot")],pause=root.querySelector(".obitrend-visual-pause"),progress=root.querySelector(".obitrend-visual-progress");
-let index=0,timer=null,paused=false;
+let index=0,timer=null,paused=false,speed=6000;const speedBtn=root.querySelector(".obitrend-visual-speed");
 const reduced=()=>window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 const render=()=>{
  slides.forEach((s,i)=>s.classList.toggle("active",i===index));
@@ -1233,9 +1233,9 @@ const render=()=>{
  if(progress){progress.style.animation="none";void progress.offsetWidth;progress.style.animation=reduced()?"none":"obitrendVisualProgress 6s linear infinite"}
 };
 const stop=()=>{if(timer){clearInterval(timer);timer=null}};
-const start=()=>{stop();if(paused||reduced()||document.hidden)return;timer=setInterval(()=>{index=(index+1)%slides.length;render()},6000)};
+const start=()=>{stop();if(paused||reduced()||document.hidden)return;timer=setInterval(()=>{index=(index+1)%slides.length;render()},speed)};
 dots.forEach((d,i)=>d.addEventListener("click",()=>{index=i;render();start()}));
-pause?.addEventListener("click",()=>{paused=!paused;pause.setAttribute("aria-pressed",String(paused));pause.textContent=paused?"▶":"Ⅱ";pause.setAttribute("aria-label",paused?"Resume visual rotation":"Pause visual rotation");if(paused){stop();if(progress)progress.style.animation="none"}else{render();start()}});
+speedBtn?.addEventListener("click",()=>{speed=speed===6000?10000:speed===10000?30000:6000;speedBtn.textContent=(speed/1000)+"s";speedBtn.title="Rotation: "+(speed/1000)+" seconds";if(!paused){render();start()}});pause?.addEventListener("click",()=>{paused=!paused;pause.setAttribute("aria-pressed",String(paused));pause.textContent=paused?"▶":"Ⅱ";pause.setAttribute("aria-label",paused?"Resume visual rotation":"Pause visual rotation");if(paused){stop();if(progress)progress.style.animation="none"}else{render();start()}});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else start()});
 root.addEventListener("mouseenter",stop);root.addEventListener("mouseleave",start);
 render();start();
