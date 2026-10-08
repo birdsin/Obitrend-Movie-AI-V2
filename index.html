@@ -638,7 +638,38 @@ html.obitrend-desktop-site .obitrend-route{scroll-margin-top:70px}
  window.visualViewport?.addEventListener("resize",check,{passive:true});
  window.matchMedia?.("(min-width: 900px)")?.addEventListener?.("change",check);
 })();
-</script></head><script id="android-desktop-site-mode">
+</script><style id="desktop-site-studio-mode">
+/* Desktop Site mode: wide studio when Android Chrome requests a desktop viewport.
+   Normal Android stays unchanged below 900 CSS px. */
+@media (min-width:900px){
+  body{min-width:0!important;overflow-x:hidden}
+  #main{width:min(1440px,calc(100vw - 48px))!important;max-width:none!important;margin:0 auto!important;padding:0 0 48px!important}
+  #creditSummary.live-wallet{margin:12px 0 18px!important}
+  #obitrendHomeDashboard{max-width:none!important}
+  #phase3Creator,#phase6Advanced,#phase7Director,#phase8Timeline,#phase9Characters,#phase10Movies,#phase11Library,#movieProjectsPage,#phase5Marketplace,#savedVideoFolder{width:100%!important;max-width:none!important}
+  #phase3Creator .p3grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  #phase3Creator .p3-quick{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr)!important;gap:18px!important;align-items:start}
+  #phase3Creator .p3-quick>*{min-width:0}
+  #phase3Creator .p3-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #phase3Creator #p3Generate{grid-column:auto!important}
+  #phase3Creator .p3-results{display:grid!important;grid-template-columns:1.2fr .8fr;gap:14px!important}
+  #phase3Creator .p3-results>*{min-width:0}
+  .ob-demo-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .ob-studio-bar{padding:14px 18px!important}
+  #phase3MenuBtn{left:18px!important}
+  .p3head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important}
+  .p3field,.p6-field,.p7-field,.p8-card,.p9-card,.p11-card,.mp-card{min-width:0}
+}
+@media (min-width:1200px){
+  #main{width:min(1520px,calc(100vw - 64px))!important}
+  #phase3Creator .p3grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  #phase3Creator .p3-results{grid-template-columns:1.35fr .65fr!important}
+}
+@media (max-width:899px){
+  body{min-width:0!important}
+  #main{width:auto!important;max-width:1180px}
+}
+</style></head><script id="android-desktop-site-mode">
 (()=>{const root=document.documentElement,key="obitrend_android_layout_mode_v1";const isAndroid=/Android/i.test(navigator.userAgent||"");const wide=()=>isAndroid&&Math.max(window.innerWidth,document.documentElement.clientWidth)>=760;const mode=()=>wide()?"desktop":"mobile";const apply=()=>root.classList.toggle("ob-android-desktop",wide());const current=mode();apply();try{const previous=sessionStorage.getItem(key);if(previous&&previous!==current){sessionStorage.setItem(key,current);setTimeout(()=>location.reload(),80)}else sessionStorage.setItem(key,current)}catch{}let timer=0;window.addEventListener("resize",()=>{clearTimeout(timer);timer=setTimeout(()=>{const next=mode();apply();try{const previous=sessionStorage.getItem(key);if(previous&&previous!==next){sessionStorage.setItem(key,next);location.reload()}}catch{}},180)},{passive:true});window.addEventListener("orientationchange",()=>setTimeout(()=>{apply()},250),{passive:true})})();
 </script><body><a class="a11y-skip" href="#main">Skip to main content</a><div id="obitrendLoading" aria-live="polite" aria-busy="true"><div id="obitrendLoadingCard"><div id="obitrendLoadingSpinner"></div><div id="obitrendLoadingText">Loading…</div><div id="obitrendLoadingHint">Please wait — your request is still working.</div></div></div><script>window.obitrendSetLoading=function(on,text){const b=document.getElementById("obitrendLoading"),m=document.getElementById("obitrendLoadingText");if(m&&text)m.textContent=text;if(b)b.classList.toggle("open",!!on)};</script><button id="phase3MenuBtn" aria-label="Open OBITREND menu" aria-controls="phase3Drawer" aria-expanded="false"><span></span></button><div id="phase3Shade" aria-hidden="true"></div><aside id="phase3Drawer" aria-label="OBITREND Phase 3 menu" aria-hidden="true"><button id="phase3Close" aria-label="Close menu">×</button><div class="p3brand">OBITREND<small>Movie AI V2 · Creator</small></div><nav class="p3nav"><button data-p3="home">⌂ Home</button><button data-p3="creator">🎬 Create Movie</button><button data-p3="advanced">✦ Advanced Creator</button><button data-p3="director">🎥 Director Controls</button><button data-p3="timeline">▤ Movie Timeline</button><button data-p3="characters">♙ Characters</button><button data-p3="movies">▣ My Movies</button><button data-p3="saved">▣ Saved Videos</button><button data-p3="projects">▤ Movie Projects</button><button data-p3="media">▧ Reference Library</button><button data-p3="models">⌕ AI Models</button><button data-p3="settings">⚙ Creator Settings</button><button data-p3="credits">▣ OBITREND Credits</button><button data-p3="account">♙ Account & Security</button></nav></aside><main id="main"><div class="ob-android-mode-note" aria-live="polite"><span>▣</span><span><b>Desktop site view</b> · OBITREND is showing the full studio layout. Turn off Chrome Desktop site to return to the normal Android layout.</span></div><h1>OBITREND Movie AI V2</h1><p class="muted">New isolated OBITREND platform. Existing production apps are untouched.</p><div id="creditSummary" class="live-wallet" role="status" aria-live="polite"><div class="live-wallet-brand"><span class="live-dot" aria-hidden="true"></span><div><strong>Live balance</strong><small id="walletSync">Secure wallet · syncing</small></div></div><div class="live-wallet-stats"><div class="wallet-stat"><span>AVAILABLE</span><b id="walletBalanceDisplay">—</b><small>OBITREND credits</small></div><div class="wallet-divider"></div><div class="wallet-stat"><span>RESERVED</span><b id="walletReservedDisplay">—</b><small>in generation</small></div></div><button id="walletRefresh" type="button" aria-label="Refresh live balance">↻</button><b id="credits" class="wallet-legacy-text">Credits: —</b></div><section id="obitrendHomeDashboard" class="obitrend-route obitrend-active"><div class="obi-growth"><div class="obi-hero"><span class="obi-eyebrow"><i></i> AI MOVIE CREATOR</span><h2>Turn your ideas into <span class="obi-gradient-text">cinematic movies.</span></h2><p class="obi-hero-copy">Create scenes, direct the camera, build characters and shape your story with OBITREND Movie AI.</p><div class="obi-cta"><button type="button" class="obi-primary" data-home-route="creator">🎬 Start Creating</button><button type="button" class="obi-secondary" data-home-route="models">Explore AI Models</button></div><div class="obi-trust"><span>4 creation modes</span><span>4–15 second scenes</span><span>480p / 720p</span><span>Projects &amp; saved movies</span></div></div><div class="obi-showcase"><div class="obi-poster large"><span class="obi-scene-label">Cinematic story</span><h3>From one sentence to a movie scene.</h3><p>Describe the world, action, mood and camera. Then refine the result with your production controls.</p><span class="obi-play">▶</span></div><div class="obi-mini-grid"><div class="obi-poster purple"><span class="obi-scene-label">Director</span><h3>Control the shot</h3><span class="obi-play">✦</span></div><div class="obi-poster blue"><span class="obi-scene-label">Characters</span><h3>Keep identity consistent</h3><span class="obi-play">♙</span></div></div></div><div class="obi-benefits"><div class="obi-benefit"><b>🎥 Direct every scene</b><span>Use camera, framing, movement, lighting and timeline controls.</span></div><div class="obi-benefit"><b>🧠 Build a production</b><span>Keep your story, characters, references and settings together in a project.</span></div><div class="obi-benefit"><b>⚡ Create, save, share</b><span>Generate your movie, preview it, download it or save it to your folder.</span></div></div></div><section class="obi-launch"><section class="obi-how">
 <h3 class="obi-section-title">From idea to finished scene</h3>
@@ -1363,7 +1394,27 @@ setTimeout(mount,250);
  window.addEventListener("resize",check,{passive:true});
  window.visualViewport?.addEventListener("resize",check,{passive:true});
 })();
-</script><script id="live-wallet-events">document.getElementById("walletRefresh")?.addEventListener("click",async()=>{const s=document.getElementById("walletSync");if(s)s.textContent="Secure wallet · refreshing…";await refreshLiveWallet(false)});</script><script id="creator-generate-readiness-script">(()=>{const el=id=>document.getElementById(id);const sync=()=>{const p=(el("prompt")?.value||"").trim();const m=el("p3ModelSelect")?.value||el("model")?.value||"";const b=el("p3Generate");if(!b)return;b.disabled=!(p&&m);b.setAttribute("aria-disabled",String(!(p&&m)));if(!p)b.title="Add a movie idea first";else if(!m)b.title="Select a video model first";else b.title="Generate your movie"};["prompt","p3ModelSelect","model"].forEach(id=>{el(id)?.addEventListener("input",sync);el(id)?.addEventListener("change",sync)});new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});sync()})();</script></body></html><script id="phase6-script">
+</script><script id="live-wallet-events">document.getElementById("walletRefresh")?.addEventListener("click",async()=>{const s=document.getElementById("walletSync");if(s)s.textContent="Secure wallet · refreshing…";await refreshLiveWallet(false)});</script><script id="creator-generate-readiness-script">(()=>{const el=id=>document.getElementById(id);const sync=()=>{const p=(el("prompt")?.value||"").trim();const m=el("p3ModelSelect")?.value||el("model")?.value||"";const b=el("p3Generate");if(!b)return;b.disabled=!(p&&m);b.setAttribute("aria-disabled",String(!(p&&m)));if(!p)b.title="Add a movie idea first";else if(!m)b.title="Select a video model first";else b.title="Generate your movie"};["prompt","p3ModelSelect","model"].forEach(id=>{el(id)?.addEventListener("input",sync);el(id)?.addEventListener("change",sync)});new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});sync()})();</script><script id="desktop-site-mode-sync">
+(()=> {
+  const key="obitrendDesktopViewport";
+  const mq=window.matchMedia("(min-width:900px)");
+  const mode=()=>mq.matches?"desktop":"android";
+  try{
+    const current=mode(),previous=sessionStorage.getItem(key);
+    if(previous&&previous!==current){sessionStorage.setItem(key,current);location.reload();}
+    else sessionStorage.setItem(key,current);
+  }catch{}
+  const onChange=()=>{
+    const next=mode();
+    try{
+      const prev=sessionStorage.getItem(key);
+      if(prev&&prev!==next){sessionStorage.setItem(key,next);location.reload();}
+      else sessionStorage.setItem(key,next);
+    }catch{}
+  };
+  mq.addEventListener?.("change",onChange);
+})();
+</script></body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
