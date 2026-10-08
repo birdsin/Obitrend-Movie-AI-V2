@@ -1,0 +1,11 @@
+{
+  "name": "OBITREND Movie AI V2",
+  "short_name": "OBITREND Movie AI",
+  "description": "Create cinematic AI movie scenes with OBITREND Movie AI V2.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07080d",
+  "theme_color": "#07080d",
+  "orientation": "portrait-primary"
+}
