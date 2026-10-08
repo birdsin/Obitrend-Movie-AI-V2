@@ -1002,7 +1002,7 @@ setTimeout(mount,250);
   }catch(e){el("p11UploadStatus").textContent=e?.message||"Upload failed."}
   finally{loading(false);uploading=false}
  };
- window.obitrendUploadReference=upload;el("p11UploadButton")?.addEventListener("click",()=>el("p11File")?.click());el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
+ window.obitrendUploadReference=upload;el("p11File")?.addEventListener("change",e=>upload(e.target.files?.[0]));
  el("p11Search")?.addEventListener("input",render);el("p11Type")?.addEventListener("change",render);el("p11Refresh")?.addEventListener("click",load);
  el("p11List")?.addEventListener("click",async e=>{
   const openRef=e.target.getAttribute("data-open-reference");
