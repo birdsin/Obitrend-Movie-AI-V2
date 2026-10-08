@@ -1128,6 +1128,10 @@ function mount(){
  };
  wrap.querySelectorAll("[data-growth-create]").forEach(b=>b.addEventListener("click",go));
  wrap.querySelector("[data-growth-explore]")?.addEventListener("click",go); wrap.querySelector("[data-live-refresh]")?.addEventListener("click",loadLiveShowcase);
+ // Keep the showcase fresh without polling the database continuously.
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadLiveShowcase()});
+ window.addEventListener("obitrend:movie-generated",loadLiveShowcase);
+ try{S.auth.onAuthStateChange(()=>{setTimeout(loadLiveShowcase,0)})}catch{}
  loadLiveShowcase();
  wrap.querySelectorAll("[data-growth-prompt]").forEach(b=>b.addEventListener("click",()=>{
    const p=b.getAttribute("data-growth-prompt")||"";
