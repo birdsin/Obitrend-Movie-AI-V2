@@ -840,7 +840,7 @@ function mount(){
 const observer=new MutationObserver(mount);observer.observe(document.body,{childList:true,subtree:true});
 setTimeout(mount,250);
 })();
-</script></body></html><script id="phase6-script">
+</script><style id="creator-generate-readiness">#p3Generate:disabled{opacity:.48;filter:saturate(.55);cursor:not-allowed}#p3Generate:not(:disabled){box-shadow:0 8px 24px rgba(215,173,92,.12)}</style><script id="creator-generate-readiness-script">(()=>{const el=id=>document.getElementById(id);const sync=()=>{const p=(el("prompt")?.value||"").trim();const m=el("p3ModelSelect")?.value||el("model")?.value||"";const b=el("p3Generate");if(!b)return;b.disabled=!(p&&m);b.setAttribute("aria-disabled",String(!(p&&m)));if(!p)b.title="Add a movie idea first";else if(!m)b.title="Select a video model first";else b.title="Generate your movie"};["prompt","p3ModelSelect","model"].forEach(id=>{el(id)?.addEventListener("input",sync);el(id)?.addEventListener("change",sync)});new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});sync()})();</script></body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
