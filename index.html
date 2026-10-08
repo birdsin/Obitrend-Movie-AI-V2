@@ -818,9 +818,19 @@ function mount(){
    <span class="ob-growth-final-note">Your workspace is ready whenever you are.</span>
  </section>`;
  home.prepend(wrap);
- const go=()=>window.obitrendNavigate?.("creator");
+ const go=()=>{
+   wrap.querySelectorAll("[data-growth-create]").forEach(b=>{b.disabled=true;b.dataset.originalText=b.textContent;b.textContent="Opening Creator…"});
+   window.obitrendNavigate?.("creator");
+   setTimeout(()=>{
+     const creator=document.getElementById("phase3Creator");
+     const prompt=document.getElementById("prompt");
+     creator?.scrollIntoView({behavior:"smooth",block:"start"});
+     setTimeout(()=>prompt?.focus(),180);
+     wrap.querySelectorAll("[data-growth-create]").forEach(b=>{b.disabled=false;if(b.dataset.originalText)b.textContent=b.dataset.originalText});
+   },180);
+ };
  wrap.querySelectorAll("[data-growth-create]").forEach(b=>b.addEventListener("click",go));
- wrap.querySelector("[data-growth-explore]")?.addEventListener("click",()=>window.obitrendNavigate?.("creator"));
+ wrap.querySelector("[data-growth-explore]")?.addEventListener("click",go);
  wrap.querySelectorAll("[data-growth-prompt]").forEach(b=>b.addEventListener("click",()=>{
    const p=b.getAttribute("data-growth-prompt")||"";
    window.obitrendNavigate?.("creator");
