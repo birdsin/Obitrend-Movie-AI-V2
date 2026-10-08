@@ -1170,6 +1170,18 @@ function mount(){
    </div>
    <div class="ob-growth-trust"><span>Text → Video</span><span>Director Controls</span><span>Movie Projects</span><span>Save & Download</span></div>
  </section>
+ <section class="ob-rotating-showcase" aria-label="Rotating OBITREND visual showcase">
+   <div class="ob-rotating-head"><div><h2>Explore what you can create</h2><p>Visual ideas change automatically every 6 seconds.</p></div><span class="ob-live-live">AUTO ROTATE</span></div>
+   <div class="ob-rotating-stage" id="obRotatingStage">
+    <article class="ob-rotating-slide is-active" data-theme="gold" data-slide="0"><div class="ob-rotating-icon" aria-hidden="true">🎬</div><div class="ob-rotating-copy"><strong>Cinematic Movie</strong><span>Turn a simple idea into a cinematic scene with camera movement, lighting and atmosphere.</span></div></article>
+    <article class="ob-rotating-slide" data-theme="blue" data-slide="1"><div class="ob-rotating-icon" aria-hidden="true">🎥</div><div class="ob-rotating-copy"><strong>Director Control</strong><span>Shape framing, lens, movement, focus and the visual language of every shot.</span></div></article>
+    <article class="ob-rotating-slide" data-theme="violet" data-slide="2"><div class="ob-rotating-icon" aria-hidden="true">🎭</div><div class="ob-rotating-copy"><strong>Characters & Continuity</strong><span>Build recurring characters and keep their identity, wardrobe and story details together.</span></div></article>
+    <article class="ob-rotating-slide" data-theme="teal" data-slide="3"><div class="ob-rotating-icon" aria-hidden="true">🌍</div><div class="ob-rotating-copy"><strong>World Building</strong><span>Create locations, environments and cinematic worlds for your next production.</span></div></article>
+    <article class="ob-rotating-slide" data-theme="red" data-slide="4"><div class="ob-rotating-icon" aria-hidden="true">⚡</div><div class="ob-rotating-copy"><strong>Action & Motion</strong><span>Direct dynamic movement, suspense, action beats and dramatic camera transitions.</span></div></article>
+    <article class="ob-rotating-slide" data-theme="silver" data-slide="5"><div class="ob-rotating-icon" aria-hidden="true">📽️</div><div class="ob-rotating-copy"><strong>Save & Build</strong><span>Keep your finished outputs, projects and references organized for the next scene.</span></div></article>
+   </div>
+   <div class="ob-rotating-controls"><div class="ob-rotating-dots" role="tablist" aria-label="Showcase slides"></div><button type="button" class="ob-rotating-pause" id="obRotatingPause" aria-pressed="false">Pause</button></div>
+ </section>
  <section class="ob-growth-section ob-live-showcase" id="obLiveShowcase">
    <div class="ob-growth-section-head">
      <div><h2>See it in action</h2><p>Real completed OBITREND movie outputs from your account.</p></div>
@@ -1199,6 +1211,25 @@ function mount(){
    <span class="ob-growth-final-note">Your workspace is ready whenever you are.</span>
  </section>`;
  home.prepend(wrap);
+ const rotatingStage=document.getElementById("obRotatingStage");
+ const rotatingSlides=[...(rotatingStage?.querySelectorAll(".ob-rotating-slide")||[])];
+ const rotatingDots=wrap.querySelector(".ob-rotating-dots");
+ const rotatingPause=wrap.querySelector("#obRotatingPause");
+ let rotatingIndex=0, rotatingTimer=null, rotatingPaused=false;
+ function showRotatingSlide(index){
+   if(!rotatingSlides.length)return;
+   rotatingIndex=(index+rotatingSlides.length)%rotatingSlides.length;
+   rotatingSlides.forEach((s,i)=>s.classList.toggle("is-active",i===rotatingIndex));
+   if(rotatingDots)rotatingDots.querySelectorAll("button").forEach((d,i)=>{d.classList.toggle("is-active",i===rotatingIndex);d.setAttribute("aria-selected",i===rotatingIndex?"true":"false")});
+ }
+ function stopRotating(){if(rotatingTimer){clearInterval(rotatingTimer);rotatingTimer=null}}
+ function startRotating(){stopRotating();if(rotatingPaused||document.hidden||window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches)return;rotatingTimer=setInterval(()=>showRotatingSlide(rotatingIndex+1),6000)}
+ if(rotatingDots){
+   rotatingSlides.forEach((_,i)=>{const d=document.createElement("button");d.type="button";d.className="ob-rotating-dot"+(i===0?" is-active":"");d.setAttribute("role","tab");d.setAttribute("aria-label","Show visual "+(i+1));d.setAttribute("aria-selected",i===0?"true":"false");d.addEventListener("click",()=>{showRotatingSlide(i);startRotating()});rotatingDots.appendChild(d)})
+ }
+ rotatingPause?.addEventListener("click",()=>{rotatingPaused=!rotatingPaused;rotatingPause.textContent=rotatingPaused?"Play":"Pause";rotatingPause.setAttribute("aria-pressed",rotatingPaused?"true":"false");if(rotatingPaused)stopRotating();else startRotating()});
+ document.addEventListener("visibilitychange",()=>{if(document.hidden)stopRotating();else startRotating()});
+ startRotating();
  async function loadLiveShowcase(){
    const root=document.getElementById("obLiveShowcaseGrid"); if(!root)return;
    try{
