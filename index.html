@@ -2633,7 +2633,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  let busy=false, objectUrls=[];
  const status=t=>{const x=$("smStatus");if(x)x.textContent=t};
  const clearPreview=()=>{objectUrls.forEach(u=>URL.revokeObjectURL(u));objectUrls=[];const box=$("smPreview");if(box)box.innerHTML="Your storyboard frames will appear here.";const count=$("smPreviewCount");if(count)count.textContent="0 FRAMES"};
- const renderFrames=frames=>{const box=$("smPreview");if(!box)return;clearPreview();box.innerHTML="";frames.forEach((frame,i)=>{const img=document.createElement("img");img.src=frame.url;img.alt="Storyboard frame "+(i+1);img.loading="lazy";img.style.cssText="width:clamp(88px,22%,140px);aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid #343947;background:#080a0f";box.appendChild(img)});$("smPreviewCount").textContent=frames.length+" FRAMES"};
+ const renderFrames=frames=>{const box=$("smPreview");if(!box)return;box.innerHTML="";const valid=(frames||[]).filter(frame=>frame&&frame.url);valid.forEach((frame,i)=>{const img=document.createElement("img");img.src=frame.url;img.alt="Storyboard frame "+(i+1);img.loading="lazy";img.style.cssText="width:clamp(88px,22%,140px);aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid #343947;background:#080a0f";box.appendChild(img)});const count=$("smPreviewCount");if(count)count.textContent=valid.length+" FRAMES";if(!valid.length)box.textContent="Your storyboard frames will appear here."};
  function estimate(){const n=+$("smFrames").value||12,f=+$("smFps").value||6;$("smEstimate").textContent=n+" frames · "+(n/f).toFixed(1)+"s at "+f+" fps"}
  function save(){const data={};ids.forEach(id=>{const el=$(id);if(el)data[id]=el.value});try{localStorage.setItem(key,JSON.stringify(data));return true}catch{return false}}
  try{const d=JSON.parse(localStorage.getItem(key)||"{}");ids.forEach(id=>{if(d[id]!=null&&$(id))$(id).value=d[id]})}catch{}
@@ -2690,7 +2690,9 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  $("smUpload")?.addEventListener("change",()=>{const files=[...($("smUpload").files||[])];if(files.length<2){clearPreview();$("smUploadStatus").textContent="Select at least two frame images in order.";status("Choose at least two images to build a storyboard.");return}objectUrls.forEach(u=>URL.revokeObjectURL(u));objectUrls=files.map(f=>URL.createObjectURL(f));$("smUploadStatus").textContent=files.length+" frame image(s) selected.";renderFrames(objectUrls.map(url=>({url})));try{localStorage.setItem("obitrend_stop_motion_frames_v1",JSON.stringify({title:$("smTitle").value,ratio:$("smShape").value,fps:+$("smFps").value,frames:files.map((f,i)=>({name:f.name,index:i+1})),created_at:new Date().toISOString()}))}catch{}status("Storyboard preview ready with "+files.length+" uploaded frames.")}
  );
  $("stopMotionBack")?.addEventListener("click",()=>window.obitrendNavigate?.("creator"));
+ try{const saved=JSON.parse(localStorage.getItem("obitrend_stop_motion_frames_v1")||"null");if(saved&&Array.isArray(saved.frames)){const restorable=saved.frames.filter(frame=>frame&&typeof frame.url==="string"&&frame.url);if(restorable.length){renderFrames(restorable);status("Restored "+restorable.length+" saved storyboard frames from this device.");}}}catch{}
  estimate();
+ document.addEventListener("DOMContentLoaded",()=>{for(const node of [...document.body.childNodes])if(node.nodeType===3&&node.textContent.trim()==="\\n")node.remove();},{once:true});
 })();
 </script></body></html><script id="phase6-script">
 (()=>{
