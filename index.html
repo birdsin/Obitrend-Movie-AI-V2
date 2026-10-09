@@ -2692,7 +2692,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  $("stopMotionBack")?.addEventListener("click",()=>window.obitrendNavigate?.("creator"));
  try{const saved=JSON.parse(localStorage.getItem("obitrend_stop_motion_frames_v1")||"null");if(saved&&Array.isArray(saved.frames)){const restorable=saved.frames.filter(frame=>frame&&typeof frame.url==="string"&&frame.url);if(restorable.length){renderFrames(restorable);status("Restored "+restorable.length+" saved storyboard frames from this device.");}}}catch{}
  estimate();
- document.addEventListener("DOMContentLoaded",()=>{for(const node of [...document.body.childNodes])if(node.nodeType===3&&node.textContent.trim()==="\\n")node.remove();},{once:true});
+ (()=>{const cleanStrayNewline=()=>{for(const node of [...document.body.childNodes])if(node.nodeType===3&&node.textContent.trim()==="\\n")node.remove()};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",cleanStrayNewline,{once:true});else cleanStrayNewline()})();
 })();
 </script></body></html><script id="phase6-script">
 (()=>{
