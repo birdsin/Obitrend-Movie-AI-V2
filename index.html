@@ -973,6 +973,7 @@ body{padding-top:0!important}
     img.dataset.obFallbackApplied="1";
     img.src=fallbackImage;
    };
+   if(img.complete&&img.naturalWidth===0)img.onerror();
   };
   document.querySelectorAll(".ob-ref-card, .ob-growth-feature, .ob-rotating-slide").forEach(card=>{
    const title=card.querySelector(".ob-ref-card-copy b")?.textContent?.trim()||card.querySelector("strong")?.textContent?.trim();
