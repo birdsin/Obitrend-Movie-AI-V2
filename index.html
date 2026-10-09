@@ -1695,9 +1695,9 @@ const number=v=>Number(v||0).toLocaleString("en-NG",{maximumFractionDigits:2});
 const empty=(id,msg)=>{const n=$(id);if(n)n.innerHTML='<div class="credit-empty">'+esc(msg)+'</div>';};
 function setText(id,value){const n=$(id);if(n)n.textContent=value;}
 async function refresh(){
- if(!window.S||!window.u?.id){setText("creditLedgerSync","Please sign in to view your own credit records.");["creditLedgerHistory","creditGenerationHistory","creditExpiryList"].forEach(id=>empty(id,"Sign in to load account records."));return;}
+ if(typeof S==="undefined"||!u?.id){setText("creditLedgerSync","Please sign in to view your own credit records.");["creditLedgerHistory","creditGenerationHistory","creditExpiryList"].forEach(id=>empty(id,"Sign in to load account records."));return;}
  setText("creditLedgerSync","Refreshing secure wallet and transaction history…");
- const uid=window.u.id;
+ const uid=u.id;
  const [w,l,j,o,products,e]=await Promise.all([
   S.from("wallets").select("balance,reserved,updated_at").eq("user_id",uid).maybeSingle(),
   S.from("credit_ledger").select("id,job_id,type,amount,balance_after,reference,metadata,created_at").eq("user_id",uid).order("created_at",{ascending:false}).limit(100),
