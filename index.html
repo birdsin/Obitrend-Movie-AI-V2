@@ -1893,7 +1893,34 @@ speedBtn?.addEventListener("click",()=>{speed=speed===6000?10000:speed===10000?3
 document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else start()});
 if(window.matchMedia?.("(hover: hover) and (pointer: fine)")?.matches){root.addEventListener("mouseenter",stop);root.addEventListener("mouseleave",start)}let touchX=0;root.addEventListener("touchstart",e=>{touchX=e.changedTouches[0]?.clientX||0;stop()},{passive:true});root.addEventListener("touchend",e=>{const end=e.changedTouches[0]?.clientX||0,diff=end-touchX;if(Math.abs(diff)>45){index=(index+(diff<0?1:slides.length-1))%slides.length;render()}start()},{passive:true});
 root.querySelector("[data-visual-start]")?.addEventListener("click",()=>{window.obitrendNavigate?.("creator")});render();start();
-})();</script></body></html><script id="phase6-script">
+})();</script><style id="obitrend-live-balance-home-only">
+/* Live Balance belongs only to the main dashboard. */
+#creditSummary.live-wallet{display:none!important}
+#obitrendHomeDashboard.obitrend-active ~ *{}
+body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
+</style>
+<script id="obitrend-live-balance-home-only-script">
+(()=> {
+  const apply=()=>{
+    const wallet=document.getElementById("creditSummary");
+    const home=document.getElementById("obitrendHomeDashboard");
+    if(!wallet||!home)return;
+    const onHome=home.classList.contains("obitrend-active")&&!home.classList.contains("hidden");
+    document.body.classList.toggle("obitrend-home-dashboard",onHome);
+    wallet.setAttribute("aria-hidden",String(!onHome));
+  };
+  const start=()=>{
+    apply();
+    const home=document.getElementById("obitrendHomeDashboard");
+    if(home){
+      new MutationObserver(apply).observe(home,{attributes:true,attributeFilter:["class"]});
+    }
+    new MutationObserver(apply).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
+  };
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
+  else start();
+})();
+</script></body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
