@@ -1738,16 +1738,37 @@ async function refresh(){
   return '<div class="credit-row"><div class="credit-row-main"><b>'+esc(String(x.mode||"generation").replace(/_/g," "))+' · '+esc(status)+'</b><small>Job ID: '+esc(x.id)+'</small><small>'+esc(details)+'</small></div><span class="credit-delta">'+esc(number(cost))+' cr</span></div>';
  }).join("");
  const expiry=[];
- for(const ent of ents){const pr=productMap.get(ent.product_id);expiry.push({title:pr?.name||"Subscription entitlement",start:ent.starts_at,expires:ent.expires_at,status:ent.status,amount:null});}
- for(const order of orders){if(order.status!=="paid"||!order.fulfilled_at)continue;const meta=order.metadata&&typeof order.metadata==="object"?order.metadata:{};const product=productMap.get(order.product_id);const dur=product?.duration_days??meta.duration_days??null;
-  if(dur!=null&&Number.isFinite(Number(dur))&&Number(dur)>0){const expires=new Date(new Date(order.fulfilled_at).getTime()+Number(dur)*86400000).toISOString();expiry.push({title:product?.name||"Purchased credits",start:order.fulfilled_at,expires,status:"paid",amount:order.credits});}
+ for(const ent of ents){
+  const pr=productMap.get(ent.product_id);
+  expiry.push({key:"entitlement:"+ent.id,title:pr?.name||"Subscription entitlement",start:ent.starts_at,expires:ent.expires_at,expiresLabel:ent.expires_at?time(ent.expires_at):"No expiry timestamp recorded",status:ent.status,amount:null});
  }
- for(const row of ledger){if(!["topup","adjustment"].includes(String(row.type).toLowerCase()))continue;const meta=row.metadata&&typeof row.metadata==="object"?row.metadata:{};if(meta.expires_at||meta.expiry_at)expiry.push({title:meta.source||"Credit grant",start:row.created_at,expires:meta.expires_at||meta.expiry_at,status:"recorded",amount:row.amount});}
- const unique=new Map();expiry.forEach(x=>unique.set(String(x.title)+"|"+String(x.expires),x));
+ for(const order of orders){
+  if(order.status!=="paid"||!order.fulfilled_at)continue;
+  const meta=order.metadata&&typeof order.metadata==="object"?order.metadata:{};
+  const product=productMap.get(order.product_id);
+  if(!product)continue;
+  const dur=product.duration_days??meta.duration_days??null;
+  if(product.product_type==="credit_pack"&& (dur==null||!Number.isFinite(Number(dur))||Number(dur)<=0)){
+   expiry.push({key:"order:"+order.id,title:product.name||"Purchased credit pack",start:order.fulfilled_at,expires:null,expiresLabel:"Never expires (per credit-pack rules)",status:"paid",amount:order.credits});
+  }else if(product.product_type==="subscription"&&dur!=null&&Number.isFinite(Number(dur))&&Number(dur)>0){
+   const existing=ents.find(ent=>ent.order_id===order.id);
+   const expires=existing?.expires_at||new Date(new Date(order.fulfilled_at).getTime()+Number(dur)*86400000).toISOString();
+   expiry.push({key:"order:"+order.id,title:product.name||"Subscription",start:existing?.starts_at||order.fulfilled_at,expires,expiresLabel:time(expires),status:existing?.status||"paid",amount:order.credits});
+  }else if(dur!=null&&Number.isFinite(Number(dur))&&Number(dur)>0){
+   const expires=new Date(new Date(order.fulfilled_at).getTime()+Number(dur)*86400000).toISOString();
+   expiry.push({key:"order:"+order.id,title:product.name||"Purchased credits",start:order.fulfilled_at,expires,expiresLabel:time(expires),status:"paid",amount:order.credits});
+  }
+ }
+ for(const row of ledger){
+  if(!["topup","adjustment"].includes(String(row.type).toLowerCase()))continue;
+  const meta=row.metadata&&typeof row.metadata==="object"?row.metadata:{};
+  if(meta.expires_at||meta.expiry_at)expiry.push({key:"ledger:"+row.id,title:meta.source||"Credit grant",start:row.created_at,expires:meta.expires_at||meta.expiry_at,expiresLabel:time(meta.expires_at||meta.expiry_at),status:"recorded",amount:row.amount});
+ }
+ const unique=new Map();expiry.forEach(x=>unique.set(x.key||String(x.title)+"|"+String(x.expires),x));
  const exp=[...unique.values()].sort((a,b)=>new Date(a.expires||"9999-12-31").getTime()-new Date(b.expires||"9999-12-31").getTime());
  if(ents.error&&o.error)empty("creditExpiryList","Expiry records are temporarily unavailable.");
- else if(!exp.length)empty("creditExpiryList","No expiry date is recorded for your current credits. This does not mean they expire today; expiry rules are shown only when the source record defines one.");
- else $("creditExpiryList").innerHTML=exp.map(x=>'<div class="credit-row"><div class="credit-row-main"><b>'+esc(x.title)+' · '+esc(x.status||"")+'</b><small>Added/started: '+esc(time(x.start))+'</small><small>Expires: <span class="credit-stamp">'+esc(time(x.expires))+'</span></small></div>'+(x.amount!=null?'<span class="credit-delta">'+esc(number(x.amount))+' cr</span>':"")+'</div>').join("");
+ else if(!exp.length)empty("creditExpiryList","No expiry information is available for your recorded credit sources yet.");
+ else $("creditExpiryList").innerHTML=exp.map(x=>'<div class="credit-row"><div class="credit-row-main"><b>'+esc(x.title)+' · '+esc(x.status||"")+'</b><small>Added/started: '+esc(time(x.start))+'</small><small>Expiry: <span class="credit-stamp">'+esc(x.expiresLabel|| (x.expires?time(x.expires):"Not recorded"))+'</span></small></div>'+(x.amount!=null?'<span class="credit-delta">'+esc(number(x.amount))+' cr</span>':"")+'</div>').join("");
 }
 function open(){p.classList.remove("hidden");if(sum)sum.classList.add("hidden");p.scrollTop=0;document.getElementById("phase3Drawer")?.classList.remove("open");document.getElementById("phase3Shade")?.classList.remove("open");window.scrollTo({top:0,behavior:"smooth"});refresh().catch(()=>setText("creditLedgerSync","Could not refresh credits. Please try again."));}
 function close(){p.classList.add("hidden");if(sum)sum.classList.remove("hidden");window.obitrendNavigate?.("home");}
