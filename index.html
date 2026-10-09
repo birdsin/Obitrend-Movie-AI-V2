@@ -1920,6 +1920,174 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});
   else start();
 })();
+</script><script id="studio-pipeline-bridge-v1">
+(()=> {
+ const BASE="https://gclshpaipluhvlsznugl.supabase.co/functions/v1";
+ const $=id=>document.getElementById(id);
+ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+ const session=async()=>{const x=await S.auth.getSession();return x?.data?.session||null};
+ const esc=x=>String(x??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+ const status=(id,msg)=>{const x=$(id);if(x)x.textContent=msg};
+ const model=async category=>{
+   const r=await S.from("ai_models").select("id,name,provider,credit_price,enabled,category").eq("enabled",true).eq("category",category).order("name").limit(1);
+   if(r.error)throw r.error;
+   const m=(r.data||[])[0];
+   if(!m)throw new Error("No verified "+category+" model is currently enabled.");
+   return m;
+ };
+ const gateway=async({category,mode,prompt,duration=5,ratio="16:9",input_assets=[]})=>{
+   const s=await session();if(!s)throw new Error("Please sign in again.");
+   const m=await model(category);
+   const r=await fetch(BASE+"/ai-provider-gateway",{method:"POST",headers:{Authorization:"Bearer "+s.access_token,"Content-Type":"application/json"},body:JSON.stringify({
+     mode,model_id:m.id,prompt,settings:{duration:Number(duration)||5,resolution:"720p",aspect_ratio:ratio,provider_model:category==="video"?"seedance-2-mini":undefined},input_assets,project_id:window.obitrendCurrentProjectId||null
+   })});
+   const x=await r.json().catch(()=>({}));
+   if(!r.ok)throw new Error(x?.error||x?.message||"Generation could not be started.");
+   if(x.status==="succeeded"&&x.output_assets?.length)return x;
+   if(!x.job_id)throw new Error("Provider returned no job id.");
+   for(let i=0;i<180;i++){
+     if(i)await sleep(5000);
+     const q=await fetch(BASE+"/ai-job-status?job_id="+encodeURIComponent(x.job_id),{headers:{Authorization:"Bearer "+s.access_token}});
+     const z=await q.json().catch(()=>({}));
+     if(z?.status==="succeeded"&&z.output_assets?.length)return {...z,job_id:x.job_id};
+     if(z?.status==="failed"||z?.status==="cancelled")throw new Error(z?.error||"Generation failed. Reserved credits were released.");
+   }
+   throw new Error("Generation is still processing. The job remains available in My Movies.");
+ };
+ const firstAsset=x=>(x?.output_assets||[]).find(a=>a?.url)||null;
+ const showImage=(boxId,url,alt)=>{
+   const b=$(boxId);if(!b)return;
+   b.innerHTML='<img src="'+esc(url)+'" alt="'+esc(alt||"Generated image")+'" style="display:block;width:100%;max-height:620px;object-fit:contain;border-radius:14px;background:#05070b">';
+   b.hidden=false;
+ };
+ const showVideo=(boxId,url)=>{
+   const b=$(boxId);if(!b)return;
+   b.innerHTML='<video controls playsinline src="'+esc(url)+'" style="display:block;width:100%;max-height:620px;border-radius:14px;background:#000"></video>';
+   b.hidden=false;
+ };
+ const uploadFile=async file=>{
+   const s=await session();if(!s)throw new Error("Please sign in again.");
+   const fd=new FormData();fd.append("file",file,file.name);fd.append("library","false");
+   const r=await fetch(BASE+"/ai-media-upload",{method:"POST",headers:{Authorization:"Bearer "+s.access_token},body:fd});
+   const x=await r.json().catch(()=>({}));
+   if(!r.ok||!x?.asset?.url)throw new Error(x?.detail||x?.error||"Reference upload failed.");
+   return x.asset;
+ };
+
+ // Story Creator: turn the structured episode request into the first connected cinematic scene.
+ document.addEventListener("click",async e=>{
+   const b=e.target.closest?.("#storyCreate");if(!b)return;
+   e.preventDefault();e.stopImmediatePropagation();
+   const p=($( "storyPrompt")?.value||"").trim();
+   if(!p){status("storyStatus","Add your episode idea first.");$("storyPrompt")?.focus();return}
+   const n=parseInt(String($("storyLength")?.value||"6").replace(/\D/g,""),10)||6;
+   const style=$("storyStyle")?.value||"Cinematic",ratio=$("storyRatio")?.value||"16:9";
+   const cont=$("storyContinuity")?.value||"Keep characters consistent";
+   $("storyOutline")&&( $("storyOutline").hidden=false );
+   status("storyOutlineText","Building the connected cinematic scene from your episode…");
+   b.disabled=true;
+   try{
+     const x=await gateway({category:"video",mode:"video",prompt:"Story Creator episode. "+p+"\nStyle: "+style+"\nPlanned scenes: "+n+"\nCharacter continuity: "+cont+"\nCreate the opening cinematic scene with clear characters, setting, action and camera direction.",duration:5,ratio});
+     const a=firstAsset(x);if(!a?.url)throw new Error("No scene output was returned.");
+     showVideo("storyOutlineText",a.url);
+     status("storyStatus","Connected scene generated successfully. The episode is now linked to the video generation pipeline.");
+   }catch(err){status("storyStatus",err?.message||"Story generation failed.");status("storyOutlineText","");}
+   finally{b.disabled=false}
+ },true);
+
+ // Manga Creator: connect chapter outline to the verified image pipeline.
+ document.addEventListener("click",async e=>{
+   const b=e.target.closest?.("#mangaOutline");if(!b)return;
+   e.preventDefault();e.stopImmediatePropagation();
+   const p=($( "mangaPrompt")?.value||"").trim();
+   if(!p){status("mangaStatus","Describe your manga first.");$("mangaPrompt")?.focus();return}
+   const style=$("mangaStyle")?.value||"Shonen",layout=$("mangaLayout")?.value||"Dynamic panels",ratio=layout==="Webtoon vertical"?"9:16":"1:1";
+   $("mangaOutlineBox")&&($("mangaOutlineBox").hidden=false);
+   status("mangaOutlineText","Generating the first connected manga page…");
+   b.disabled=true;
+   try{
+     const x=await gateway({category:"image",mode:"image",prompt:"Manga Creator page. "+p+"\nArt style: "+style+"\nLayout: "+layout+"\nCreate one finished manga/comic page with consistent character design, cinematic composition and readable panel storytelling. Do not invent unrelated text.",ratio});
+     const a=firstAsset(x);if(!a?.url)throw new Error("No manga page output was returned.");
+     showImage("mangaOutlineText",a.url,"Generated manga page");
+     status("mangaStatus","Connected manga page generated successfully.");
+   }catch(err){status("mangaStatus",err?.message||"Manga generation failed.");status("mangaOutlineText","");}
+   finally{b.disabled=false}
+ },true);
+
+ // Motion Type: connect directly to the verified video pipeline instead of routing to an incompatible video-only Creator screen.
+ document.addEventListener("click",async e=>{
+   const b=e.target.closest?.("#motionTypeGenerate");if(!b)return;
+   e.preventDefault();e.stopImmediatePropagation();
+   const msg=($("motionTypeMessage")?.value||"").trim();if(!msg){status("motionTypeStatus","Enter your message before generating.");$("motionTypeMessage")?.focus();return}
+   b.disabled=true;status("motionTypeStatus","Generating Motion Type video…");
+   try{
+     const template=document.querySelector("[data-motion-template].active")?.dataset.motionTemplate||"Kinetic Typography";
+     const palette=document.querySelector("[data-motion-palette].active")?.dataset.motionPalette||"Premium";
+     const ratio=$("motionTypeRatio")?.value||"1:1",duration=Number($("motionTypeDuration")?.value||10);
+     const x=await gateway({category:"video",mode:"video",prompt:"Motion Type Studio. Template: "+template+"\nPalette: "+palette+"\nMessage:\n"+msg+"\nKeep every supplied word exactly as written. Use animated typography and clean cinematic motion.",duration,ratio});
+     const a=firstAsset(x);if(!a?.url)throw new Error("No Motion Type output was returned.");
+     status("motionTypeStatus","Motion Type video generated successfully.");
+     const host=$("motionTypeStatus");if(host)host.insertAdjacentHTML("afterend",'<video controls playsinline src="'+esc(a.url)+'" style="display:block;width:100%;margin-top:14px;border-radius:14px;background:#000"></video>');
+   }catch(err){status("motionTypeStatus",err?.message||"Motion Type generation failed.");}
+   finally{b.disabled=false}
+ },true);
+
+ // Thumbnail + Social: use the verified image pipeline directly.
+ document.addEventListener("click",async e=>{
+   const b=e.target.closest?.("#thumbnailGenerate,#socialGenerate");if(!b)return;
+   e.preventDefault();e.stopImmediatePropagation();b.disabled=true;
+   const isThumb=b.id==="thumbnailGenerate";
+   const desc=($(isThumb?"thumbnailDescription":"socialDescription")?.value||"").trim();
+   if(!desc){status(isThumb?"thumbnailStatus":"socialStatus","Enter a description first.");b.disabled=false;return}
+   try{
+     const title=$(isThumb?"thumbnailTitle":"socialHeadline")?.value?.trim()||"";
+     const platform=isThumb?($("thumbnailPlatformQuote")?.textContent||"YouTube"):($("socialPlatformQuote")?.textContent||"Instagram Post");
+     const style=isThumb?($("thumbnailStyleQuote")?.textContent||"Minimal"):"";
+     const ratio=isThumb?"16:9":($("socialRatioQuote")?.textContent||"1:1");
+     const prompt=(isThumb?"Create a "+platform+" thumbnail.":"Create a "+platform+" social media graphic in "+ratio+".")+"\nStyle: "+style+"\n"+(title?"Exact text: "+title+"\n":"")+"Brief: "+desc+"\nOptimize for mobile readability. Do not add unrelated text.";
+     status(isThumb?"thumbnailStatus":"socialStatus","Generating image…");
+     const x=await gateway({category:"image",mode:"image",prompt,ratio});
+     const a=firstAsset(x);if(!a?.url)throw new Error("No image output was returned.");
+     showImage(isThumb?"thumbnailOutputBody":"socialOutputBody",a.url,isThumb?"Generated thumbnail":"Generated social post");
+     status(isThumb?"thumbnailStatus":"socialStatus","Image generated successfully.");
+   }catch(err){status(isThumb?"thumbnailStatus":"socialStatus",err?.message||"Image generation failed.");}
+   finally{b.disabled=false}
+ },true);
+
+ // Motion Poster: real image render, followed by real animation using the rendered poster.
+ let posterAsset=null;
+ document.addEventListener("click",async e=>{
+   const b=e.target.closest?.("#posterRender");if(!b)return;
+   e.preventDefault();e.stopImmediatePropagation();
+   const file=$("posterReference")?.files?.[0],brief=($("posterBrief")?.value||"").trim();
+   if(!file||!brief){status("posterBalance","Add a reference image and creative brief first.");return}
+   b.disabled=true;b.textContent="Rendering Poster…";
+   try{
+     const asset=await uploadFile(file);
+     const style=document.querySelector(".poster-preset.active")?.dataset.style||"Cinematic Teaser";
+     const x=await gateway({category:"image",mode:"image",prompt:"Motion Poster. Style: "+style+"\nBrief: "+brief+"\nCreate a polished cinematic branded poster based on the supplied reference. Preserve the subject identity and composition intent.",ratio:"2:3",input_assets:[asset]});
+     const a=firstAsset(x);if(!a?.url)throw new Error("No poster output was returned.");
+     posterAsset=a;showImage("posterImageEmpty",a.url,"Generated motion poster");
+     $("posterAnimate")&&( $("posterAnimate").disabled=false );
+     b.textContent="✓ Poster Rendered";
+     status("posterBalance","Poster rendered through the verified image pipeline. Step 2 is ready.");
+   }catch(err){b.disabled=false;b.textContent="✦ Step 1 · Render Poster";status("posterBalance",err?.message||"Poster rendering failed.")}
+ },true);
+
+ document.addEventListener("click",async e=>{
+   const b=e.target.closest?.("#posterAnimate");if(!b)return;
+   e.preventDefault();e.stopImmediatePropagation();
+   if(!posterAsset?.url){status("posterBalance","Render the poster first.");return}
+   b.disabled=true;b.textContent="Animating…";
+   try{
+     const brief=($("posterBrief")?.value||"").trim();
+     const x=await gateway({category:"video",mode:"image-to-video",prompt:"Animate this cinematic poster subtly and professionally. "+brief,duration:5,ratio:"2:3",input_assets:[posterAsset]});
+     const a=firstAsset(x);if(!a?.url)throw new Error("No animated poster output was returned.");
+     showVideo("posterVideoEmpty",a.url);b.textContent="✓ Animation Ready";
+     status("posterBalance","Motion Poster pipeline completed.");
+   }catch(err){b.disabled=false;b.textContent="▷ Step 2 · Animate";status("posterBalance",err?.message||"Poster animation failed.")}
+ },true);
+})();
 </script></body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
