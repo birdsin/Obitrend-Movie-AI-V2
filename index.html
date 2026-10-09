@@ -1732,11 +1732,25 @@ async function refresh(){
  }).join("");
  if(j.error)empty("creditGenerationHistory","Generation history is temporarily unavailable.");
  else if(!jobs.length)empty("creditGenerationHistory","No generations recorded yet.");
- else $("creditGenerationHistory").innerHTML=jobs.map(x=>{
-  const status=String(x.status||"unknown"),cost=Number(x.credit_cost||0),reserve=Number(x.reserved_credits||0);
-  const details=["Requested: "+time(x.created_at),x.started_at?"Started: "+time(x.started_at):"",x.completed_at?"Completed: "+time(x.completed_at):"",reserve>0?"Still reserved: "+number(reserve)+" credits":"",x.error_code?"Error: "+x.error_code:""].filter(Boolean).join(" · ");
-  return '<div class="credit-row"><div class="credit-row-main"><b>'+esc(String(x.mode||"generation").replace(/_/g," "))+' · '+esc(status)+'</b><small>Job ID: '+esc(x.id)+'</small><small>'+esc(details)+'</small></div><span class="credit-delta">'+esc(number(cost))+' cr</span></div>';
- }).join("");
+ else {
+  const byJob=new Map();
+  ledger.filter(row=>row.job_id).forEach(row=>{const list=byJob.get(row.job_id)||[];list.push(row);byJob.set(row.job_id,list);});
+  $("creditGenerationHistory").innerHTML=jobs.map(x=>{
+   const status=String(x.status||"unknown").toLowerCase(),cost=Number(x.credit_cost||0),reserve=Number(x.reserved_credits||0),events=byJob.get(x.id)||[];
+   const held=events.find(row=>String(row.type).toLowerCase()==="reserve");
+   const returned=events.find(row=>String(row.type).toLowerCase()==="release");
+   const committed=events.find(row=>String(row.type).toLowerCase()==="commit");
+   let result="",resultClass="";
+   if(status==="succeeded"){result="Charged: "+number(cost)+" credits";resultClass="credit-negative";}
+   else if(returned){result="Returned: "+number(returned.amount)+" credits";resultClass="credit-positive";}
+   else if(status==="failed"&&held){result="Refund not found — needs review";resultClass="credit-negative";}
+   else if(status==="cancelled"&&held){result="Cancellation recorded; checking release";resultClass="credit-negative";}
+   else if(status==="processing"&&reserve>0){result="Reserved: "+number(reserve)+" credits";resultClass="credit-negative";}
+   else result="No charge recorded";
+   const details=["Requested: "+time(x.created_at),x.started_at?"Started: "+time(x.started_at):"",held?"Credits reserved: "+time(held.created_at):"",committed?"Charge finalized: "+time(committed.created_at):"",returned?"Credits returned: "+time(returned.created_at):"",held&&held.balance_after!=null?"Balance after reservation: "+number(held.balance_after):"",returned&&returned.balance_after!=null?"Balance after return: "+number(returned.balance_after):"",x.completed_at?"Completed: "+time(x.completed_at):"",x.error_code?"Error: "+x.error_code:""].filter(Boolean).join(" · ");
+   return '<div class="credit-row"><div class="credit-row-main"><b>'+esc(String(x.mode||"generation").replace(/_/g," "))+' · '+esc(status)+'</b><small>Job ID: '+esc(x.id)+'</small><small>'+esc(details)+'</small></div><span class="credit-delta '+resultClass+'">'+esc(result)+'</span></div>';
+  }).join("");
+ }
  const expiry=[];
  for(const ent of ents){
   const pr=productMap.get(ent.product_id);
