@@ -2088,7 +2088,116 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
    }catch(err){b.disabled=false;b.textContent="▷ Step 2 · Animate";status("posterBalance",err?.message||"Poster animation failed.")}
  },true);
 })();
-</script></body></html><script id="phase6-script">
+</script><script id="obitrend-menu-architecture-v1">
+(()=> {
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const architecture={
+    "home":{label:"Home",route:"home",layer:"dashboard",pipeline:"dashboard"},
+    "create-movie":{label:"Create Movie",route:"creator",layer:"create-direct",pipeline:"movie"},
+    "advanced":{label:"Advanced Creator",route:"advanced",layer:"create-direct",pipeline:"movie"},
+    "director":{label:"Director Controls",route:"director",layer:"create-direct",pipeline:"director"},
+    "timeline":{label:"Movie Timeline",route:"timeline",layer:"create-direct",pipeline:"timeline"},
+    "characters":{label:"Characters",route:"characters",layer:"create-direct",pipeline:"characters"},
+    "long-video":{label:"Long Video Generator",route:"longVideoStudioPage",layer:"creator-studio",pipeline:"video"},
+    "story":{label:"Story Creator",route:"storyCreatorStudioPage",layer:"creator-studio",pipeline:"story-to-video"},
+    "montage":{label:"Montage Studio",route:"montageStudioPage",layer:"creator-studio",pipeline:"multi-clip-render"},
+    "manga":{label:"Manga Creator",route:"mangaCreatorStudioPage",layer:"creator-studio",pipeline:"image"},
+    "motion":{label:"Motion Studio",route:"motionControlStudioPage",layer:"creator-studio",pipeline:"motion-control"},
+    "poster":{label:"Motion Poster",route:"motionPosterStudioPage",layer:"creator-studio",pipeline:"image-to-video"},
+    "motion-type":{label:"Motion Type Studio",route:"motionTypeStudioPage",layer:"creator-studio",pipeline:"video"},
+    "thumbnail":{label:"Thumbnail Generator",route:"thumbnailStudioPage",layer:"creator-studio",pipeline:"image"},
+    "social":{label:"Social Media Posts",route:"socialStudioPage",layer:"creator-studio",pipeline:"image"},
+    "movies":{label:"My Movies",route:"movies",layer:"my-production",pipeline:"library"},
+    "saved":{label:"Saved Videos",route:"saved",layer:"my-production",pipeline:"library"},
+    "projects":{label:"Movie Projects",route:"projects",layer:"my-production",pipeline:"projects"},
+    "media":{label:"Reference Library",route:"media",layer:"my-production",pipeline:"assets"},
+    "models":{label:"AI Models",route:"models",layer:"ai-account",pipeline:"models"},
+    "settings":{label:"Creator Settings",route:"settings",layer:"ai-account",pipeline:"settings"},
+    "credits":{label:"OBITREND Credits",route:"credits",layer:"ai-account",pipeline:"credits"},
+    "account":{label:"Account & Security",route:"account",layer:"ai-account",pipeline:"account"}
+  };
+  const toolMap={};
+  Object.entries(architecture).forEach(([key,v])=>{if(v.layer==="creator-studio")toolMap[v.pipeline]=key});
+  const getMenuButtons=()=>$$("[data-p3]");
+  const stamp=()=>{
+    getMenuButtons().forEach(b=>{
+      const key=b.dataset.studioTool||b.dataset.p3;
+      const item=architecture[key];
+      if(!item)return;
+      b.dataset.pipeline=item.pipeline;
+      b.dataset.menuLayer=item.layer;
+      b.dataset.pipelineReady=item.pipeline==="multi-clip-render"?"partial":"wired";
+      b.setAttribute("data-architecture-key",key);
+    });
+  };
+  const verify=()=>{
+    const missing=[];
+    Object.entries(architecture).forEach(([key,item])=>{
+      const selector=item.layer==="creator-studio"?('[data-studio-tool="'+key+'"]'):('[data-p3="'+key+'"]');
+      if(!$(selector))missing.push({key,label:item.label,selector});
+    });
+    return {ok:missing.length===0,missing,items:Object.keys(architecture).length,architecture};
+  };
+  window.obitrendMenuArchitecture={architecture,toolMap,verify,refresh:stamp};
+  stamp();
+
+  // Keep cross-tool handoffs explicit without changing the existing visual workflow.
+  const handoff=(source,payload)=>{
+    window.dispatchEvent(new CustomEvent("obitrend-pipeline-handoff",{detail:{source,...payload}}));
+  };
+  document.addEventListener("obitrend-route-changed",e=>{
+    const route=e.detail||"home";
+    window.obitrendCurrentRoute=route;
+  });
+  document.addEventListener("obitrend-creator-tool-opened",e=>{
+    const tool=e.detail;
+    const item=architecture[tool];
+    if(item)window.obitrendCurrentStudioTool=item;
+  });
+
+  // Montage keeps a real production manifest rather than pretending a render exists.
+  const montageKey="obitrend_montage_manifest_v1";
+  const readMontage=()=>{try{return JSON.parse(localStorage.getItem(montageKey)||"null")}catch{return null}};
+  const writeMontage=x=>{try{localStorage.setItem(montageKey,JSON.stringify(x));return true}catch{return false}};
+  const montageState=()=>{
+    const workspace=$("#montageWorkspace");
+    const empty=$("#montageEmpty");
+    const status=$("#montageStatus");
+    return {workspace,empty,status};
+  };
+  document.addEventListener("click",e=>{
+    const b=e.target.closest?.("#montageNew"); if(!b)return;
+    const now={version:1,title:"Untitled Montage",ratio:document.querySelector(".montage-ratios button.active")?.textContent?.trim()||"16:9",clips:[],audio:[],text:[],updated_at:new Date().toISOString()};
+    writeMontage(now);
+    const m=montageState();
+    if(m.empty)m.empty.hidden=true;
+    if(m.workspace)m.workspace.hidden=false;
+    if(m.status)m.status.textContent="Montage project created. Add generated clips, audio and text, then save the production manifest.";
+    handoff("montage",{type:"project-created",manifest:now});
+  },true);
+  document.addEventListener("click",e=>{
+    const b=e.target.closest?.("#montageSave"); if(!b)return;
+    const existing=readMontage()||{version:1,title:"Untitled Montage",ratio:"16:9",clips:[],audio:[],text:[]};
+    existing.ratio=document.querySelector(".montage-ratios button.active")?.textContent?.trim()||existing.ratio||"16:9";
+    existing.updated_at=new Date().toISOString();
+    writeMontage(existing);
+    const m=montageState();
+    if(m.status)m.status.textContent="Montage production manifest saved. Final multi-clip render remains pending a server-side render/export endpoint.";
+    handoff("montage",{type:"manifest-saved",manifest:existing});
+  },true);
+
+  // Ratio buttons update the montage manifest without altering the existing UI.
+  document.addEventListener("click",e=>{
+    const b=e.target.closest?.(".montage-ratios button"); if(!b)return;
+    const x=readMontage(); if(x){x.ratio=b.textContent.trim();x.updated_at=new Date().toISOString();writeMontage(x);}
+  },true);
+
+  // A single verification hook makes it easy to validate the whole drawer after deployment.
+  window.addEventListener("load",()=>{stamp();window.obitrendMenuArchitecture.lastVerification=verify()});
+})();
+</script>
+</body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
