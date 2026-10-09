@@ -1,0 +1,58 @@
+:root{--ob-bg:#080808;--ob-card:#141414;--ob-border:#2a2a2a;--ob-gold:#d4af37;--ob-input:#0e0e0e}
+body{background:var(--ob-bg)!important}
+#phase3Creator{background:var(--ob-bg)!important;border:1px solid var(--ob-border)!important;border-radius:16px!important;padding:14px!important;margin:10px 0!important;box-shadow:none!important}
+#phase3Creator .p3head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:3px 1px 12px;border-bottom:1px solid var(--ob-border);margin-bottom:12px}
+#phase3Creator .p3head h2{font-size:24px;line-height:1.2;font-weight:800;margin:0}
+#phase3Creator .p3badge{color:var(--ob-gold);border:1px solid #80692c;border-radius:999px;padding:7px 10px;white-space:nowrap}
+#phase3Creator .p3tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;overflow:visible;margin:12px 0}
+#phase3Creator .p3tabs button{min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere;padding:11px 5px;background:#141414;border:1px solid var(--ob-border);border-radius:11px;font-size:clamp(10px,2.5vw,13px);line-height:1.25}
+#phase3Creator .p3tabs button.active{background:var(--ob-gold);color:#080808;border-color:var(--ob-gold);box-shadow:0 0 15px #d4af3730}
+#phase3Creator .ob-creator-describe,#phase3Creator .p3field,#phase3Creator .p3-coach,#phase3Creator .p3-ready,#phase3Creator .p3-results{background:var(--ob-card);border:1px solid var(--ob-border);border-radius:16px;padding:13px;margin:10px 0}
+#phase3Creator .ob-section-title{display:flex;align-items:flex-start;gap:11px;margin-bottom:12px}
+#phase3Creator .ob-title-icon{display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;border:1px solid #343434;border-radius:10px;color:var(--ob-gold);font-size:20px}
+#phase3Creator .ob-section-title h3{margin:0 0 3px;font-size:16px;color:#f6f6f6}
+#phase3Creator .ob-section-title p{margin:0 0 5px;color:#f1f1f1;font-size:13px}
+#phase3Creator .ob-section-title small{display:block;color:#a4a4a4;line-height:1.45;font-size:12px}
+#phase3Creator .p3-ideas{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 11px}
+#phase3Creator .p3-idea{flex:1 1 auto;min-width:0;background:#0e0e0e!important;border:1px solid #333!important;border-radius:11px!important;padding:10px 9px!important;font-size:12px!important;color:#fff!important;white-space:normal;line-height:1.25}
+#phase3Creator button:focus-visible{outline:2px solid var(--ob-gold);outline-offset:2px}
+#phase3Creator .ob-prompt-label{display:block;color:#aaa;font-size:11px;margin:7px 0}
+#phase3Creator .ob-prompt-wrap{position:relative}
+#phase3Creator #p3QuickPrompt{width:100%;min-width:0;box-sizing:border-box;display:block;background:#0e0e0e;border:1px solid #333;border-radius:12px;min-height:95px;padding:13px 48px 25px 13px;font:13px/1.5 ui-monospace,SFMono-Regular,monospace;resize:vertical}
+#phase3Creator #obPromptCount{position:absolute;right:11px;bottom:9px;font-size:10px;color:#929292}
+#phase3Creator .p3-quick-actions{display:block;margin-top:10px}
+#phase3Creator .ob-use-idea{width:100%;min-height:48px;background:var(--ob-gold)!important;color:#080808!important;border:0!important;border-radius:12px!important;font-weight:800!important}
+#phase3Creator .p3-quick-note{display:block;margin-top:8px;color:#888;font-size:11px}
+#phase3Creator .p3-coach{margin-top:11px;background:#101010}
+#phase3Creator .p3-coach-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#phase3Creator .p3-coach-head b{font-size:13px;color:#eee}
+#phase3Creator .p3-coach-head span{font-size:10px;color:#999}
+#phase3Creator .p3-coach-items{display:flex;flex-wrap:wrap;gap:7px}
+#phase3Creator .p3-coach-items span{background:#141414;border:1px solid #2a2a2a;border-radius:999px;padding:7px 9px;font-size:11px;color:#c8c8c8;opacity:1}
+#phase3Creator .p3grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}
+#phase3Creator .p3field{min-width:0;margin:0;padding:11px;background:var(--ob-card)}
+#phase3Creator .p3field>b{color:#a6a6a6;font-size:11px;letter-spacing:.02em}
+#phase3Creator .p3field select,#phase3Creator .p3field input:not([type=file]){display:block;width:100%;min-width:0;box-sizing:border-box;background:var(--ob-input);border:1px solid #333;border-radius:10px;padding:11px 9px;font-size:12px}
+#phase3Creator .ob-model-filter{margin-bottom:7px}
+#phase3Creator .ob-reference-field{grid-column:1/-1}
+#phase3Creator .ob-reference-field .ob-section-title{margin-bottom:10px}
+#phase3Creator .ob-reference-field .ob-section-title b{font-size:14px;color:#eee}
+#phase3Creator .ob-media-row{display:grid;grid-template-columns:minmax(105px,.8fr) minmax(0,2fr);gap:9px;align-items:stretch}
+#phase3Creator .ob-upload-tile{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;text-align:center;min-height:100px;border:1px dashed #8b793e;border-radius:11px;background:#0e0e0e;padding:8px;cursor:pointer;color:#eee}
+#phase3Creator .ob-upload-tile>span{font-size:24px;color:var(--ob-gold);line-height:1}
+#phase3Creator .ob-upload-tile strong{font-size:12px}
+#phase3Creator .ob-upload-tile small{font-size:10px;color:#aaa}
+#phase3Creator .ob-reference-examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
+#phase3Creator .ob-reference-thumb{position:relative;margin:0;min-width:0;min-height:100px;overflow:hidden;border:1px solid #333;border-radius:10px;background:#0e0e0e}
+#phase3Creator .ob-reference-thumb img{display:block;width:100%;height:100%;min-height:100px;object-fit:cover}
+#phase3Creator .ob-thumb-remove{position:absolute;right:4px;top:4px;width:25px;height:25px;padding:0;border:1px solid #ffffff55;border-radius:50%;background:#080808bb;color:white;font-size:18px;line-height:1;cursor:pointer}
+#phase3Creator .ob-real-file{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;clip-path:inset(50%)!important}
+#phase3Creator .p3-actions.ob-setting-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+#phase3Creator .p3-actions.ob-setting-actions button{min-width:0;padding:12px 7px;background:var(--ob-gold);color:#080808;border:0;border-radius:11px;font-weight:800;font-size:12px}
+#phase3Creator .p3-generate-row{margin-top:9px}
+#phase3Creator #p3Generate{display:block;width:100%;min-height:52px;background:var(--ob-gold);color:#080808;border:0;border-radius:12px;font-weight:900;font-size:16px}
+#phase3Creator .p3-ready{display:flex;align-items:center;gap:10px;background:#101010}
+#phase3Creator .p3-results h3{font-size:13px;letter-spacing:.04em}
+#phase3Creator .p3-result{background:#0e0e0e;border-color:#303030;border-radius:11px}
+@media(max-width:650px){#phase3Creator{padding:10px!important}#phase3Creator .p3head h2{font-size:24px}#phase3Creator .p3tabs{grid-template-columns:repeat(2,minmax(0,1fr))}#phase3Creator .p3grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#phase3Creator .p3field{padding:8px}#phase3Creator .p3field select,#phase3Creator .p3field input:not([type=file]){padding:10px 6px;font-size:11px}#phase3Creator .ob-reference-field{grid-column:1/-1}#phase3Creator .ob-media-row{grid-template-columns:minmax(92px,.78fr) minmax(0,2fr);gap:6px}#phase3Creator .ob-reference-examples{gap:5px}#phase3Creator .ob-reference-thumb,#phase3Creator .ob-reference-thumb img{min-height:94px}#phase3Creator .ob-upload-tile{min-height:94px;padding:5px}}
+@media(max-width:390px){#phase3Creator .p3grid{grid-template-columns:1fr}#phase3Creator .ob-reference-field{grid-column:1}#phase3Creator .p3field{padding:10px}#phase3Creator .p3tabs button{font-size:11px}}
