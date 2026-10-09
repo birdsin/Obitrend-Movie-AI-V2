@@ -2338,6 +2338,21 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
   window.addEventListener("load",()=>{stamp();window.obitrendMenuArchitecture.lastVerification=verify()});
 })();
 </script>
+<script id="obitrend-hide-legacy-home-v2">
+(function(){
+ function hideLegacyHome(){
+   var home=document.getElementById("obitrendHomeDashboard");
+   if(!home)return;
+   var legacy=home.querySelector(":scope > .obi-growth");
+   if(legacy){legacy.hidden=true;legacy.style.setProperty("display","none","important");legacy.setAttribute("aria-hidden","true");}
+   var oldLaunch=home.querySelector(":scope > .obi-launch");
+   if(oldLaunch){oldLaunch.hidden=true;oldLaunch.style.setProperty("display","none","important");oldLaunch.setAttribute("aria-hidden","true");}
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",hideLegacyHome,{once:true});
+ else hideLegacyHome();
+ window.addEventListener("load",hideLegacyHome,{once:true});
+})();
+</script>
 </body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
