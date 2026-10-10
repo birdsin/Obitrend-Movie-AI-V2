@@ -39,13 +39,13 @@ test("completed state without output is never treated as success", () => {
 });
 
 test("request validation accepts documented minimum and maximum durations", () => {
-  assert.equal(validateFlixlyMiniRequest({ duration: 4, resolution: "480p", aspect_ratio: "16:9" }).valid, true);
-  assert.equal(validateFlixlyMiniRequest({ duration: 15, resolution: "720p", aspect_ratio: "9:16" }).valid, true);
+  assert.equal(validateFlixlyMiniRequest({ duration: 4, resolution: "480p", aspectRatio: "16:9" }).valid, true);
+  assert.equal(validateFlixlyMiniRequest({ duration: 15, resolution: "720p", aspectRatio: "9:16" }).valid, true);
 });
 
 test("request validation rejects durations outside documented range", () => {
-  assert.equal(validateFlixlyMiniRequest({ duration: 3, resolution: "480p", aspect_ratio: "16:9" }).valid, false);
-  assert.equal(validateFlixlyMiniRequest({ duration: 16, resolution: "720p", aspect_ratio: "9:16" }).valid, false);
+  assert.equal(validateFlixlyMiniRequest({ duration: 3, resolution: "480p", aspectRatio: "16:9" }).valid, false);
+  assert.equal(validateFlixlyMiniRequest({ duration: 16, resolution: "720p", aspectRatio: "9:16" }).valid, false);
 });
 
 test("status URL validation rejects insecure or deceptive hosts", () => {
