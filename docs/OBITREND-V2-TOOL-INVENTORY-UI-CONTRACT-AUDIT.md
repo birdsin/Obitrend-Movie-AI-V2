@@ -1,17 +1,18 @@
 # OBITREND Movie AI V2 — Tool Inventory & UI Contract Audit
 
 Reviewed: 2026-10-10  
-Scope: read-only audit of the structural prototype on `feat/obitrend-v2-structural-prototype`. This document does not enable any AI service.
+Scope: read-only source audit of the structural prototype on `feat/obitrend-v2-structural-prototype`. This document does not enable any AI service.
 
 ## Audit result
 
 - Navigation destinations: 20.
 - Registered tool definitions: 35.
 - Tool IDs: 35 unique IDs; no duplicate IDs observed in the current source.
-- UI handlers observed in source: navigation rendering, tool selection, search input, Clear action, menu toggle, and Generate input-review handler.
+- Source handlers exist for navigation rendering, tool selection, search input, Clear action, mobile menu toggle, local reference preview, and Generate input-review.
 - Generate is a local input-review/demo flow only. It does not call an AI API, upload reference media, save a project, or deduct credits.
 - Output Download, Save to project, and Try again are intentionally disabled in the structural prototype.
-- This is a source inspection, not a full automated browser test of every tool.
+- Local reference preview creates a browser object URL and labels the preview as a source file, not generated output.
+- This is source inspection, not a full automated browser click test of every tool or device size.
 
 ## Navigation-to-tool assignments found in source
 
@@ -35,6 +36,29 @@ Scope: read-only audit of the structural prototype on `feat/obitrend-v2-structur
 
 Special destinations such as My Projects, My Creations & History, AI Models & Credits, and Settings & Support use dedicated informational panels rather than the standard tool form. They must remain separate and must not be replaced by tool-search results.
 
+## Static UI behavior reviewed
+
+- The source has a dedicated tool object for each of the 35 IDs and renders a standard workspace from that object's title, description, input type, output label, and field list.
+- Standard tool Generate buttons are labeled as input review or settings check, not connected generation.
+- Special section Generate and Review actions explicitly show demo-only messaging.
+- File selection is local-only; file type is checked against the selected tool, a 100 MB browser-demo limit is enforced, and the status explains that no upload or generated result exists.
+- Clear resets prompt, selects, local file input and the preview object URL.
+- Download, Save, and Retry are disabled in both standard tool and special section panels.
+- The source uses hard-coded local option arrays. These are placeholders, not an authoritative provider capability catalogue or live price quote.
+
+## Known limitations / next QA pass
+
+- [ ] Visit each of the 20 navigation destinations on Android and confirm title, content, and return navigation.
+- [ ] Select all 35 tools and confirm the title, prompt/text input, relevant settings, output label, and demo-only message.
+- [ ] Test search with empty, matching, non-matching, and long queries, including switching between tool categories and special sections.
+- [ ] Confirm special panels remain dedicated panels and are not replaced by search results.
+- [ ] Confirm no Generate action is mistaken for a completed AI job and no credits are displayed as live balance.
+- [ ] Confirm local reference preview remains local, invalid types are rejected, oversized files are rejected, and Clear releases the preview.
+- [ ] Confirm refresh does not imply demo projects or outputs were persisted.
+- [ ] Check Android portrait, Android landscape, and desktop for clipped controls, horizontal overflow, focus visibility, and readable status messages.
+- [ ] Check keyboard/screen-reader labels for every file input, select, action, and status message.
+- [ ] Confirm the current preview deployment actually contains the latest branch commit before reporting deployment status.
+
 ## Per-tool UI contract
 
 Every standard tool panel should provide:
@@ -45,16 +69,6 @@ Every standard tool panel should provide:
 5. A clearly labeled Generate action that states whether it is demo-only or connected.
 6. An output panel with accurate idle, validation, pending, success, failure, and unavailable states as appropriate.
 7. Save, download, and retry actions only when a real result and the required service are available.
-
-## Findings to verify in the next manual QA pass
-
-- [ ] Visit each of the 20 navigation destinations and confirm the selected section title matches.
-- [ ] Select all 35 tools and verify that the title, prompt/text input, settings, and output label match the selected tool.
-- [ ] Confirm tool search filters only the standard tool library and never replaces the special panels.
-- [ ] Confirm Generate is never presented as successful generation when only local validation occurred.
-- [ ] Confirm a reference file remains local and does not trigger a request.
-- [ ] Confirm refresh does not imply demo projects or outputs were persisted.
-- [ ] Check Android portrait and desktop layouts for clipped controls and horizontal overflow.
 
 ## Release and service safety gate
 
