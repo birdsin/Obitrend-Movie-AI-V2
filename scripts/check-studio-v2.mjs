@@ -16,7 +16,7 @@ const names = tools.map(([_, name]) => name);
 assert.equal(new Set(names).size, names.length, 'Tool names should be unique');
 
 for (const locale of ['en','fr','es','pt','ar','hi','zh','ja','ko','yo','ig','ha']) {
-  assert.match(html, new RegExp('(^|[,{])' + locale + ':\\{'), `Missing locale dictionary: ${locale}`);
+  assert.match(html, new RegExp('(^|[,{])\\s*' + locale + ':\\{'), `Missing locale dictionary: ${locale}`);
 }
 assert.match(html, /document\.documentElement\.dir=locale==='ar'\?'rtl':'ltr'/, 'Arabic should set RTL direction');
 assert.match(html, /id="toolScreen"[\s\S]*?button class="primary full" disabled/, 'Generation must remain disabled until backend setup');
