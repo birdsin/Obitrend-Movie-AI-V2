@@ -3287,6 +3287,22 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",retire,{once:true});else retire();
 })();
 </script>
+<style id="obitrend-retire-movie-timeline">
+/* Remove the legacy Movie Timeline screen from the visible tool-first interface. */
+#phase8Timeline{display:none!important;visibility:hidden!important;pointer-events:none!important}
+</style>
+<script id="obitrend-retire-movie-timeline-route">
+(()=> {
+ const original=window.obitrendNavigate;
+ if(typeof original==="function"&&!original.__timelineRetired){
+  const navigate=function(route){return original(route==="timeline"?"home":route);};
+  navigate.__timelineRetired=true;
+  window.obitrendNavigate=navigate;
+ }
+ const retire=()=>{const old=document.getElementById("phase8Timeline");if(old){old.classList.remove("obitrend-active");old.setAttribute("aria-hidden","true");old.inert=true;}};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",retire,{once:true});else retire();
+})();
+</script>
 </body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
