@@ -7,15 +7,19 @@ on:
       - "tests/flixly-contract-fixtures.test.mjs"
       - "tests/helpers/flixly-normalize.mjs"
       - "tests/helpers/validate-flixly-mini-request.mjs"
+      - "tests/flixly-mini-request-validation.test.mjs"
       - "tests/helpers/validate-flixly-status-url.mjs"
       - "tests/flixly-status-url-validation.test.mjs"
-      - "tests/flixly-mini-request-validation.test.mjs tests/flixly-status-url-validation.test.mjs"
       - ".github/workflows/flixly-contract-tests.yml"
   push:
     branches: ["feat/obitrend-v2-structural-prototype"]
     paths:
       - "tests/flixly-contract-fixtures.test.mjs"
       - "tests/helpers/flixly-normalize.mjs"
+      - "tests/helpers/validate-flixly-mini-request.mjs"
+      - "tests/flixly-mini-request-validation.test.mjs"
+      - "tests/helpers/validate-flixly-status-url.mjs"
+      - "tests/flixly-status-url-validation.test.mjs"
       - ".github/workflows/flixly-contract-tests.yml"
   workflow_dispatch:
 
@@ -35,4 +39,4 @@ jobs:
         with:
           node-version: "22"
       - name: Run isolated mock fixtures
-        run: node --test tests/flixly-contract-fixtures.test.mjs tests/flixly-mini-request-validation.test.mjs
+        run: node --test tests/flixly-contract-fixtures.test.mjs tests/flixly-mini-request-validation.test.mjs tests/flixly-status-url-validation.test.mjs
