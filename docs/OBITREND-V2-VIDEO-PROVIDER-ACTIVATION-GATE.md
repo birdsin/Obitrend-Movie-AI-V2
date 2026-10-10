@@ -111,3 +111,12 @@ Added `tests/helpers/flixly-normalize.mjs` and updated `tests/flixly-contract-fi
 A local Node.js run of an equivalent isolated mock harness passed **14/14 assertions**. Network access to retrieve the committed files into the local runner was unavailable, so this run should not be described as CI execution of the committed repository file. The committed test suite itself has not been run by CI in this step.
 
 **Integration boundary:** The new helper is currently test-scoped. It has not been wired into the existing deployed `ai-job-status` function. Doing so would require a reviewed code change and a safe deployment plan; the shared function was intentionally left untouched. The mock lifecycle tests validate expected invariants only; they do not prove database RPC idempotency or live credit-ledger behavior.
+
+
+## CI workflow added for mock-only Flixly contract tests (2026-10-10)
+
+Added `.github/workflows/flixly-contract-tests.yml` on the prototype branch. It uses Node.js 22 and runs `node --test tests/flixly-contract-fixtures.test.mjs` for relevant pushes, pull requests targeting `main`, or manual dispatch. Permissions are limited to `contents: read`; no provider credentials or service calls are required.
+
+The workflow was added in commit `39a23eea346bb6098c3cf7fa5d68602a7262cfc7`. At the time of this check, no associated pull-request workflow run was returned by the available run lookup. **CI execution is therefore pending/unverified**; do not describe the workflow as passing until an actual run result is observed.
+
+This CI workflow only runs the mock fixture suite. It does not test or deploy the shared Supabase function and does not clear any video-provider activation gate.
