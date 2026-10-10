@@ -157,3 +157,7 @@ html,body{background:var(--ob-master-black)!important;color:#f5f5f5}
  #obitrendToolHome .ob-toolhome-copy strong{font-size:11px!important}
 }
 @media(prefers-reduced-motion:reduce){#obitrendMasterHeader *,#obitrendMasterRail *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Main navigation lives in the sidebars; the center is reserved for the 31 named creation tools. */
+#obitrendToolHome .ob-toolhome-category[data-category="Main Navigation"],
+#obitrendToolHome .ob-toolhome-category[data-category="AI & Account"]{display:none!important}
