@@ -3735,7 +3735,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
 </style>
 <script id="obitrend-main-navigation-tap-fix-script">
 (()=> {
- const routeByKey={home:"home",history:"movies",explore:"models",compare:"models"};
+ const routeByKey={home:"home",history:"movies",explore:"models",compare:"models","creator-settings":"settings","account-security":"account","obitrend-credits":"credits"};
  document.addEventListener("click",event=>{
    const card=event.target.closest("#obitrendToolHome .ob-toolhome-card");
    if(!card)return;
@@ -3747,5 +3747,12 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
    if(typeof window.obitrendNavigate==="function")window.obitrendNavigate(routeByKey[key]);
    else window.location.hash=routeByKey[key];
  },true);
+ document.addEventListener("keydown",event=>{
+   if(event.key!=="Enter"&&event.key!==" ")return;
+   const card=event.target.closest("#obitrendToolHome .ob-toolhome-card");
+   if(!card)return;
+   event.preventDefault();
+   card.click();
+ });
 })();
 </script>
