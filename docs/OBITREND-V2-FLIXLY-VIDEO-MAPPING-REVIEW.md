@@ -45,3 +45,22 @@ Before implementation, obtain a verified provider contract and record:
 ## Next review step
 
 Obtain provider documentation or a verified, non-mutating model catalog response to establish the exact upstream model ID and parameter contract. Then prepare a code change for review on the V2 feature branch only. Do not deploy backend changes or enable generation until the isolation gate is passed.
+## Public provider documentation cross-check (2026-10-10)
+
+Flixly's public model page identifies `seedance-2-mini` as a video model and documents text-to-video and image-to-video support, 480p/720p, aspect ratios including 16:9, 9:16 and 1:1, and durations from 4 to 15 seconds. Flixly's developer docs describe `GET /api/v1/models`, `POST /api/v1/generate`, and asynchronous status polling through `GET /api/v1/generations/{id}`. Sources:
+
+- https://www.flixly.ai/models/seedance-2-mini
+- https://www.flixly.ai/developers
+
+### Interpretation
+
+This public documentation supports `seedance-2-mini` as a plausible upstream candidate for the intended V2 video capability, and explains the application catalogue slug vs provider model ID distinction. It does **not** prove the existing shared gateway maps the request correctly end-to-end, that the configured Flixly API key is active, or that this product's credit pricing is correct. No API key was used and no provider call was made.
+
+### Remaining go/no-go blockers
+
+- The shared `flixly-video` row is still disabled.
+- The shared AI Platform gateway and credit ledger are not verified isolated from production.
+- The exact deployed gateway request/response adapter and server-side credit quote still need a code review and isolated integration test.
+- Do not enable the shared row or wire the V2 UI to the live project based solely on public documentation.
+
+Decision remains **NO-GO for live generation** until isolation and end-to-end mapping are verified.
