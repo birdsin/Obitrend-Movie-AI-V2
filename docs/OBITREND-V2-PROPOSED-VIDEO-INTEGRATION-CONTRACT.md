@@ -106,3 +106,22 @@ A read-only inventory of the connected Supabase organization returned two existi
 The inventory does not identify a third, dedicated V2 test project. The AI Platform was previously found to host shared gateway, job-status, media-upload, credit, model-sync, and usage functions. Project existence or healthy status does not prove tenant, wallet, storage, credentials, job data, or billing isolation.
 
 **Environment gate remains BLOCKED:** no existing isolated non-production backend has been demonstrated. Do not use either project for live integration tests or change their schema, functions, model catalogue, credentials, or billing. Do not create a new project or branch. The next permissible step is to locate existing deployment/environment configuration and verify isolation using read-only evidence; if no isolated target exists, stop before backend/provider testing and request explicit authorization for any proposed alternative.
+
+
+## Vercel staging configuration review — 2026-10-10
+
+Read-only inspection of the existing Vercel project `obitrend-movie-ai-v2` found:
+
+- Project metadata reports `live: false`.
+- The latest deployment metadata still points to commit `2f8aabf3831e6518c03fa6eb76b0ff033b36e319` and target `staging`.
+- The environment-variable listing returned an empty list and `hiddenProductionEnvCount: 0`.
+- Password protection and SSO protection are reported disabled for the project.
+
+Interpretation and limits:
+
+- The current deployment is a staging target, but it is an older snapshot than this branch's latest documentation commits. Do not claim the latest documentation is deployed.
+- The empty environment-variable list supports that no Vercel project env vars were returned by this query; it does not prove that every possible secret, integration, or runtime is absent.
+- Disabled password/SSO protection means the staging URL should be treated as publicly reachable. Keep it free of secrets, personal media, real credentials, and production data.
+- This configuration is consistent with a static prototype, not evidence of an isolated backend or a connected video provider.
+
+No Vercel settings, environment variables, deployment targets, or domains were changed. Keep real generation blocked until a suitable isolated backend and explicit authorization are established.
