@@ -14,6 +14,25 @@ Scope: read-only source audit of the structural prototype on `feat/obitrend-v2-s
 - Local reference preview creates a browser object URL and labels the preview as a source file, not generated output.
 - This is source inspection, not a full automated browser click test of every tool or device size.
 
+## Latest static source checks
+
+Read directly from the current feature-branch prototype source. These are static checks, not browser interaction or deployment checks.
+
+| Check | Result | Meaning |
+|---|---|---|
+| HTML document declaration | Pass | HTML document begins with a doctype. |
+| Mobile viewport meta | Pass | A viewport meta tag is present. |
+| Navigation definitions | 20 found | Matches the intended 20 destinations. |
+| Tool definitions | 35 found | Matches the intended 35 registered tools. |
+| Unique tool IDs | 35/35 unique | No duplicate IDs found in the definitions. |
+| Local-only reference notice | Present | Source tells users selected files are not uploaded. |
+| Demo-only Generate labels | Present | Main tool actions are framed as input review/settings checks. |
+| Output actions disabled in source | Present | Download, Save and Retry remain disabled in the reviewed paths. |
+| Direct provider/API fetch in prototype | Not found | No direct fetch call to the AI gateway, Flixly or Supabase was detected by the static pattern check. |
+| External script source | Not found | No external `script src` was detected in the HTML source. |
+
+**Important limitation:** pattern-based static checks cannot prove that every runtime path is correct, that no indirect network request can occur, or that the deployed page matches this commit. A real browser/network-panel QA pass is still required.
+
 ## Navigation-to-tool assignments found in source
 
 | Navigation destination | Registered tools |
@@ -57,6 +76,7 @@ Special destinations such as My Projects, My Creations & History, AI Models & Cr
 - [ ] Confirm refresh does not imply demo projects or outputs were persisted.
 - [ ] Check Android portrait, Android landscape, and desktop for clipped controls, horizontal overflow, focus visibility, and readable status messages.
 - [ ] Check keyboard/screen-reader labels for every file input, select, action, and status message.
+- [ ] Use browser network tools during QA to confirm no AI, storage, account, or credit requests occur.
 - [ ] Confirm the current preview deployment actually contains the latest branch commit before reporting deployment status.
 
 ## Per-tool UI contract
