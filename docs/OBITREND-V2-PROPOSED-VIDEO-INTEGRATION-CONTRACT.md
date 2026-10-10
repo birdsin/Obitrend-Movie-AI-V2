@@ -66,3 +66,31 @@ Define the smallest safe server-mediated contract for the V2 Video Generator whi
 - Calling the provider or running model-sync jobs as a test.
 - Enabling or changing shared catalogue rows, deploying/modifying Supabase functions, uploading real user media, or executing credit/payment operations.
 - Merging PR #6 or promoting staging to production.
+
+
+## Static capability and mapping review — 2026-10-10
+
+This section records compatibility checks from the existing source review and public model documentation. It is not a live capability query and does not authorize enabling the model.
+
+| Field | V2 / adapter observation | Public model documentation observation | Required disposition |
+|---|---|---|---|
+| Catalogue ID | `flixly-video` | Provider model candidate is `seedance-2-mini` | Keep mapping server-side and explicit; verify against the authenticated provider model list before use. |
+| Duration | Existing adapter audit found a 1–30 second clamp; current UI selection is 5 seconds. | Candidate model page documents 4–15 seconds. | Treat 4–15 seconds as the documented candidate range, not a verified runtime guarantee. Reject out-of-range values server-side; remove any silent clamp that can transform a user's requested duration. Confirm request field and exact supported increments from the authenticated schema. |
+| Resolution | No verified V2-to-provider resolution mapping recorded. | Public page lists 480p and 720p. | Do not infer a default; verify accepted field names and model-specific values before exposing resolution controls. |
+| Aspect ratio | Current UI shows 16:9. | Public page lists 16:9, 9:16, 1:1, 21:9, 4:3 and 3:4. | Validate against the server-side capability list; never trust arbitrary client strings. |
+| Input mode | V2 reference picker is local-only; no owned server asset ID is established. | Candidate model supports text-to-video and image-to-video. | Image-to-video stays unavailable until upload, ownership, type/size limits, and provider-readable asset handling are verified. |
+| Audio | No verified UI/request/response mapping recorded. | Public page mentions optional synchronized audio. | Keep hidden until exact request schema and output behavior are verified. |
+| Async status | Adapter audit flagged a potentially incorrect fallback label (`seedance-2-5`) and unresolved status aliases. | Provider generation is asynchronous and must be polled. | Use the submitted job's verified model ID and documented provider status mapping; unknown statuses remain non-success and must not show output. |
+| Output | No end-to-end verified output persistence or download contract. | Public examples mention output URL fields, but the exact authenticated model response is not verified. | Validate response schema, output URL host/type, ownership, persistence and authorized download before enabling output actions. |
+| Price | Shared catalogue row is disabled; 8 credits is only a planned value. | Public docs do not establish OBITREND's authoritative customer price. | Require a fresh server-authoritative quote and approved pricing policy; never bill from a browser constant or stale catalogue display. |
+
+### Mapping questions that remain open
+
+- Exact authenticated request fields for prompt, duration, aspect ratio, resolution, image input, and audio.
+- Exact provider response fields for generation ID, state, errors, result URL, and charged provider credits.
+- Whether the provider returns a temporary URL, and its expiry/retention rules.
+- Which status values mean queued, running, succeeded, failed, or ambiguous, including retry semantics.
+- Whether a retry after timeout can duplicate provider work and how idempotency is supported.
+- Which existing storage and credit settlement operations can be safely exercised in an already-isolated test environment.
+
+**Outcome:** static review identifies a concrete duration mismatch (adapter clamp 1–30 seconds versus public model documentation 4–15 seconds) and several unresolved mappings. Do not fix this by changing shared backend code or by guessing provider fields. Keep the prototype in demo mode until the authenticated contract and isolated environment are verified.
