@@ -6,11 +6,13 @@ Status: manual QA checklist for the isolated structural prototype only. Screensh
 
 - Repository: `birdsin/Obitrend-Movie-AI-V2`
 - Working branch: `feat/obitrend-v2-structural-prototype`
-- Test URL: `https://obitrend-movie-ai-v2-1v935evds-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest verified staging test URL: `https://obitrend-movie-ai-v2-f6jvbq80y-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest verified commit: `2f8aabf3831e6518c03fa6eb76b0ff033b36e319`
+- User confirmed the current preview is working on 2026-10-10.
 - This checklist does not authorize production release, real generation, uploads, account writes, credit deductions, or payment actions.
 - Do not create a Supabase project or branch. Do not change production services. Keep PR #6 draft and unmerged.
 
-## Confirmed from the supplied Android screenshots
+## Confirmed from the supplied Android screenshots and user feedback
 
 - [x] Premium black-and-gold theme renders on a narrow mobile viewport.
 - [x] Header displays the current section and the credit status indicator.
@@ -20,6 +22,7 @@ Status: manual QA checklist for the isolated structural prototype only. Screensh
 - [x] UI explicitly labels project data as not persisted and output as preview-only.
 - [x] Download, Save to project, and Try again are visibly locked.
 - [x] Safety note states real generation, upload, account, credit, payment, storage, and download services are not connected.
+- [x] User reports that the latest staging preview is working.
 
 ## Manual checks still required on Android
 
@@ -47,8 +50,7 @@ Do not wire the prototype to live services until all of the following are indepe
 
 ## Evidence limits
 
-Screenshot review verifies visible layout and safety labels only. It does not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
-
+The successful HTTP 200 fetch verifies that the current prototype page is served. Screenshot review and user feedback verify visible layout and that the user reports it working. They do not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
 
 ## Android Video Generator test evidence — 2026-10-10
 
