@@ -2826,7 +2826,76 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  estimate();
  (()=>{const cleanStrayNewline=()=>{for(const node of [...document.body.childNodes])if(node.nodeType===3&&node.textContent.trim()==="\\n")node.remove()};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",cleanStrayNewline,{once:true});else cleanStrayNewline()})();
 })();
-</script></body></html><script id="phase6-script">
+</script><style id="obitrend-every-sidebar-generate-output-style">
+.ob-sidebar-workflow{margin:18px 0 22px;padding:16px;border:1px solid rgba(230,185,94,.3);border-radius:18px;background:linear-gradient(145deg,rgba(20,23,31,.98),rgba(8,10,15,.98));box-shadow:0 16px 38px rgba(0,0,0,.2)}
+.ob-sidebar-workflow-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.ob-sidebar-workflow-kicker{font-size:10px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:#e6b95e}
+.ob-sidebar-workflow h3{margin:5px 0 4px;font-size:20px;line-height:1.2;color:#f5f6f8}
+.ob-sidebar-workflow p{margin:0;color:#a5adbb;font-size:13px;line-height:1.5}
+.ob-sidebar-workflow-step{flex:0 0 auto;border:1px solid rgba(230,185,94,.35);border-radius:10px;padding:7px 9px;color:#e6b95e;font-size:11px}
+.ob-sidebar-workflow-actions{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
+.ob-sidebar-run{border:0!important;border-radius:12px!important;padding:12px 16px!important;background:linear-gradient(135deg,#f2c65f,#d79d36)!important;color:#111!important;font-weight:850!important;cursor:pointer}
+.ob-sidebar-how{border:1px solid rgba(255,255,255,.14)!important;border-radius:12px!important;padding:11px 14px!important;background:rgba(255,255,255,.045)!important;color:#f2f4f7!important;cursor:pointer}
+.ob-sidebar-output{min-height:92px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:#090c12;padding:13px;display:flex;align-items:center;gap:12px;color:#aab2c1}
+.ob-sidebar-output-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border:1px solid rgba(230,185,94,.22);border-radius:12px;background:rgba(230,185,94,.07);font-size:20px}
+.ob-sidebar-output strong{display:block;color:#f2f4f7;font-size:14px;margin-bottom:3px}
+.ob-sidebar-output small{display:block;color:#929bab;font-size:12px;line-height:1.45}
+.ob-sidebar-workflow-status{font-size:11px;color:#e6b95e;margin-top:9px;min-height:15px}
+@media(max-width:700px){.ob-sidebar-workflow{padding:13px;border-radius:15px}.ob-sidebar-workflow h3{font-size:18px}.ob-sidebar-workflow-head{gap:8px}.ob-sidebar-output{align-items:flex-start}}
+</style>
+<script id="obitrend-every-sidebar-generate-output">
+(()=> {
+ const definitions = [
+  ["phase3Creator","Text to Video","Describe your scene, choose generation settings, then create your video.","🎬"],
+  ["phase6Advanced","Image to Video / Advanced Creator","Add your source media and configure the existing creation settings before running the tool.","🖼️"],
+  ["phase7Director","Director Controls","Set camera direction and visual controls, then apply them to your production.","🎥"],
+  ["phase8Timeline","Movie Timeline","Arrange your shots and use the timeline's existing actions to build the sequence.","🧩"],
+  ["phase11Library","Reference Library","Choose or manage reference assets used by your projects.","🗂️"],
+  ["phase12Settings","Creator Settings","Review your creative defaults and apply changes with the controls above.","⚙️"],
+  ["phase10Movies","My Movies","Review completed generations and use the available playback and download actions.","▶️"],
+  ["phase9Characters","AI Characters","Set up character details and use the existing character tools.","👤"],
+  ["phase5Marketplace","AI Tools & Styles","Choose an available tool or style and follow its controls to apply it.","✨"],
+  ["phase13AccountPage","Account & Security","Review your account settings and use the existing account actions.","🔐"],
+  ["movieProjectsPage","Movie Projects","Open a project or use the project controls to save and continue your work.","🎞️"],
+  ["p3CreditsPage","OBITREND Credits","Review your credit balance and use the secure purchase controls if needed.","🪙"]
+ ];
+ const esc=s=>String(s).replace(/[&<>"]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]));
+ function mount(){
+  document.querySelectorAll(".obitrend-route").forEach(route=>{
+   if(route.id==="obitrendHomeDashboard"||route.querySelector(":scope > .ob-sidebar-workflow")) return;
+   const def=definitions.find(d=>d[0]===route.id);
+   const title=def?.[1]||route.querySelector("h1,h2,h3")?.textContent?.trim()||"Creator Tool";
+   const desc=def?.[2]||"Configure the controls in this workspace, then run the tool to view its result here.";
+   const icon=def?.[3]||"✨";
+   const box=document.createElement("section"); box.className="ob-sidebar-workflow";
+   box.innerHTML='<div class="ob-sidebar-workflow-head"><div><div class="ob-sidebar-workflow-kicker">TOOL WORKFLOW</div><h3>'+esc(title)+' · Generate & Output</h3><p>'+esc(desc)+'</p></div><span class="ob-sidebar-workflow-step">2 STEPS</span></div><div class="ob-sidebar-workflow-actions"><button type="button" class="ob-sidebar-run">✨ Generate / Run Tool</button><button type="button" class="ob-sidebar-how">How it works</button></div><div class="ob-sidebar-output" aria-live="polite"><span class="ob-sidebar-output-icon">'+icon+'</span><div><strong>Output / Result</strong><small>Your result will appear here when this tool finishes. Existing workspace output and controls remain available.</small></div></div><div class="ob-sidebar-workflow-status" aria-live="polite"></div>';
+   route.appendChild(box);
+   const status=box.querySelector(".ob-sidebar-workflow-status"), output=box.querySelector(".ob-sidebar-output");
+   box.querySelector(".ob-sidebar-how").addEventListener("click",()=>{
+    status.textContent="Step 1: complete the tool settings above. Step 2: use Generate / Run Tool. Results remain available in this workspace.";
+    box.scrollIntoView({behavior:"smooth",block:"nearest"});
+   });
+   box.querySelector(".ob-sidebar-run").addEventListener("click",()=>{
+    const candidates=[...route.querySelectorAll("button,input[type=submit]")].filter(b=>!box.contains(b)&&!b.disabled&&b.getClientRects().length);
+    const action=candidates.find(b=>/generate|create video|render|upscale|extend|remove background|lip.?sync|face swap|apply effect|sync audio|build scene|save project|save movie|export|download/i.test((b.innerText||b.value||b.getAttribute("aria-label")||"").trim()));
+    if(action){
+     status.textContent="Running the existing workspace action: "+(action.innerText||action.value||"Run tool").trim();
+     action.click();
+     const media=[...route.querySelectorAll("video,audio,canvas")].filter(el=>!box.contains(el));
+     if(media.length){output.querySelector("small").textContent="The workspace has "+media.length+" media/result element(s). Use the original result controls for playback, download or saving.";}
+    } else {
+     status.textContent="This workspace does not expose a Generate action in its current state. Complete the controls above or use the existing action for this tool; no fake result was created.";
+     route.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+   });
+  });
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount);else mount();
+ const observer=new MutationObserver(()=>mount());
+ observer.observe(document.documentElement,{subtree:true,childList:true});
+})();
+</script>
+</body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
