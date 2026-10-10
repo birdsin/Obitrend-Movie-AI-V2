@@ -11,6 +11,8 @@ Use this checklist against the development preview after each UI commit. Do not 
 - [ ] Workspace closes without navigating away or losing the entire page.
 - [ ] No horizontal overflow at 320px, 360px, 390px, tablet, and desktop widths.
 - [ ] Buttons and form controls are keyboard accessible and have accessible names.
+- [ ] Escape closes the topmost dialog; focus returns to the control that opened it.
+- [ ] Tab and Shift+Tab stay inside an open dialog; clicking the backdrop closes it.
 
 ## Authentication UI (not yet connected)
 - [ ] Create Account, Log In, and Forgot Password screens switch correctly.
