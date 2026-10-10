@@ -1,13 +1,13 @@
 # OBITREND Movie AI V2 — Android Preview QA Checklist
 
-Status: manual QA checklist for the isolated structural prototype only. Screenshot review performed 2026-10-10.
+Status: manual QA checklist for the isolated structural prototype only. User confirmed the fresh staging preview is working on Android on 2026-10-10; this confirms the page loads, not every workflow.
 
 ## Scope and safety
 
 - Repository: `birdsin/Obitrend-Movie-AI-V2`
 - Working branch: `feat/obitrend-v2-structural-prototype`
-- Latest verified staging test URL: `https://obitrend-movie-ai-v2-f6jvbq80y-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
-- Latest verified commit: `2f8aabf3831e6518c03fa6eb76b0ff033b36e319`
+- Latest verified staging test URL: `https://obitrend-movie-ai-v2-b8vury0cx-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest verified commit: `6b0d4ebbc454e9877d62eef35bae1a2345ef81ac`
 - User confirmed the current preview is working on 2026-10-10.
 - This checklist does not authorize production release, real generation, uploads, account writes, credit deductions, or payment actions.
 - Do not create a Supabase project or branch. Do not change production services. Keep PR #6 draft and unmerged.
@@ -50,7 +50,7 @@ Do not wire the prototype to live services until all of the following are indepe
 
 ## Evidence limits
 
-The successful HTTP 200 fetch verifies that the current prototype page is served. Screenshot review and user feedback verify visible layout and that the user reports it working. They do not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
+Vercel reports the fresh staging deployment as READY for commit `6b0d4ebbc454e9877d62eef35bae1a2345ef81ac`, and the user confirms the fresh preview is working on Android. Earlier screenshots support visible layout checks. This does not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
 
 ## Android Video Generator test evidence — 2026-10-10
 
