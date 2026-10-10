@@ -74,3 +74,16 @@ Continue read-only source review and contract documentation. If an isolated non-
 Allowed: review-only documentation and UI-only prototype changes that remain clearly in demo mode.
 
 Not performed: provider calls, live jobs, uploads, credit/payment operations, database mutations, Edge Function deployments, PR merge, or production deployment.
+
+
+## Additional status-adapter findings (read-only, 2026-10-10)
+
+Re-read the currently deployed `ai-job-status` source (version 24) and compared its exact status normalization branch with the documented Flixly terminal states. This remains source inspection only; no function invocation or provider request was made.
+
+1. **Documented `completed` status is not recognized as success in the polling branch.** The branch maps `complete`, `succeeded`, `success`, and `done` to `completed`, but does not include the literal `completed`. A provider response using the documented spelling can therefore fall through to `processing` even if it includes an output URL.
+2. **Documented `failed` status is not recognized as failure in the polling branch.** The branch maps `error`, `cancelled`, and `canceled` to `failed`, but omits the literal `failed`. A provider response using that spelling can fall through to `processing` rather than releasing a reservation after a confirmed failure.
+3. **Polling still constructs the generation-ID endpoint.** The function does not visibly retain or follow a provider-returned `status_url`. The public docs mention both the generation-ID endpoint and `status_url` polling guidance, so the exact required behavior should be confirmed against the current provider response contract.
+4. **Gateway HTTP error settlement needs separate treatment.** The gateway releases on every non-OK response. HTTP status alone does not universally prove that a generation was not accepted (particularly server errors or intermediary failures); before production use, classify errors according to the provider contract and retain/reconcile reservations whenever acceptance is uncertain.
+5. **Input URL guard is weak.** The gateway accepts asset URLs using a `startsWith("http")` check, which also accepts non-HTTPS schemes such as `http://` and does not establish asset ownership or allowed host. This is not a sufficient production URL/SSRF boundary.
+
+These are code-path observations and risk findings, not evidence of a live failure. They strengthen the **NO-GO** decision. Do not patch or deploy the shared function without explicit authorization and a reviewed isolated rollout plan. The V2 prototype remains demo-only.
