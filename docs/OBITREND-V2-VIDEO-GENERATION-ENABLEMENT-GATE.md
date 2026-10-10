@@ -57,3 +57,15 @@ These are source-level observations, not a successful end-to-end verification. D
 ## Next safe action
 
 Continue read-only verification of the existing server-side function contract and cost/credit rules, then review whether a safe non-production backend target already exists. If no isolated target is available, keep generation disabled. Do not create or alter Supabase resources, connect the staging UI to a live backend, merge the draft PR, or promote the Vercel deployment to production.
+## Read-only backend audit findings (2026-10-10)
+
+- The account currently exposes two active Supabase projects: `OBITREND` (`vjlitqujcujwsislprfg`) and `OBITREND AI Platform` (`gclshpaipluhvlsznugl`). No separate V2 Supabase project is available in the project listing. No new project or branch was created.
+- `OBITREND AI Platform` currently has active Edge Functions including `ai-provider-gateway` (version 27), `ai-job-status` (version 24), `credit-engine` (version 15), `ai-media-upload` (version 7), `flixly-model-sync` (version 5), and `movie-provider-usage` (version 3).
+- The deployed gateway source contains Flixly, Kling, and Google Omni/Veo provider paths. This is a shared multi-provider gateway, not proof of a V2-only backend.
+- The `flixly-model-sync` source fetches the live Flixly model catalog and writes to the `ai_models` table, including disabling and upserting Flixly model rows. It was inspected only; it was NOT invoked. Do not run it as a test because it mutates shared model configuration.
+- The gateway/status source includes server-side credit reserve/commit/release paths and job ownership checks in the inspected status handler. These are source-level signals only; no generation, polling, upload, credit operation, provider call, or database mutation was executed during this audit.
+- Since the only available AI Platform project is shared and contains active provider/payment/credit functions, its use by the V2 preview cannot currently be certified as isolated. The existing project's presence does not authorize connecting V2 to it.
+
+### Audit decision
+
+**Real generation remains blocked.** The safe no-new-project/no-new-branch route is to continue UI-only work and read-only verification. Do not connect the Vercel prototype to `gclshpaipluhvlsznugl`, invoke model sync, deploy or edit any Supabase function, upload references, or spend credits unless an isolated target is identified and explicitly approved.
