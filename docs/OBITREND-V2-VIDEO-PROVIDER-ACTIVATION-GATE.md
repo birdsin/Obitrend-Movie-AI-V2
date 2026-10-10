@@ -144,3 +144,16 @@ This helper only validates a candidate URL; it does not fetch it, does not prove
 ### CI scope correction (2026-10-10)
 
 A follow-up review found that run 38091915529 completed before the workflow was corrected to explicitly include `tests/flixly-status-url-validation.test.mjs`. Therefore, that run verifies the response/lifecycle and request-settings suites, but **does not verify the status-URL test file**. The workflow was corrected in commit `b35f8fe74acdf2906436e1b4738d071e6eeae7d9` to list each test file separately in path filters and run all three suites. The corrected workflow then passed in run [38091949228](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38091949228); the `Run isolated mock fixtures` step completed successfully with all three test files in its command.
+
+
+## Official async contract recheck and isolated lifecycle decision fixtures (2026-10-10)
+
+Rechecked the current official Flixly developer documentation:
+- https://www.flixly.ai/developers — documents HTTP 202 with `status: "processing"`, says to poll `status_url`, and lists `GET /api/v1/generations/{id}` as the generation status endpoint.
+- https://www.flixly.ai/developers/webhooks — describes completion/failure events and says polling `/generations/{id}` is the fallback.
+
+This clarifies that the generation-ID endpoint is documented, but the async overview specifically says to poll `status_url`. The existing adapter's choice to construct/poll the generation-ID endpoint instead of following the returned URL therefore remains a compatibility question to resolve against a real documented response example or provider confirmation. No request was sent.
+
+Added `tests/helpers/flixly-lifecycle-decision.mjs` and `tests/flixly-async-lifecycle-decision.test.mjs`. These test-only fixtures assert conservative decisions for processing, success with output, terminal success without output, confirmed failure, timeout, non-2xx response, and unknown states. The expected invariant is that uncertain outcomes retain reservations for reconciliation; only a provider-confirmed failure requests one release, while success requires output persistence before one-time commit. These are decision-model unit tests, not tests of deployed Supabase RPC idempotency or actual storage/credit operations.
+
+The workflow was updated to run the lifecycle decision tests alongside the three existing suites. **CI result for this newest workflow change is pending verification.** The shared provider gateway, status function, catalogue, credits, and payments remain untouched; V2 remains demo-only.
