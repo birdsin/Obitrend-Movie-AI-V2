@@ -6,8 +6,8 @@ Status: manual QA checklist for the isolated structural prototype only. User con
 
 - Repository: `birdsin/Obitrend-Movie-AI-V2`
 - Working branch: `feat/obitrend-v2-structural-prototype`
-- Latest verified staging test URL: `https://obitrend-movie-ai-v2-b8vury0cx-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
-- Latest verified commit: `6b0d4ebbc454e9877d62eef35bae1a2345ef81ac`
+- Latest verified staging test URL: `https://obitrend-movie-ai-v2-ij6726og1-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest verified deployment source commit: `6febd67411c55f442204ef887a6dbe6019d313cf`
 - User confirmed the current preview is working on 2026-10-10.
 - This checklist does not authorize production release, real generation, uploads, account writes, credit deductions, or payment actions.
 - Do not create a Supabase project or branch. Do not change production services. Keep PR #6 draft and unmerged.
@@ -78,7 +78,7 @@ Do not wire the prototype to live services until all of the following are indepe
 
 ## Evidence limits
 
-Vercel reports the fresh staging deployment as READY for commit `6b0d4ebbc454e9877d62eef35bae1a2345ef81ac`, and the user confirms the fresh preview is working on Android. Earlier screenshots support visible layout checks. This does not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
+Vercel reports the latest checked staging deployment as READY for commit `6febd67411c55f442204ef887a6dbe6019d313cf`, and the user confirms the preview is working on Android. Earlier screenshots support visible layout checks. This does not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
 
 ## Android Video Generator test evidence — 2026-10-10
 
@@ -161,7 +161,7 @@ Record failures by tool name and screenshot. Do not mark a tool as passed based 
 ## Next-run Android smoke test — user execution
 
 Use the staging preview only:
-https://obitrend-movie-ai-v2-b8vury0cx-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
+https://obitrend-movie-ai-v2-ij6726og1-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
 
 The six-step smoke test above is now complete. Continue with the full 20-destination / 35-tool review:
 
