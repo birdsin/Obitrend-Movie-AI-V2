@@ -87,3 +87,23 @@ Re-read the currently deployed `ai-job-status` source (version 24) and compared 
 5. **Input URL guard is weak.** The gateway accepts asset URLs using a `startsWith("http")` check, which also accepts non-HTTPS schemes such as `http://` and does not establish asset ownership or allowed host. This is not a sufficient production URL/SSRF boundary.
 
 These are code-path observations and risk findings, not evidence of a live failure. They strengthen the **NO-GO** decision. Do not patch or deploy the shared function without explicit authorization and a reviewed isolated rollout plan. The V2 prototype remains demo-only.
+
+## Follow-up compatibility review (read-only, 2026-10-11)
+
+Re-fetched the current deployed source for shared project functions `ai-provider-gateway` (version 27) and `ai-job-status` (version 24). This was a source-only review; neither function was invoked and no provider request, job, upload, credit action, or payment operation was performed.
+
+### Prioritized findings
+
+- **P0 — terminal status handling:** the status adapter's normalized success aliases omit literal `completed`; its failure aliases omit literal `failed`. Both spellings should be covered by a shared, testable normalizer and mapped to terminal decisions without ambiguity. The existing branch does not import the test-only normalizer, so green mock tests do not fix the deployed function.
+- **P0 — non-OK submission response:** the gateway attempts credit release on every non-OK Flixly submission response. The safe policy must distinguish a provider-confirmed rejection from a response where job acceptance is uncertain. For uncertain outcomes, preserve the reservation and reconcile; do not infer non-acceptance from HTTP status alone.
+- **P0 — request duration:** the gateway currently rounds/clamps duration to 1–30 seconds while the reviewed model page lists 4–15 seconds. Validate the exact user-selected value against the selected model contract before creating/submitting a paid job; do not silently transform it.
+- **P0 — asset URL boundary:** `startsWith("http")` does not enforce HTTPS, an allowed host, or asset ownership. A production path needs server-verified asset IDs/ownership and a narrow URL policy before forwarding an image URL.
+- **P1 — polling contract:** the status adapter constructs the generation-ID endpoint and does not visibly follow `status_url`. Public docs mention both mechanisms; confirm the required behavior against a documented response example/provider clarification before implementation.
+- **P1 — output and settlement:** output persistence, execution finalization, and credit commit/release failures need injected-failure and duplicate-poll tests against a shared pure decision layer. The current test helpers express expected decisions only; they do not execute the deployed function or database RPCs.
+- **P1 — telemetry model label:** status polling uses `seedance-2-5` as a fallback model label, inconsistent with the gateway's `seedance-2-mini` mapping. Prefer the persisted selected model or a neutral unknown value.
+
+### Safe next action
+
+Keep the V2 prototype demo-only. Prepare a proposed patch and mock fixtures for these exact findings, then require explicit review and a proven isolated test environment before any shared function deployment or provider test. Do not create a Supabase project/branch, enable the model, invoke provider sync, or perform live credit/payment operations as part of this work.
+
+**Disposition remains NO-GO for live generation.** The successful GitHub Actions runs verify the isolated mock suite only; they do not change the deployed adapter or clear these findings.
