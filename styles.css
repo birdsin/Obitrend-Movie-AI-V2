@@ -56,3 +56,104 @@ body{background:var(--ob-bg)!important}
 #phase3Creator .p3-result{background:#0e0e0e;border-color:#303030;border-radius:11px}
 @media(max-width:650px){#phase3Creator{padding:10px!important}#phase3Creator .p3head h2{font-size:24px}#phase3Creator .p3tabs{grid-template-columns:repeat(2,minmax(0,1fr))}#phase3Creator .p3grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#phase3Creator .p3field{padding:8px}#phase3Creator .p3field select,#phase3Creator .p3field input:not([type=file]){padding:10px 6px;font-size:11px}#phase3Creator .ob-reference-field{grid-column:1/-1}#phase3Creator .ob-media-row{grid-template-columns:minmax(92px,.78fr) minmax(0,2fr);gap:6px}#phase3Creator .ob-reference-examples{gap:5px}#phase3Creator .ob-reference-thumb,#phase3Creator .ob-reference-thumb img{min-height:94px}#phase3Creator .ob-upload-tile{min-height:94px;padding:5px}}
 @media(max-width:390px){#phase3Creator .p3grid{grid-template-columns:1fr}#phase3Creator .ob-reference-field{grid-column:1}#phase3Creator .p3field{padding:10px}#phase3Creator .p3tabs button{font-size:11px}}
+
+
+/* MASTER PLAN: premium black-and-gold Creator Studio, presentation layer only. */
+:root{--ob-master-gold:#d4af37;--ob-master-gold-deep:#8b6914;--ob-master-black:#050508;--ob-master-panel:#0b0d13;--ob-master-line:#2a2a2a}
+html,body{background:var(--ob-master-black)!important;color:#f5f5f5}
+#obitrendMasterHeader{position:fixed;z-index:10000;left:0;right:0;top:0;min-height:92px;box-sizing:border-box;display:grid;grid-template-columns:minmax(260px,1fr) minmax(250px,.8fr) 145px;align-items:center;gap:22px;padding:10px 26px;background:linear-gradient(105deg,#05070d 0%,#0b111b 52%,#050508 100%);border-bottom:1px solid #5e4a1c;box-shadow:0 8px 28px #0008}
+.ob-master-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.ob-master-crown{font-size:54px;line-height:1;color:#f5c957;text-shadow:0 0 18px #e6b53d8c}
+.ob-master-brand>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ob-master-brand strong{font-size:clamp(22px,2.6vw,38px);line-height:1;color:#f6ca60;letter-spacing:-.035em;text-shadow:0 2px 16px #d4af3740}
+.ob-master-brand b{font-size:15px;color:#f6f6f6;white-space:nowrap}
+.ob-master-brand i{font-style:normal;display:inline-block;margin-left:5px;padding:4px 9px;border:1px solid #9a7422;border-radius:99px;color:#f7d46c;font-size:10px;letter-spacing:.07em}
+.ob-master-center{justify-self:center;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;max-width:300px}
+.ob-master-center>span{color:#f3c75a;font-size:23px}
+.ob-master-center strong{border:2px solid #d4af37;border-radius:999px;padding:8px 20px;color:#ffe49a;font-size:17px;letter-spacing:.04em;white-space:nowrap}
+.ob-master-center small{width:100%;text-align:center;color:#e6d5a2;font-size:12px}
+.ob-master-premium{padding-left:17px;border-left:1px solid #8b6914;color:#ffe49a;font-size:15px;line-height:1.2;letter-spacing:.035em}
+#main{box-sizing:border-box;padding-top:108px!important}
+#main>h1,#main>.muted:first-of-type,#main>.ob-android-mode-note,#main>.ob-desktop-banner{display:none!important}
+#creditSummary{margin:0 auto 12px!important;max-width:100%;padding:8px 12px!important;border-color:#55451e!important;background:#0c0d12!important;border-radius:13px!important}
+#obitrendHomeDashboard{min-width:0;max-width:none!important;margin:0!important}
+#obitrendToolHome{max-width:none!important;padding:8px 0 30px!important}
+#obitrendToolHome .ob-toolhome-head h2{font-size:clamp(23px,2.5vw,34px)!important}
+#obitrendToolHome .ob-toolhome-kicker{color:#e7c65e!important;letter-spacing:.12em!important}
+#obitrendToolHome .ob-toolhome-search{width:100%;min-width:0;box-sizing:border-box;border:1px solid #38352b!important;border-radius:13px!important;background:#0b0c12!important;color:#fff!important;margin:0 0 16px!important;padding:13px 15px!important}
+#obitrendToolHome .ob-toolhome-category{background:linear-gradient(145deg,#0c0d12,#08090e)!important;border:1px solid #2a2a2a!important;border-radius:16px!important;padding:12px!important;margin-bottom:14px!important}
+#obitrendToolHome .ob-toolhome-category-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+#obitrendToolHome .ob-toolhome-category-head h3{color:#f6d675!important;font-size:13px!important;letter-spacing:.08em!important}
+#obitrendToolHome .ob-toolhome-category-head span{color:#f4d26b!important;border-color:#6e5924!important;background:#17140b!important}
+#obitrendToolHome .ob-toolhome-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+#obitrendToolHome .ob-toolhome-card{height:120px;min-height:120px!important;box-sizing:border-box;position:relative;overflow:hidden;border:1px solid #2a2a2a!important;border-radius:14px!important;padding:10px!important;background:#10121a!important;align-items:flex-end!important}
+#obitrendToolHome .ob-toolhome-card:before{opacity:.86!important}
+#obitrendToolHome .ob-toolhome-card:after{background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.35) 48%,transparent 100%)!important}
+#obitrendToolHome .ob-toolhome-card .ob-toolhome-icon{position:absolute;top:8px;left:8px;width:26px;height:26px;min-width:26px;flex-basis:26px;border-radius:8px;background:#050508c9!important;border-color:#d4af3766!important;font-size:15px!important}
+#obitrendToolHome .ob-toolhome-copy{padding-top:35px!important;margin-top:auto!important}
+#obitrendToolHome .ob-toolhome-copy strong{display:block;padding-right:26px;color:#fff!important;font-size:12px!important;line-height:1.25}
+#obitrendToolHome .ob-toolhome-copy small{display:block;margin-top:3px;color:#d0d0d0!important;font-size:10px!important;line-height:1.25}
+#obitrendToolHome .ob-toolhome-arrow{top:auto!important;bottom:8px!important;right:8px!important;width:26px!important;height:26px!important;background:#d4af37!important;color:#080808!important}
+#obitrendToolHome .ob-premium-hero{min-height:185px!important;margin:0 0 12px!important;border-color:#725b2f!important;border-radius:16px!important}
+#obitrendToolHome .ob-premium-hero h3 span{background:linear-gradient(90deg,#ffe9a5,#d4af37,#b77b20);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+#obitrendToolHome .ob-premium-workflow{margin:0 0 15px!important;gap:7px!important}
+#obitrendToolHome .ob-premium-step{border-color:#73591f!important;background:linear-gradient(145deg,#17130a,#0b0b0c)!important}
+#obitrendMasterRail{position:fixed;z-index:9000;right:10px;top:104px;bottom:10px;width:210px;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;padding:10px;border:1px solid #51421f;border-radius:16px;background:linear-gradient(180deg,#0c0d12,#07080c);scrollbar-width:thin;scrollbar-color:#6b5422 #090a0d}
+#obitrendMasterRail>h2{margin:2px 2px 10px;color:#f4d16b;font-size:13px;letter-spacing:.05em}
+.ob-master-rail-group{margin:0 0 10px}
+.ob-master-rail-group h3{margin:0 0 5px;padding:6px 4px;border-bottom:1px solid #3b3018;color:#e8c45c;font-size:10px;line-height:1.2;letter-spacing:.035em}
+.ob-master-rail-list{display:grid;gap:3px}
+.ob-master-rail-item{display:grid;grid-template-columns:20px 16px minmax(0,1fr);align-items:center;gap:5px;min-width:0;width:100%;padding:5px 4px;text-align:left;background:#0c0e13!important;border:1px solid #242831!important;border-radius:8px!important;color:#d8dce5!important;font-size:10px!important;line-height:1.1}
+.ob-master-rail-item:hover,.ob-master-rail-item.active{border-color:#d4af37!important;background:#d4af371c!important;color:#ffe9a2!important}
+.ob-master-number{display:grid;place-items:center;width:18px;height:18px;border:1px solid #3c3525;border-radius:6px;color:#f0d16d;font-size:9px}
+.ob-master-rail-icon{font-size:12px;color:#e5bd4b;text-align:center}
+.ob-master-rail-label{overflow-wrap:anywhere}
+.ob-master-features{margin-top:12px;padding:9px;border:1px solid #d4af37;border-radius:12px;background:linear-gradient(145deg,#eac65d,#bd8c24);color:#171204}
+.ob-master-features h3{margin:0 0 7px;font-size:11px;color:#171204}
+.ob-master-features ul{list-style:none;padding:0;margin:0;display:grid;gap:5px}
+.ob-master-features li{position:relative;padding-left:17px;font-size:9px;line-height:1.2}
+.ob-master-features li:before{content:"✓";position:absolute;left:0;top:0;width:12px;height:12px;display:grid;place-items:center;border-radius:50%;background:#15140e;color:#f5d66f;font-size:9px;font-weight:900}
+#phase3Drawer .p3brand{color:#f4cb60!important}
+#phase3Drawer .p3brand>span{color:#f4cb60}
+#phase3Drawer .p3nav button{font-size:12px!important;padding:9px 10px!important;border-radius:9px!important}
+#phase3Drawer .p3nav .p3-group>summary{font-size:10px!important;letter-spacing:.05em;color:#c7cbd5}
+#phase3Drawer .p3nav button.active,#phase3Drawer .p3nav button[aria-current="page"]{background:#d4af3726!important;border-color:#d4af37!important;color:#ffe7a0!important}
+@media(min-width:1200px){
+ #phase3MenuBtn,#phase3Close,#phase3Shade{display:none!important}
+ #phase3Drawer{top:100px!important;bottom:10px!important;left:10px!important;width:265px!important;max-width:265px!important;transform:none!important;transition:none!important;padding:12px!important;border:1px solid #34302a!important;border-radius:16px!important;background:#080a0f!important}
+ #phase3Drawer .p3brand{font-size:21px!important;padding:6px 8px 13px!important}
+ #phase3Drawer .p3nav{gap:3px!important}
+ #phase3Drawer .p3nav .p3-group{margin-bottom:5px}
+ #phase3Drawer .p3nav .p3-group>summary{padding:7px 8px!important}
+ #phase3Drawer .p3nav button{padding:7px 9px!important;font-size:12px!important}
+ #main{margin-left:285px!important;margin-right:230px!important;padding:108px 10px 24px!important}
+ #creditSummary{max-width:100%!important}
+}
+@media(min-width:901px) and (max-width:1199px){
+ #obitrendMasterRail{display:none}
+ #main{padding-top:108px!important}
+}
+@media(max-width:900px){
+ #obitrendMasterHeader{position:relative;min-height:70px;grid-template-columns:minmax(0,1fr) auto;padding:8px 12px 8px 60px;gap:8px}
+ .ob-master-crown{font-size:36px}
+ .ob-master-brand strong{font-size:22px}
+ .ob-master-brand b{font-size:11px}
+ .ob-master-brand i{font-size:8px}
+ .ob-master-center{display:none}
+ .ob-master-premium{font-size:10px;padding-left:8px}
+ #obitrendMasterRail{display:none!important}
+ #phase3Drawer{top:0!important;padding-top:54px!important}
+ #main{padding:12px 10px 28px!important;margin:0!important}
+ #obitrendHomeDashboard{padding:0!important}
+ #obitrendToolHome .ob-toolhome-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #obitrendToolHome .ob-premium-hero{min-height:220px!important}
+ #creditSummary{margin-bottom:10px!important}
+}
+@media(max-width:390px){
+ .ob-master-brand{gap:5px}
+ .ob-master-brand strong{font-size:19px}
+ .ob-master-brand b{font-size:10px}
+ #obitrendToolHome .ob-toolhome-card{height:118px;min-height:118px!important;padding:8px!important}
+ #obitrendToolHome .ob-toolhome-copy strong{font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){#obitrendMasterHeader *,#obitrendMasterRail *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
