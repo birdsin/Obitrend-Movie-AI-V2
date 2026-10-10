@@ -3399,7 +3399,48 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  };
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wire,{once:true});else wire();
 })();
-</script></body></html><script id="phase6-script">
+</script>
+<style id="obitrend-video-generator-home-route-style">
+/* Expose the existing, connected video-generation workspace only when opened from its home card. */
+#phase3Creator.obitrend-video-generator-open{display:block!important;visibility:visible!important;pointer-events:auto!important}
+#phase3Creator.obitrend-video-generator-open .p3head h2:after{content:"";display:block}
+</style>
+<script id="obitrend-video-generator-home-route">
+(()=> {
+ const openVideo=()=>{
+  const home=document.getElementById("obitrendHomeDashboard");
+  const workspace=document.getElementById("phase3Creator");
+  if(!home||!workspace)return;
+  document.querySelectorAll(".obitrend-route").forEach(el=>el.classList.remove("obitrend-active"));
+  home.classList.remove("obitrend-active");
+  workspace.classList.add("obitrend-active","obitrend-video-generator-open");
+  workspace.removeAttribute("inert");
+  workspace.setAttribute("aria-hidden","false");
+  const heading=workspace.querySelector(".p3head h2");
+  if(heading)heading.textContent="Video Generator";
+  window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("phase3Close")?.click();
+  window.dispatchEvent(new CustomEvent("obitrend-route-changed",{detail:"video-generator"}));
+ };
+ document.addEventListener("click",event=>{
+  const card=event.target.closest("#obitrendToolHome .ob-toolhome-card");
+  if(!card)return;
+  const search=(card.dataset.search||"").toLowerCase();
+  if(!search.includes("video-generator")&&!search.includes("video generator"))return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  openVideo();
+ },true);
+ document.addEventListener("click",event=>{
+  const button=event.target.closest("#obitrendHomeDashboard [data-home-route='creator'],#phase3Drawer [data-ob-menu-key='video-generator']");
+  if(!button)return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  openVideo();
+ },true);
+})();
+</script>
+</body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
