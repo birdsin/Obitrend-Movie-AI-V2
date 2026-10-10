@@ -120,3 +120,10 @@ Added `.github/workflows/flixly-contract-tests.yml` on the prototype branch. It 
 The workflow was added in commit `39a23eea346bb6098c3cf7fa5d68602a7262cfc7`. At the time of this check, no associated pull-request workflow run was returned by the available run lookup. **CI execution is now verified:** GitHub Actions run [38090518445](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38090518445) completed successfully, and the `Mock-only Flixly contract fixtures` job's test step passed. This confirms only the isolated mock fixture suite, not live provider integration.
 
 This CI workflow only runs the mock fixture suite. It does not test or deploy the shared Supabase function and does not clear any video-provider activation gate.
+
+
+## Documented request-settings preflight fixtures added (2026-10-10)
+
+Added a pure test-only validator at `tests/helpers/validate-flixly-mini-request.mjs` and eight test cases at `tests/flixly-mini-request-validation.test.mjs`. The fixtures cover the documented Seedance 2.0 Mini duration range (4–15 seconds), resolutions (480p/720p), and aspect ratios (16:9, 9:16, 1:1, 21:9, 4:3, 3:4), including invalid, fractional, and unsupported settings. The GitHub Actions workflow was updated to run both the existing response/lifecycle mock suite and this request-settings suite.
+
+**Status at this commit:** the tests and workflow have been committed, but the new CI run has not yet been checked. These are isolated pure-function fixtures only; the validator is not wired into the shared gateway, no provider request is sent, and no activation gate is cleared. Confirm the CI run result before describing these new tests as passing.
