@@ -72,3 +72,29 @@ The model selector reports “No verified AI model connected.” This is expecte
 1. Identify and prove an already-existing isolated non-production backend target, without creating a Supabase project or branch.
 2. Confirm the Flixly model mapping and authoritative server-side price/quote using read-only source review or an approved test environment.
 3. Only after explicit authorization, run integration tests using a dedicated non-production account and test data.
+
+
+## Next-run Android smoke test — user execution
+
+Use the staging preview only:
+https://obitrend-movie-ai-v2-f6jvbq80y-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
+
+Run this short pass before the full 20-destination / 35-tool review:
+
+1. Open the URL in Chrome on Android and wait for the dashboard to finish rendering.
+2. Open the menu, choose **Video Generator**, and verify the page changes.
+3. Leave the prompt empty and tap Generate. Expected: a prompt validation message; no video, upload, or credit use.
+4. Enter a short test prompt and tap Generate. Expected: a clear “no verified model connected” / demo-only message; no claimed generation.
+5. Tap Clear inputs. Expected: the prompt and local reference selection reset.
+6. Refresh once. Expected: no claim that demo project/output data was saved.
+
+Record the result in the next chat message using:
+- Dashboard opens: PASS / FAIL
+- Video Generator opens: PASS / FAIL
+- Empty-prompt validation: PASS / FAIL
+- Demo-only message: PASS / FAIL
+- Clear inputs: PASS / FAIL
+- Refresh behavior: PASS / FAIL
+- Any visible issue: short description or “none”
+
+Do not enter payment details, attempt a real generation, or test against production. This is a manual visual/interaction smoke test; it does not establish backend integration readiness.
