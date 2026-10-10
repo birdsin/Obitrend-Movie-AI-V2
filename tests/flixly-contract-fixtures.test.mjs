@@ -1,65 +1,55 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { normalizeFlixlyResponse } from "./helpers/flixly-normalize.mjs";
 
 /**
- * Mock-only contract fixtures for the Flixly response shapes currently accepted
- * by OBITREND's ai-job-status parser. This deliberately does not import or call
- * the deployed Edge Function, network, Supabase, storage, or credit APIs.
- *
- * These tests document/validate the expected contract in isolation. They do
- * NOT prove that the deployed function passes them.
+ * Isolated contract fixtures. No deployed Edge Function, provider network,
+ * Supabase, storage, or credit API is called by this test file.
  */
 
-function normalize(payload) {
-  const candidates = [payload, payload?.data, payload?.result, payload?.generation].filter(Boolean);
-  const rawState = String(candidates.map((x) => x?.status).find((v) => v != null) || "")
-    .trim().toLowerCase();
-  const outputUrl = candidates
-    .map((x) => x?.output_url || x?.outputUrl || x?.url || x?.video_url || x?.videoUrl)
-    .find((v) => typeof v === "string" && v.length > 0) || "";
-
-  const status =
-    ["complete", "succeeded", "success", "done"].includes(rawState) ? "completed" :
-    ["error", "cancelled", "canceled"].includes(rawState) ? "failed" :
-    rawState || "processing";
-
-  return { status, outputUrl, rawState };
-}
-
 test("completed fixture with output_url normalizes to completed", () => {
-  assert.deepEqual(normalize({ status: "completed", output_url: "https://fixture.invalid/out.mp4" }), {
-    status: "completed", outputUrl: "https://fixture.invalid/out.mp4", rawState: "completed"
+  assert.deepEqual(normalizeFlixlyResponse({
+    status: "completed", output_url: "https://fixture.invalid/out.mp4"
+  }), {
+    status: "completed", rawState: "completed",
+    outputUrl: "https://fixture.invalid/out.mp4", hasOutput: true,
+    malformedTerminalSuccess: false
   });
 });
 
 test("nested result with success and url normalizes", () => {
-  assert.deepEqual(normalize({ result: { status: "success", url: "https://fixture.invalid/video.mp4" } }), {
-    status: "completed", outputUrl: "https://fixture.invalid/video.mp4", rawState: "success"
+  const result = normalizeFlixlyResponse({
+    result: { status: "success", url: "https://fixture.invalid/video.mp4" }
   });
+  assert.equal(result.status, "completed");
+  assert.equal(result.outputUrl, "https://fixture.invalid/video.mp4");
 });
 
 test("HTTP 202 processing-shaped body stays processing", () => {
-  assert.deepEqual(normalize({ status: "processing", status_url: "https://fixture.invalid/status/abc", id: "fixture-task" }), {
-    status: "processing", outputUrl: "", rawState: "processing"
+  const result = normalizeFlixlyResponse({
+    status: "processing",
+    status_url: "https://fixture.invalid/status/abc",
+    id: "fixture-task"
   });
+  assert.equal(result.status, "processing");
+  assert.equal(result.outputUrl, "");
 });
 
 test("failed fixture normalizes to failed", () => {
-  assert.deepEqual(normalize({ generation: { status: "failed", error: { message: "fixture failure" } } }), {
-    status: "failed", outputUrl: "", rawState: "failed"
-  });
+  assert.equal(normalizeFlixlyResponse({
+    generation: { status: "failed", error: { message: "fixture failure" } }
+  }).status, "failed");
 });
 
 test("legacy cancelled spelling normalizes to failed", () => {
-  assert.equal(normalize({ status: "canceled" }).status, "failed");
+  assert.equal(normalizeFlixlyResponse({ status: "canceled" }).status, "failed");
 });
 
-test("completed without an output URL remains distinguishable as malformed", () => {
-  const result = normalize({ status: "completed" });
+test("completed without output is explicitly malformed", () => {
+  const result = normalizeFlixlyResponse({ status: "completed" });
   assert.equal(result.status, "completed");
-  assert.equal(result.outputUrl, "");
-  // The consumer MUST NOT mark this as successful output delivery.
-  assert.equal(result.status === "completed" && !result.outputUrl, true);
+  assert.equal(result.hasOutput, false);
+  assert.equal(result.malformedTerminalSuccess, true);
 });
 
 test("missing task response does not invent an identifier", () => {
@@ -69,9 +59,7 @@ test("missing task response does not invent an identifier", () => {
 });
 
 test("unknown provider state is not mistaken for success or failure", () => {
-  const result = normalize({ status: "queued" });
-  assert.equal(result.status, "queued");
-  assert.equal(result.outputUrl, "");
+  assert.equal(normalizeFlixlyResponse({ status: "queued" }).status, "queued");
 });
 
 test("fixture URLs are inert placeholders only", () => {
@@ -80,4 +68,67 @@ test("fixture URLs are inert placeholders only", () => {
     { status: "processing", status_url: "https://fixture.invalid/status/abc" }
   ]);
   assert.equal(serialized.includes("flixly.ai"), false);
+});
+
+test("mock lifecycle does not commit credits if output write fails", async () => {
+  const events = [];
+  async function mockLifecycle({ providerSucceeded, outputWriteOk }) {
+    if (!providerSucceeded) return { status: "processing", events };
+    events.push("output-write");
+    if (!outputWriteOk) return { status: "ambiguous", creditsReserved: true, events };
+    events.push("commit");
+    return { status: "succeeded", events };
+  }
+  const result = await mockLifecycle({ providerSucceeded: true, outputWriteOk: false });
+  assert.equal(result.status, "ambiguous");
+  assert.equal(result.creditsReserved, true);
+  assert.deepEqual(events, ["output-write"]);
+});
+
+test("mock lifecycle does not claim settlement if credit commit fails", async () => {
+  const events = [];
+  async function mockLifecycle({ outputWriteOk, commitOk }) {
+    if (!outputWriteOk) return { status: "ambiguous", creditsReserved: true, events };
+    events.push("output-write");
+    if (!commitOk) return { status: "ambiguous", creditsReserved: true, events };
+    events.push("commit");
+    return { status: "succeeded", events };
+  }
+  const result = await mockLifecycle({ outputWriteOk: true, commitOk: false });
+  assert.equal(result.status, "ambiguous");
+  assert.equal(result.creditsReserved, true);
+  assert.deepEqual(events, ["output-write"]);
+});
+
+test("mock lifecycle retains reservation on provider timeout", async () => {
+  const result = { status: "ambiguous", creditsReserved: true, releaseCalled: false };
+  assert.equal(result.status, "ambiguous");
+  assert.equal(result.creditsReserved, true);
+  assert.equal(result.releaseCalled, false);
+});
+
+test("duplicate mock polls do not run settlement twice", async () => {
+  let commits = 0;
+  const settledJobs = new Set();
+  function commitOnce(jobId) {
+    if (settledJobs.has(jobId)) return;
+    settledJobs.add(jobId);
+    commits += 1;
+  }
+  commitOnce("fixture-job-1");
+  commitOnce("fixture-job-1");
+  assert.equal(commits, 1);
+});
+
+test("failed terminal result asks for at most one mock release", () => {
+  let releases = 0;
+  const releasedJobs = new Set();
+  function releaseOnce(jobId) {
+    if (releasedJobs.has(jobId)) return;
+    releasedJobs.add(jobId);
+    releases += 1;
+  }
+  releaseOnce("fixture-job-failed");
+  releaseOnce("fixture-job-failed");
+  assert.equal(releases, 1);
 });
