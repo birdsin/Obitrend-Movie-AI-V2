@@ -127,3 +127,15 @@ This CI workflow only runs the mock fixture suite. It does not test or deploy th
 Added a pure test-only validator at `tests/helpers/validate-flixly-mini-request.mjs` and eight test cases at `tests/flixly-mini-request-validation.test.mjs`. The fixtures cover the documented Seedance 2.0 Mini duration range (4–15 seconds), resolutions (480p/720p), and aspect ratios (16:9, 9:16, 1:1, 21:9, 4:3, 3:4), including invalid, fractional, and unsupported settings. The GitHub Actions workflow was updated to run both the existing response/lifecycle mock suite and this request-settings suite.
 
 **Status at this commit:** the tests and workflow have been committed, but the new CI run has not yet been checked. These are isolated pure-function fixtures only; the validator is not wired into the shared gateway, no provider request is sent, and no activation gate is cleared. Confirm the CI run result before describing these new tests as passing.
+
+
+## Request-settings CI verification and status-URL safety fixtures (2026-10-10)
+
+The combined CI run [38090969977](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38090969977) completed successfully. Its Node test step passed after the documented request-settings preflight tests were added. This verifies the fixture suite at that commit only.
+
+A further test-only safety layer has now been added:
+- `tests/helpers/validate-flixly-status-url.mjs` accepts only HTTPS URLs whose origin exactly matches the current allowlist (`https://www.flixly.ai`), and rejects malformed URLs, HTTP, deceptive hosts/subdomains, nonstandard ports, embedded credentials, and relative URLs.
+- `tests/flixly-status-url-validation.test.mjs` covers these URL-policy cases.
+- The workflow was updated to run this new test file as well. **The CI result for this latest addition is pending verification.**
+
+This helper only validates a candidate URL; it does not fetch it, does not prove the provider requires `status_url`, and is not wired into the shared function. The exact allowlisted origin must be checked against current provider documentation before any production use. No provider request or shared backend operation was performed.
