@@ -3434,6 +3434,88 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  },true);
 })();
 </script>
+
+<style id="obitrend-premium-gold-dashboard">
+/* Premium Gold home refresh: presentation/navigation only. Existing auth, wallet, checkout and generation handlers remain in place. */
+:root{--ob-gold:#f3c65f;--ob-gold-bright:#ffe5a0}
+#obitrendHomeDashboard #obitrendToolHome{max-width:1440px;padding:18px 0 44px}
+#obitrendHomeDashboard .ob-toolhome-head{margin-bottom:15px}
+#obitrendHomeDashboard .ob-toolhome-kicker{color:var(--ob-gold);font-weight:900;letter-spacing:.19em}
+#obitrendHomeDashboard .ob-toolhome-head h2{font-size:clamp(27px,4vw,43px);font-weight:900;letter-spacing:-.035em}
+#obitrendHomeDashboard .ob-toolhome-head p{max-width:760px;color:#bdc7d6}
+#obitrendHomeDashboard .ob-premium-hero{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;min-height:230px;margin:0 0 18px;border:1px solid #725b2f;border-radius:20px;background:#0a101b url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1500&q=85') center 43%/cover}
+#obitrendHomeDashboard .ob-premium-hero:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#070b12 0%,#080d16f2 40%,#080d1680 74%,#080d1630 100%)}
+#obitrendHomeDashboard .ob-premium-hero-copy{padding:clamp(20px,4vw,34px);max-width:680px}
+#obitrendHomeDashboard .ob-premium-eyebrow{color:var(--ob-gold-bright);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+#obitrendHomeDashboard .ob-premium-hero h3{font-size:clamp(27px,4vw,42px);line-height:1.05;letter-spacing:-.03em;margin:9px 0 10px;color:#fff}
+#obitrendHomeDashboard .ob-premium-hero h3 span{color:var(--ob-gold)}
+#obitrendHomeDashboard .ob-premium-hero p{margin:0 0 17px;color:#d3d9e4;max-width:520px;line-height:1.55}
+#obitrendHomeDashboard .ob-premium-start{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:11px;background:linear-gradient(120deg,#ffe8a1,#e8b33e);padding:12px 17px;color:#211806;font-weight:900;cursor:pointer}
+#obitrendHomeDashboard .ob-premium-workflow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0 0 24px}
+#obitrendHomeDashboard .ob-premium-step{display:flex;align-items:center;gap:9px;min-width:0;padding:10px;border:1px solid #293649;border-radius:12px;background:linear-gradient(145deg,#111a28,#0a1019)}
+#obitrendHomeDashboard .ob-premium-step b{display:grid;place-items:center;flex:0 0 27px;height:27px;border-radius:9px;color:#201806;background:var(--ob-gold);font-size:12px}
+#obitrendHomeDashboard .ob-premium-step span{font-size:11px;color:#dbe3ef;font-weight:750}
+#obitrendHomeDashboard .ob-toolhome-search{margin-bottom:23px;border-color:#344156;background:#0b121d}
+#obitrendHomeDashboard .ob-toolhome-category{padding:14px;margin:0 0 17px;border:1px solid #253246;border-radius:17px;background:linear-gradient(145deg,#0d1521,#090f18)}
+#obitrendHomeDashboard .ob-toolhome-category-head h3{color:var(--ob-gold-bright);font-size:12px;letter-spacing:.13em}
+#obitrendHomeDashboard .ob-toolhome-category-head span{color:#f0d89d;border-color:#57482c;background:#17170f}
+#obitrendHomeDashboard .ob-toolhome-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#obitrendHomeDashboard .ob-toolhome-card{isolation:isolate;overflow:hidden;min-height:132px;align-items:flex-end;padding:14px;border-color:#344154;background:#111a28;box-shadow:0 8px 22px #0002}
+#obitrendHomeDashboard .ob-toolhome-card:before{content:"";position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;opacity:.82;transition:transform .25s}
+#obitrendHomeDashboard .ob-toolhome-card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#050910f5 0%,#050910bd 48%,#05091018 100%)}
+#obitrendHomeDashboard .ob-toolhome-card:hover{border-color:var(--ob-gold);transform:translateY(-2px);box-shadow:0 10px 30px #0005}
+#obitrendHomeDashboard .ob-toolhome-card:hover:before{transform:scale(1.06)}
+#obitrendHomeDashboard .ob-toolhome-icon{align-self:flex-start;flex:0 0 37px;width:37px;height:37px;background:#090d16d9;border-color:#d9b75b;color:var(--ob-gold-bright)}
+#obitrendHomeDashboard .ob-toolhome-copy{margin-top:auto;align-self:flex-end;width:100%;padding-top:38px}
+#obitrendHomeDashboard .ob-toolhome-copy strong{font-size:13px;color:#fff}
+#obitrendHomeDashboard .ob-toolhome-copy small{color:#c3cede;line-height:1.4}
+#obitrendHomeDashboard .ob-toolhome-arrow{position:absolute;right:10px;top:10px;color:#171204;background:var(--ob-gold);border-radius:50%;width:27px;height:27px;display:grid;place-items:center;font-size:21px}
+#obitrendHomeDashboard .ob-toolhome-card:nth-child(6n+1):before{background-image:url('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=700&q=80')}
+#obitrendHomeDashboard .ob-toolhome-card:nth-child(6n+2):before{background-image:url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=80')}
+#obitrendHomeDashboard .ob-toolhome-card:nth-child(6n+3):before{background-image:url('https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=700&q=80')}
+#obitrendHomeDashboard .ob-toolhome-card:nth-child(6n+4):before{background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80')}
+#obitrendHomeDashboard .ob-toolhome-card:nth-child(6n+5):before{background-image:url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=700&q=80')}
+#obitrendHomeDashboard .ob-toolhome-card:nth-child(6n):before{background-image:url('https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=700&q=80')}
+#obitrendHomeDashboard .ob-toolhome-empty{color:#cbd5e1}
+@media(max-width:900px){#obitrendHomeDashboard .ob-toolhome-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#obitrendHomeDashboard .ob-premium-workflow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){#obitrendHomeDashboard #obitrendToolHome{padding:8px 0 28px}#obitrendHomeDashboard .ob-premium-hero{min-height:250px;border-radius:15px;background-position:58% center}#obitrendHomeDashboard .ob-premium-hero:before{background:linear-gradient(90deg,#070b12f7 0%,#080d16e8 60%,#080d1680 100%)}#obitrendHomeDashboard .ob-toolhome-category{padding:10px;border-radius:14px}#obitrendHomeDashboard .ob-toolhome-grid{gap:8px}#obitrendHomeDashboard .ob-toolhome-card{min-height:132px;padding:10px}#obitrendHomeDashboard .ob-toolhome-copy strong{font-size:12px}#obitrendHomeDashboard .ob-toolhome-copy small{font-size:10px}#obitrendHomeDashboard .ob-premium-workflow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){#obitrendHomeDashboard .ob-toolhome-card,#obitrendHomeDashboard .ob-toolhome-card:before{transition:none}}
+</style>
+<script id="obitrend-premium-gold-dashboard-integration">
+(()=> {
+ function mountPremiumHome(){
+  const home=document.getElementById("obitrendHomeDashboard");
+  const view=document.getElementById("obitrendToolHome");
+  if(!home||!view||view.dataset.premiumGoldMounted)return;
+  view.dataset.premiumGoldMounted="1";
+  const head=view.querySelector(".ob-toolhome-head");
+  if(head&&!view.querySelector(".ob-premium-hero")){
+   const hero=document.createElement("section");
+   hero.className="ob-premium-hero";
+   hero.setAttribute("aria-label","Premium Gold Creator Studio");
+   hero.innerHTML='<div class="ob-premium-hero-copy"><div class="ob-premium-eyebrow">Premium Gold · Creator Studio</div><h3>Turn Ideas Into <span>Amazing Movies</span></h3><p>Choose a creative tool, set up your project and continue in the existing connected workspace.</p><button class="ob-premium-start" type="button">Start Creating <span aria-hidden="true">→</span></button></div>';
+   head.insertAdjacentElement("afterend",hero);
+   hero.querySelector("button").addEventListener("click",()=>{
+    const card=[...view.querySelectorAll(".ob-toolhome-card")].find(c=>/video-generator/.test(c.dataset.search||""));
+    if(card){card.click();return;}
+    const nav=document.querySelector('#phase3Drawer [data-ob-menu-key="video-generator"]');
+    if(nav){nav.click();return;}
+    window.obitrendNavigate?.("home");
+   });
+   const workflow=document.createElement("div");
+   workflow.className="ob-premium-workflow";
+   workflow.setAttribute("aria-label","Five step creative workflow");
+   workflow.innerHTML='<div class="ob-premium-step"><b>1</b><span>Choose tool</span></div><div class="ob-premium-step"><b>2</b><span>Describe idea</span></div><div class="ob-premium-step"><b>3</b><span>Review settings</span></div><div class="ob-premium-step"><b>4</b><span>Generate</span></div><div class="ob-premium-step"><b>5</b><span>Manage output</span></div>';
+   hero.insertAdjacentElement("afterend",workflow);
+  }
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mountPremiumHome,{once:true});
+ else mountPremiumHome();
+ const observer=new MutationObserver(()=>mountPremiumHome());
+ observer.observe(document.documentElement,{childList:true,subtree:true});
+ setTimeout(()=>observer.disconnect(),8000);
+})();
+</script>
 </body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
