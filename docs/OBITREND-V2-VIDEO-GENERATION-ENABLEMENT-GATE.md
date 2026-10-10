@@ -69,3 +69,14 @@ Continue read-only verification of the existing server-side function contract an
 ### Audit decision
 
 **Real generation remains blocked.** The safe no-new-project/no-new-branch route is to continue UI-only work and read-only verification. Do not connect the Vercel prototype to `gclshpaipluhvlsznugl`, invoke model sync, deploy or edit any Supabase function, upload references, or spend credits unless an isolated target is identified and explicitly approved.
+## Additional read-only model catalogue verification (2026-10-10)
+
+A read-only SELECT of `public.ai_models` for provider `flixly` returned a row for `flixly-video` (`Flixly Video`, category `video`, `credit_price = 8.00`) with `enabled = false`. This confirms the planned row exists in the shared AI Platform database, but it does **not** prove the upstream Flixly API currently supports that exact model or that the gateway can execute it.
+
+The inspected `ai-provider-gateway` source maps its Flixly request payload to `seedance-2-mini` rather than using `flixly-video` as the provider model. This is a material model-ID mismatch that must be resolved and tested in an isolated environment before real generation can work safely. Do not enable the catalogue row, run model sync, or change the shared gateway as a shortcut.
+
+The current V2 staging deployment list also shows READY staging deployments on the existing feature branch. This is not a production deployment and does not change the backend isolation decision.
+
+### Updated next step
+
+Prepare a proposed, review-only mapping for the V2 selection (`Flixly Video`) to the actual upstream provider model ID and server quote, without executing provider requests or mutating shared model rows. Real generation stays disabled until an isolated target and verified mapping are available.
