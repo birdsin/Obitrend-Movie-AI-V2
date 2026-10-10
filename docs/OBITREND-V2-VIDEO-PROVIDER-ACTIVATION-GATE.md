@@ -117,6 +117,6 @@ A local Node.js run of an equivalent isolated mock harness passed **14/14 assert
 
 Added `.github/workflows/flixly-contract-tests.yml` on the prototype branch. It uses Node.js 22 and runs `node --test tests/flixly-contract-fixtures.test.mjs` for relevant pushes, pull requests targeting `main`, or manual dispatch. Permissions are limited to `contents: read`; no provider credentials or service calls are required.
 
-The workflow was added in commit `39a23eea346bb6098c3cf7fa5d68602a7262cfc7`. At the time of this check, no associated pull-request workflow run was returned by the available run lookup. **CI execution is therefore pending/unverified**; do not describe the workflow as passing until an actual run result is observed.
+The workflow was added in commit `39a23eea346bb6098c3cf7fa5d68602a7262cfc7`. At the time of this check, no associated pull-request workflow run was returned by the available run lookup. **CI execution is now verified:** GitHub Actions run [38090518445](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38090518445) completed successfully, and the `Mock-only Flixly contract fixtures` job's test step passed. This confirms only the isolated mock fixture suite, not live provider integration.
 
 This CI workflow only runs the mock fixture suite. It does not test or deploy the shared Supabase function and does not clear any video-provider activation gate.
