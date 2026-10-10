@@ -68,3 +68,17 @@ test("HTTP 201 with completed output follows persist-before-commit decision", ()
     payload: { status: "succeeded", video_url: "https://fixture.invalid/video.mp4" }
   }), { state: "completed", action: "persist_then_commit_once", reservation: "retain_until_persisted_and_committed" });
 });
+
+test("literal completed status is recognized by the shared test normalizer", () => {
+  assert.deepEqual(decideFlixlyLifecycle({
+    httpStatus: 200,
+    payload: { status: "completed", output_url: "https://fixture.invalid/completed.mp4" }
+  }), { state: "completed", action: "persist_then_commit_once", reservation: "retain_until_persisted_and_committed" });
+});
+
+test("literal failed status is recognized as confirmed failure", () => {
+  assert.deepEqual(decideFlixlyLifecycle({
+    httpStatus: 200,
+    payload: { status: "failed", error: { message: "fixture failure" } }
+  }), { state: "failed", action: "release_once", reservation: "release_after_confirmed_failure" });
+});
