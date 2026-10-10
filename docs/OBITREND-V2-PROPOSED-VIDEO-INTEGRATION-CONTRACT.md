@@ -94,3 +94,15 @@ This section records compatibility checks from the existing source review and pu
 - Which existing storage and credit settlement operations can be safely exercised in an already-isolated test environment.
 
 **Outcome:** static review identifies a concrete duration mismatch (adapter clamp 1–30 seconds versus public model documentation 4–15 seconds) and several unresolved mappings. Do not fix this by changing shared backend code or by guessing provider fields. Keep the prototype in demo mode until the authenticated contract and isolated environment are verified.
+
+
+## Existing non-production target discovery — 2026-10-10
+
+A read-only inventory of the connected Supabase organization returned two existing projects:
+
+- `OBITREND` — ref `vjlitqujcujwsislprfg`, created 2026-08-13.
+- `OBITREND AI Platform` — ref `gclshpaipluhvlsznugl`, created 2026-10-06.
+
+The inventory does not identify a third, dedicated V2 test project. The AI Platform was previously found to host shared gateway, job-status, media-upload, credit, model-sync, and usage functions. Project existence or healthy status does not prove tenant, wallet, storage, credentials, job data, or billing isolation.
+
+**Environment gate remains BLOCKED:** no existing isolated non-production backend has been demonstrated. Do not use either project for live integration tests or change their schema, functions, model catalogue, credentials, or billing. Do not create a new project or branch. The next permissible step is to locate existing deployment/environment configuration and verify isolation using read-only evidence; if no isolated target exists, stop before backend/provider testing and request explicit authorization for any proposed alternative.
