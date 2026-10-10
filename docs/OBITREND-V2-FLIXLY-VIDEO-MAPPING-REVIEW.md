@@ -64,3 +64,20 @@ This public documentation supports `seedance-2-mini` as a plausible upstream can
 - Do not enable the shared row or wire the V2 UI to the live project based solely on public documentation.
 
 Decision remains **NO-GO for live generation** until isolation and end-to-end mapping are verified.
+
+## Public model specification cross-check — 2026-10-10
+
+Read-only public documentation review:
+- Flixly's Seedance 2.0 Mini model page identifies upstream model ID `seedance-2-mini`, text-to-video and image-to-video support, 480p/720p, aspect ratios including 16:9 and 9:16, and durations from 4 to 15 seconds. Source: https://www.flixly.ai/models/seedance-2-mini
+- This makes the UI's currently selected 5 seconds and 16:9 plausible candidate settings for this model. It does not verify the existing OBITREND gateway adapter, actual account access, live availability, request schema compatibility, or price.
+- The page gives an upstream API example, but the prototype must not call that API directly or expose a provider key in the browser.
+- Current shared catalogue state remains `enabled=false` based on earlier read-only source inspection; the planned 8-credit value is not a verified live quote.
+- Therefore the release gate remains **BLOCKED**. Do not enable generation based only on public docs.
+
+## Required verification before enabling
+
+1. Confirm a non-production backend target isolated from live users, balances, storage, and payment data.
+2. Inspect the server-side adapter and confirm it translates the OBITREND gateway request to the provider's current schema.
+3. Confirm live model availability and quote server-side; never hardcode the planned 8-credit price as a charge.
+4. Validate authentication, job ownership, idempotency, polling, output URLs, and failure/ambiguous-job settlement in isolated tests.
+5. Obtain explicit owner approval before any real generation test.
