@@ -2946,6 +2946,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
   b.insertAdjacentElement("afterend",panel);
   b.setAttribute("aria-expanded","false");
   b.addEventListener("click",e=>{
+   e.stopPropagation();
    buttons.forEach(other=>{const p=other.nextElementSibling;if(p?.classList.contains("p3-tool-guide")&&other!==b){p.hidden=true;other.setAttribute("aria-expanded","false")}});
    panel.hidden=!panel.hidden;b.setAttribute("aria-expanded",String(!panel.hidden));
    if(!panel.hidden){panel.scrollIntoView({block:"nearest",behavior:"smooth"})}
