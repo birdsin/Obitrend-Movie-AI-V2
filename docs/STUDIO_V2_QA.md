@@ -30,7 +30,9 @@ Use this checklist against the development preview after each UI commit. Do not 
 
 ## Localization
 - [ ] Language selector selection persists only after an explicit preference mechanism is implemented.
-- [ ] Every visible label is translated for each supported locale before claiming full language support.
+- [ ] Core interface strings have initial translations for English, French, Spanish, Portuguese, Arabic, Hindi, Chinese, Japanese, Korean, Yoruba, Igbo, and Hausa.
+- [ ] Complete translation coverage is still required: audit every card title/description, auth modal state, button, validation message, tool workspace label, and footer in every locale before claiming full language support.
+- [ ] Switching locale updates page language and Arabic text direction; verify RTL layout manually.
 - [ ] Arabic layout uses correct RTL direction; mixed numbers/URLs remain readable.
 - [ ] Fallback behavior exists for untranslated strings.
 
