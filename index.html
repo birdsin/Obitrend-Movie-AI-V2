@@ -3160,10 +3160,11 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
   {title:"Generate Audio",icon:"♫",keys:["text-to-speech","voice-cloning","music"]},
   {title:"Creator Studio",icon:"🎞",keys:["stop-motion","long-video","story","montage","manga","motion","poster","motion-type","thumbnail","social"]},
   {title:"Edit & Enhance",icon:"✂",keys:["video-tools","image-tools","lip-sync-video","auto-captions"]},
-  {title:"Brand & Selling",icon:"⬡",keys:["logo-generation","ai-headshots","ai-avatar","product-mockup","virtual-try-on","book-cover","meme-generator","qr-code-art","landing-page","background-generator","pattern-generator"]}
+  {title:"Brand & Selling",icon:"⬡",keys:["logo-generation","ai-headshots","ai-avatar","product-mockup","virtual-try-on","book-cover","meme-generator","qr-code-art","landing-page","background-generator","pattern-generator"]},
+  {title:"AI & Account",icon:"✦",keys:["ai-models","creator-settings","obitrend-credits","account-security"]}
  ];
- const icons={"home":"⌂","history":"◷","explore":"◎","compare":"⑂","video-generator":"▣","image-generator":"▧","3d-generator":"⬡","text-to-speech":"♫","voice-cloning":"〰","music":"♬","stop-motion":"🎞","long-video":"▣","story":"▤","montage":"▦","manga":"▤","motion":"✧","poster":"▣","motion-type":"T","thumbnail":"▣","social":"⌯","video-tools":"▦","image-tools":"✂","lip-sync-video":"〰","auto-captions":"▤","logo-generation":"⬡","ai-headshots":"♙","ai-avatar":"◉","product-mockup":"▣","virtual-try-on":"♧","book-cover":"▤","meme-generator":"☺","qr-code-art":"▦","landing-page":"◎","background-generator":"▧","pattern-generator":"▦"};
- const descriptions={"home":"Your creative workspace","history":"Recent activity and generations","explore":"Discover creative possibilities","compare":"Compare available options","video-generator":"Create videos from your ideas","image-generator":"Generate images from prompts","3d-generator":"Create 3D assets","text-to-speech":"Turn text into spoken audio","voice-cloning":"Work with supported voice tools","music":"Create music and soundtracks","stop-motion":"Build stop-motion sequences","long-video":"Create longer video projects","story":"Turn a concept into scenes","montage":"Arrange clips into a montage","manga":"Create manga-style stories","motion":"Direct motion and movement","poster":"Create motion-poster visuals","motion-type":"Animate typography","thumbnail":"Create video thumbnails","social":"Prepare social media content","video-tools":"Edit and enhance video","image-tools":"Edit and enhance images","lip-sync-video":"Synchronize speech and video","auto-captions":"Create captions for media","logo-generation":"Create brand logos","ai-headshots":"Create professional headshots","ai-avatar":"Create avatar visuals","product-mockup":"Present product concepts","virtual-try-on":"Preview supported try-on designs","book-cover":"Design book covers","meme-generator":"Create meme visuals","qr-code-art":"Style QR code artwork","landing-page":"Create landing-page designs","background-generator":"Create backgrounds","pattern-generator":"Create repeatable patterns"};
+ const icons={"home":"⌂","history":"◷","explore":"◎","compare":"⑂","video-generator":"▣","image-generator":"▧","3d-generator":"⬡","text-to-speech":"♫","voice-cloning":"〰","music":"♬","stop-motion":"🎞","long-video":"▣","story":"▤","montage":"▦","manga":"▤","motion":"✧","poster":"▣","motion-type":"T","thumbnail":"▣","social":"⌯","video-tools":"▦","image-tools":"✂","lip-sync-video":"〰","auto-captions":"▤","logo-generation":"⬡","ai-headshots":"♙","ai-avatar":"◉","product-mockup":"▣","virtual-try-on":"♧","book-cover":"▤","meme-generator":"☺","qr-code-art":"▦","landing-page":"◎","background-generator":"▧","pattern-generator":"▦","ai-models":"⌕","creator-settings":"⚙","obitrend-credits":"▣","account-security":"♙"};
+ const descriptions={"home":"Your creative workspace","history":"Recent activity and generations","explore":"Discover creative possibilities","compare":"Compare available options","video-generator":"Create videos from your ideas","image-generator":"Generate images from prompts","3d-generator":"Create 3D assets","text-to-speech":"Turn text into spoken audio","voice-cloning":"Work with supported voice tools","music":"Create music and soundtracks","stop-motion":"Build stop-motion sequences","long-video":"Create longer video projects","story":"Turn a concept into scenes","montage":"Arrange clips into a montage","manga":"Create manga-style stories","motion":"Direct motion and movement","poster":"Create motion-poster visuals","motion-type":"Animate typography","thumbnail":"Create video thumbnails","social":"Prepare social media content","video-tools":"Edit and enhance video","image-tools":"Edit and enhance images","lip-sync-video":"Synchronize speech and video","auto-captions":"Create captions for media","logo-generation":"Create brand logos","ai-headshots":"Create professional headshots","ai-avatar":"Create avatar visuals","product-mockup":"Present product concepts","virtual-try-on":"Preview supported try-on designs","book-cover":"Design book covers","meme-generator":"Create meme visuals","qr-code-art":"Style QR code artwork","landing-page":"Create landing-page designs","background-generator":"Create backgrounds","pattern-generator":"Create repeatable patterns","ai-models":"Browse and choose available AI models","creator-settings":"Configure your creator workspace","obitrend-credits":"View your credit balance and usage","account-security":"Manage account and security options"};
  function mount(){
   const home=document.getElementById("obitrendHomeDashboard");
   const nav=document.querySelector("#phase3Drawer .p3nav");
@@ -3180,7 +3181,8 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
    group.querySelector("h3").textContent=cat.title;
    const grid=group.querySelector(".ob-toolhome-grid");
    cat.keys.forEach(key=>{
-    const menuButton=nav.querySelector('[data-ob-menu-key="'+key+'"],[data-studio-tool="'+key+'"]');
+    const accountSelectors={"ai-models":'[data-p3="models"]',"creator-settings":'[data-p3="settings"]',"obitrend-credits":'[data-p3="credits"]',"account-security":'[data-p3="account"]'};
+    const menuButton=accountSelectors[key]?nav.querySelector(accountSelectors[key]):nav.querySelector('[data-ob-menu-key="'+key+'"],[data-studio-tool="'+key+'"]');
     if(!menuButton)return;
     const label=menuButton.textContent.replace(/[🎞▣▤▦▧⬡♙◉⑂⌯〰♫♬◷◎✧T✂♧☺⌂]/g,"").trim();
     const card=document.createElement("button");card.type="button";card.className="ob-toolhome-card";card.dataset.search=(label+" "+key+" "+cat.title).toLowerCase();
@@ -3303,7 +3305,24 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",retire,{once:true});else retire();
 })();
 </script>
-</body></html><script id="phase6-script">
+<script id="obitrend-home-settings-navigation">
+(()=> {
+ const goHome=()=>window.obitrendNavigate?.("home");
+ const wire=()=>{
+  document.querySelectorAll("#obitrendNewTopbar .ob-new-brand, #obitrendNewTopbar .ob-new-crown").forEach(el=>{
+   if(el.dataset.homeNavigationBound)return;
+   el.dataset.homeNavigationBound="1";
+   el.style.cursor="pointer";
+   el.setAttribute("role","button");
+   el.setAttribute("tabindex","0");
+   el.setAttribute("aria-label","Go to Home");
+   el.addEventListener("click",goHome);
+   el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();goHome();}});
+  });
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wire,{once:true});else wire();
+})();
+</script></body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
