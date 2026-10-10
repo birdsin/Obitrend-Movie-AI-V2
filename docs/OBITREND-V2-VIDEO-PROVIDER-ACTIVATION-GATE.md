@@ -139,3 +139,8 @@ A further test-only safety layer has now been added:
 - The workflow was updated to run this new test file as well. **CI verification for this addition passed:** run [38091915529](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38091915529) completed successfully, including the test step for the combined mock suites.
 
 This helper only validates a candidate URL; it does not fetch it, does not prove the provider requires `status_url`, and is not wired into the shared function. The exact allowlisted origin must be checked against current provider documentation before any production use. No provider request or shared backend operation was performed.
+
+
+### CI scope correction (2026-10-10)
+
+A follow-up review found that run 38091915529 completed before the workflow was corrected to explicitly include `tests/flixly-status-url-validation.test.mjs`. Therefore, that run verifies the response/lifecycle and request-settings suites, but **does not verify the status-URL test file**. The workflow was corrected in commit `b35f8fe74acdf2906436e1b4738d071e6eeae7d9` to list each test file separately in path filters and run all three suites. The CI result for this corrected workflow must be checked separately before claiming the status-URL tests passed.
