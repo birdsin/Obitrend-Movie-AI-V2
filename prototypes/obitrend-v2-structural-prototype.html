@@ -10,6 +10,30 @@ button:disabled,.outputactions button:disabled{opacity:.38!important;filter:gray
 @media(max-width:1100px){.app{grid-template-columns:230px minmax(0,1fr)}.tools{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.content{padding:18px}.preview{min-height:220px}}
 @media(max-width:760px){.app{display:block}.sidebar{position:fixed;z-index:20;left:0;top:0;bottom:0;width:min(300px,86vw);height:100dvh;transform:translateX(-105%);transition:transform .2s ease;box-shadow:18px 0 50px #0008}.sidebar.open{transform:translateX(0)}.mobileoverlay.show{display:block;position:fixed;inset:0;background:#0009;z-index:19}.mobilemenu{display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid var(--line);background:var(--panel);color:white;border-radius:10px}.topbar{height:62px;padding:0 13px}.content{padding:13px}.hero{padding:18px}.hero-mark{display:none}.stats{gap:8px}.stat{padding:11px}.stat strong{font-size:16px}.tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.toolcard{padding:12px}.toolicon{width:33px;height:33px}.toolcard strong{font-size:12px}.sectionhead{align-items:stretch;flex-direction:column}.search{width:100%}.topright .credit{padding:7px 9px}.two{grid-template-columns:1fr}.workspace{grid-template-columns:1fr}.panelbody{padding:14px}}
 @media(max-width:390px){.tools{grid-template-columns:1fr}.hero h1{font-size:24px}.credit span{display:none}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{display:none}}
+
+/* Master-plan layout replacement: three-column desktop, safe mobile stacking */
+:root{--bg:#050508;--panel:#101014;--panel2:#17171b;--line:#2a2a2a;--gold:#D4AF37;--gold2:#8B6914}
+.app{min-height:100vh;grid-template-columns:280px minmax(0,1fr) 220px;align-items:start;background:#050508}
+.sidebar{height:100vh;position:sticky;top:0;overflow-y:auto;border-right:1px solid #2a2a2a}
+.main{height:100vh;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.content{max-width:none;padding:20px;}
+.hero{border-color:#4b3b12;background:radial-gradient(ellipse at 85% 0%,rgba(212,175,55,.14),transparent 42%),linear-gradient(125deg,#151515,#080808 75%)}
+.tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+.workspace{display:block}
+.input-panel{margin-bottom:18px}
+.output-rail{position:sticky;top:0;height:100vh;min-width:0;overflow-y:auto;padding:14px 10px 18px;border-left:1px solid #2a2a2a;background:#08080a}
+.output-rail .panel{position:sticky;top:12px}
+.output-rail .panelhead{padding:12px 10px;align-items:flex-start}
+.output-rail .panelhead h2{font-size:13px}
+.output-rail .panelhead p{font-size:10px}
+.output-rail .preview{min-height:220px;padding:14px;overflow-wrap:anywhere}
+.output-rail .outputactions{display:grid;grid-template-columns:1fr;padding:8px}
+.output-rail .statusline{overflow-wrap:anywhere;padding:9px;font-size:10px}
+.topbar{background:rgba(5,5,8,.96)}
+.toolcard,.stat,.panel{border-radius:16px}
+@media(max-width:1100px){.app{grid-template-columns:250px minmax(0,1fr)}.output-rail{grid-column:2;position:relative;height:auto;min-height:0;border-left:0;border-top:1px solid #2a2a2a;padding:14px}.output-rail .panel{position:relative;top:auto}.output-rail .outputactions{grid-template-columns:repeat(3,minmax(0,1fr))}.main{height:auto;min-height:100vh;overflow:visible}}
+@media(max-width:760px){.app{display:block}.sidebar{position:fixed}.main{height:auto;min-height:100vh;overflow:visible}.content{padding:13px}.output-rail{position:relative;height:auto;min-height:0;padding:12px;border-left:0;border-top:1px solid #2a2a2a}.output-rail .panel{position:relative;top:auto}.output-rail .preview{min-height:180px}.output-rail .outputactions{grid-template-columns:1fr}.tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:390px){.tools{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -29,12 +53,14 @@ button:disabled,.outputactions button:disabled{opacity:.38!important;filter:gray
 <div class="tools" id="tools"></div>
 <div class="sectionhead"><div><h2 id="workspaceTitle">Tool workspace</h2><p>Inputs, settings, Generate action and output preview.</p></div></div>
 <div class="workspace">
-<section class="panel"><div class="panelhead"><div><h2 id="formTitle">Choose a tool</h2><p id="formDesc">Select a tool above to see its input fields.</p></div><span class="pill">Input</span></div><div class="panelbody" id="formBody"><div class="empty"><strong>No tool selected</strong>Choose a tool card to configure the workspace.</div></div></section>
-<section class="panel"><div class="panelhead"><div><h2>Output panel</h2><p>Preview and status for the selected task.</p></div><span class="pill">Output</span></div><div class="preview" id="preview"><div class="previewicon">▣</div><strong>Your result will appear here</strong><p>Select a tool to see its output type. This structural prototype does not call AI services or consume credits.</p></div><div class="outputactions"><button class="secondary" id="download" disabled>Download</button><button class="secondary" id="save" disabled>Save to project</button><button class="secondary" id="retry" disabled>Try again</button></div><div class="statusline" id="status"><strong>Ready:</strong> no generation request has been sent.</div></section>
+<section class="panel input-panel"><div class="panelhead"><div><h2 id="formTitle">Choose a tool</h2><p id="formDesc">Select a tool above to see its input fields.</p></div><span class="pill">Input</span></div><div class="panelbody" id="formBody"><div class="empty"><strong>No tool selected</strong>Choose a tool card to configure the workspace.</div></div></section>
 </div>
 <div class="footnote">STRUCTURAL PROTOTYPE ONLY · No real generation, upload, account, credit deduction, payment, storage, or download service is connected. Do not enter secrets or sensitive data.</div>
 </div>
 </main>
+<aside class="output-rail" aria-label="Output panel">
+<section class="panel"><div class="panelhead"><div><h2>Output panel</h2><p>Preview and status for the selected task.</p></div><span class="pill">Output</span></div><div class="preview" id="preview"><div class="previewicon">▣</div><strong>Your result will appear here</strong><p>Select a tool to see its output type. This structural prototype does not call AI services or consume credits.</p></div><div class="outputactions"><button class="secondary" id="download" disabled>Download</button><button class="secondary" id="save" disabled>Save to project</button><button class="secondary" id="retry" disabled>Try again</button></div><div class="statusline" id="status"><strong>Ready:</strong> no generation request has been sent.</div></section>
+</aside>
 </div>
 <script>
 const navItems=[
