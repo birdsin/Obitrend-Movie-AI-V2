@@ -3211,7 +3211,35 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
 })();
-</script></body></html><script id="phase6-script">
+</script><style id="obitrend-remove-legacy-creator-ui">
+/* Retire the old Phase 3 Creator Studio screen; the new 35-tool home is the entry point. */
+#phase3Creator{display:none!important;visibility:hidden!important;pointer-events:none!important}
+</style>
+<script id="obitrend-legacy-creator-route-retirement">
+(()=> {
+ const retire=()=>{
+  const old=document.getElementById("phase3Creator");
+  if(old){old.classList.remove("obitrend-active");old.setAttribute("aria-hidden","true");old.inert=true;}
+  const home=document.getElementById("obitrendHomeDashboard");
+  if(home&&home.classList.contains("obitrend-active"))home.style.display="";
+ };
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",retire,{once:true});else retire();
+ const original=window.obitrendNavigate;
+ if(typeof original==="function"&&!original.__legacyCreatorRetired){
+  const navigate=function(route){return original(route==="creator"?"home":route);};
+  navigate.__legacyCreatorRetired=true;
+  window.obitrendNavigate=navigate;
+ }
+ document.addEventListener("click",e=>{
+  const btn=e.target.closest("#phase3Drawer [data-p3='creator']");
+  if(!btn)return;
+  if(btn.dataset.obMenuKey==="video-generator"||btn.dataset.obMenuKey==="image-generator"||btn.dataset.studioTool){
+   e.preventDefault();
+  }
+ },true);
+})();
+</script>
+</body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
   function collect(){
