@@ -173,3 +173,13 @@ Added three mock-only decision tests covering an HTTP 202 response with `status_
 GitHub Actions run [38092925214](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38092925214) completed successfully for the updated lifecycle test suite. A second run triggered by the same commit was still in progress at the time of this note; one successful run is verified.
 
 These remain pure test-only decisions. They do not execute the deployed adapter or prove live idempotency, output persistence, or credit settlement. The activation gate remains blocked, and the shared backend and payment/credit services remain untouched.
+
+## Workflow runtime warning follow-up (2026-10-11)
+
+Updated the mock-only GitHub Actions workflow to use `actions/checkout@v5` and `actions/setup-node@v6`, while keeping the test runtime at Node.js 22. This addresses the prior warning about action internals targeting deprecated Node.js 20 without changing the Node.js version used by the test command.
+
+Verified both workflow runs for commit `5717cb00538896b0607d0a34e0d4fa0ad797dd88`:
+- Pull-request run [38093817104](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38093817104): completed successfully.
+- Push run [38093813751](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38093813751): completed successfully.
+
+The pull-request run's checkout, Node setup, and isolated mock test steps all succeeded. This verifies the updated workflow executes successfully; it does not by itself confirm the deprecation annotation is absent from all action logs or prove live provider integration. The activation gate remains blocked, and no shared Supabase functions, provider settings, credits, or payments were changed.
