@@ -56,3 +56,28 @@ The first candidate for a future integration is Video Generator because the exis
 - Draft PR: https://github.com/birdsin/Obitrend-Movie-AI-V2/pull/6
 - Preview: https://obitrend-movie-ai-v2-rbqiyktr6-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
 - Real AI generation, uploads, account data, credits, payments, and storage remain disconnected in the prototype.
+
+## Read-only Video Generator contract audit (2026-10-10)
+
+Reviewed the existing `main/index.html` source only. No live endpoint was called and no backend resource was changed.
+
+### Request shape observed in existing source
+
+- Route: `POST /functions/v1/ai-provider-gateway`.
+- Authorization: `Bearer <Supabase access token>`; JSON content type.
+- Body fields observed: `mode`, `model_id`, `prompt`, `settings` (duration, resolution, provider model and advanced creator settings), `input_assets`, and `project_id`.
+- Accepted success shapes in the caller: immediate `status === 'succeeded'` with `output_assets`, or an asynchronous `job_id` followed by `GET /functions/v1/ai-job-status?job_id=...`.
+- The existing caller checks model metadata and the available wallet balance before submitting; it blocks models without a verified positive credit quote. Server-side reservation/settlement remains authoritative.
+- Existing polling handles succeeded, failed/cancelled and ambiguous states; on unclear outcomes it preserves the reservation and keeps reconciling instead of claiming a refund or encouraging immediate duplicate generation.
+- Existing reference-upload caller uses `POST /functions/v1/ai-media-upload` with a signed-in user's access token and multipart form data. The production source has a 25 MB limit for that particular reference input path.
+
+### What is not yet verified
+
+- The request and response shapes above were read from the frontend caller; the actual Edge Function implementation and database/RPC behavior have not been exercised end-to-end in an isolated environment.
+- The current Vercel staging deployment isolates the prototype UI only. It does not prove that the connected Supabase backend, provider, credits or storage are isolated.
+- Do not copy the live Supabase URL into the prototype, enable its Generate button for real calls, upload user files, or perform a credit reservation until a non-production backend target is approved and verified.
+- Keep the prototype's local file preview separate from the live upload path. Its 100 MB local-demo limit is not a statement about backend upload capacity.
+
+### Next safe implementation step
+
+Create a development-only UI contract adapter that validates prompt, duration, aspect ratio, model selection and local reference metadata without network calls. Add explicit UI states for idle, input-ready, submitting-disabled (demo only), and result-unavailable. Do not claim generation succeeded. Actual service wiring remains blocked on verified backend isolation and explicit authorization.
