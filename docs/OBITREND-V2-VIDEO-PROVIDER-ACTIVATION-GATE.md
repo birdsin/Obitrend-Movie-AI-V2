@@ -102,3 +102,12 @@ Added `tests/flixly-contract-fixtures.test.mjs` on the prototype branch. A local
 **Important limitation:** this is a standalone contract fixture that mirrors the currently reviewed parser's normalization behavior. It does not import or execute the deployed `ai-job-status` function and does not test Supabase RPCs, provider network calls, storage, or credit settlement. The passing result is not production integration evidence and does not clear any activation gate.
 
 Next testing improvement, still mock-only: extract the normalization logic into a shared pure module that the status function and tests both import, then add mocked lifecycle assertions for output-write/finalization/credit-RPC failures and duplicate polls. Do not deploy or modify the shared function as part of this step.
+
+
+## Shared pure normalizer and expanded mock lifecycle fixtures (2026-10-10)
+
+Added `tests/helpers/flixly-normalize.mjs` and updated `tests/flixly-contract-fixtures.test.mjs` to import it. The pure helper has no network, database, storage, environment, or credit side effects. The fixture suite now also covers mocked output-write failure, credit-commit failure, provider timeout, duplicate-poll idempotency, and idempotent failure release.
+
+A local Node.js run of an equivalent isolated mock harness passed **14/14 assertions**. Network access to retrieve the committed files into the local runner was unavailable, so this run should not be described as CI execution of the committed repository file. The committed test suite itself has not been run by CI in this step.
+
+**Integration boundary:** The new helper is currently test-scoped. It has not been wired into the existing deployed `ai-job-status` function. Doing so would require a reviewed code change and a safe deployment plan; the shared function was intentionally left untouched. The mock lifecycle tests validate expected invariants only; they do not prove database RPC idempotency or live credit-ledger behavior.
