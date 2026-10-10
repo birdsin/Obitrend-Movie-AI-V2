@@ -164,3 +164,12 @@ The workflow was updated to run the lifecycle decision tests alongside the three
 GitHub Actions run [38092043516](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38092043516) completed successfully for commit `45fa8086cebb1b4f8ec358b63302108198b32f0f`. The `Mock-only Flixly contract fixtures` job and its `Run isolated mock fixtures` step both succeeded. The workflow command includes the response fixture, request-settings validator, status-URL safety, and async lifecycle decision suites.
 
 This is a successful CI result for isolated test-only code. It does not execute the deployed Supabase function, call Flixly, verify real storage/RPC/credit behavior, or clear the activation gate. The V2 prototype remains demo-only; shared backend and payment systems remain untouched.
+
+
+## Additional async lifecycle fixtures and CI (2026-10-10)
+
+Added three mock-only decision tests covering an HTTP 202 response with `status_url`, HTTP 429 with a failure-like payload, and HTTP 201 with a completed output alias. The status-URL case intentionally asserts only that the reservation remains held while processing; it does **not** claim that the adapter follows the URL or settle the polling compatibility question.
+
+GitHub Actions run [38092925214](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38092925214) completed successfully for the updated lifecycle test suite. A second run triggered by the same commit was still in progress at the time of this note; one successful run is verified.
+
+These remain pure test-only decisions. They do not execute the deployed adapter or prove live idempotency, output persistence, or credit settlement. The activation gate remains blocked, and the shared backend and payment/credit services remain untouched.
