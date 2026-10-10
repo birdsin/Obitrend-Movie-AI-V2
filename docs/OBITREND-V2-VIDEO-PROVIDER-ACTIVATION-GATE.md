@@ -93,3 +93,12 @@ This matrix is a proposed test plan, not evidence that tests have run or passed.
 ## Current disposition
 
 The status-function audit narrows one uncertainty: Flixly polling code exists. It does **not** clear activation. Duration validation remains mismatched; use of `status_url` remains unconfirmed; response/output handling, storage policy, idempotency, and credit settlement remain untested end-to-end. Keep the V2 prototype demo-only and retain all no-go conditions above.
+
+
+## Mock fixture harness status (2026-10-10)
+
+Added `tests/flixly-contract-fixtures.test.mjs` on the prototype branch. A local Node test run of this standalone fixture harness passed **9/9 assertions** (0 failed). Coverage includes completed output aliases, nested response shape, processing, failed/cancelled states, completed-without-output detection, missing identifiers, unknown states, and inert fixture URLs.
+
+**Important limitation:** this is a standalone contract fixture that mirrors the currently reviewed parser's normalization behavior. It does not import or execute the deployed `ai-job-status` function and does not test Supabase RPCs, provider network calls, storage, or credit settlement. The passing result is not production integration evidence and does not clear any activation gate.
+
+Next testing improvement, still mock-only: extract the normalization logic into a shared pure module that the status function and tests both import, then add mocked lifecycle assertions for output-write/finalization/credit-RPC failures and duplicate polls. Do not deploy or modify the shared function as part of this step.
