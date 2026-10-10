@@ -102,6 +102,62 @@ The model selector reports “No verified AI model connected.” This is expecte
 3. Only after explicit authorization, run integration tests using a dedicated non-production account and test data.
 
 
+
+## Full 35-tool click-through matrix — pending manual execution
+
+Source inventory cross-check: 35 tool definitions and 35 unique IDs were found in the prototype HTML. The items below are a test plan, not a claim that these interactions have already passed. For each item, select the tool, verify the expected input controls appear, confirm the output panel label matches, run the local demo validation, and clear inputs. Never expect a real AI result.
+
+| # | Tool | Expected output label | QA |
+|---:|---|---|---|
+| 1 | Video Generator | Video preview | [ ] |
+| 2 | Image Generator | Image preview | [ ] |
+| 3 | 3D Generator | 3D asset viewer | [ ] |
+| 4 | Text to Speech | Audio player | [ ] |
+| 5 | Voice Cloning | Voice preview | [ ] |
+| 6 | Music Generator | Audio player | [ ] |
+| 7 | Stop Motion Studio | Video preview | [ ] |
+| 8 | Long Video Generator | Long video preview | [ ] |
+| 9 | Story Creator | Story and scene outline | [ ] |
+| 10 | Montage Studio | Timeline / video preview | [ ] |
+| 11 | Manga Creator | Panel preview | [ ] |
+| 12 | Motion Control | Motion video preview | [ ] |
+| 13 | Motion Poster | Animated poster preview | [ ] |
+| 14 | Motion Type Studio | Animated text preview | [ ] |
+| 15 | Thumbnail Generator | Thumbnail preview | [ ] |
+| 16 | Social Media Posts | Social post preview | [ ] |
+| 17 | Video Tools | Processed video preview | [ ] |
+| 18 | Image Tools | Edited image preview | [ ] |
+| 19 | Lip Sync Video | Synchronized video preview | [ ] |
+| 20 | Auto Captions | Captioned video preview | [ ] |
+| 21 | Logo Generation | Logo preview | [ ] |
+| 22 | AI Headshots | Portrait preview | [ ] |
+| 23 | AI Avatar | Avatar preview | [ ] |
+| 24 | Product Mockup | Product mockup preview | [ ] |
+| 25 | Virtual Try-on | Try-on image preview | [ ] |
+| 26 | Book Cover | Book cover preview | [ ] |
+| 27 | Meme Generator | Meme preview | [ ] |
+| 28 | QR Code Art | QR art preview | [ ] |
+| 29 | Landing Page | Page concept preview | [ ] |
+| 30 | Background Generator | Background preview | [ ] |
+| 31 | Pattern Generator | Pattern preview | [ ] |
+| 32 | Movie Scene Builder | Scene preview | [ ] |
+| 33 | Character Reference Manager | Character reference summary | [ ] |
+| 34 | Movie Timeline & Assembly | Timeline preview | [ ] |
+| 35 | Scene Continuity Checker | Continuity checklist | [ ] |
+
+### Shared interaction checks for each tool
+
+- [ ] Correct tool title and input prompt/text field are displayed.
+- [ ] Tool-specific settings appear and can be changed.
+- [ ] Output panel shows the expected label above.
+- [ ] Empty input receives helpful validation.
+- [ ] Non-empty input only shows a local/demo input review; it must not claim generation.
+- [ ] Clear inputs resets prompt, settings, and local reference selection where applicable.
+- [ ] Download, Save to project, and Try again remain disabled.
+- [ ] No provider, upload, account, credit, or payment request is made.
+
+Record failures by tool name and screenshot. Do not mark a tool as passed based only on its presence in the source code.
+
 ## Next-run Android smoke test — user execution
 
 Use the staging preview only:
