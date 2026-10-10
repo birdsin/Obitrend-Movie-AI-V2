@@ -3271,6 +3271,22 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",retire,{once:true});else retire();
 })();
 </script>
+<style id="obitrend-retire-saved-video-folder">
+/* Remove the legacy Saved Video Folder page from the visible tool-first interface. */
+#savedVideoFolder{display:none!important;visibility:hidden!important;pointer-events:none!important}
+</style>
+<script id="obitrend-retire-saved-video-folder-route">
+(()=> {
+ const original=window.obitrendNavigate;
+ if(typeof original==="function"&&!original.__savedFolderRetired){
+  const navigate=function(route){return original(route==="saved"?"home":route);};
+  navigate.__savedFolderRetired=true;
+  window.obitrendNavigate=navigate;
+ }
+ const retire=()=>{const old=document.getElementById("savedVideoFolder");if(old){old.classList.remove("obitrend-active");old.setAttribute("aria-hidden","true");old.inert=true;}};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",retire,{once:true});else retire();
+})();
+</script>
 </body></html><script id="phase6-script">
 (()=>{
   const val=id=>document.getElementById(id)?.value?.trim()||"";
