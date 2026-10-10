@@ -1,0 +1,34 @@
+name: Flixly mock contract tests
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tests/flixly-contract-fixtures.test.mjs"
+      - "tests/helpers/flixly-normalize.mjs"
+      - ".github/workflows/flixly-contract-tests.yml"
+  push:
+    branches: ["feat/obitrend-v2-structural-prototype"]
+    paths:
+      - "tests/flixly-contract-fixtures.test.mjs"
+      - "tests/helpers/flixly-normalize.mjs"
+      - ".github/workflows/flixly-contract-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mock-contract-tests:
+    name: Mock-only Flixly contract fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run isolated mock fixtures
+        run: node --test tests/flixly-contract-fixtures.test.mjs
