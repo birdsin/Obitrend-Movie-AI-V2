@@ -51,6 +51,18 @@ The official developer docs describe `POST /api/v1/generate`, asynchronous video
 9. **Pricing is unconfirmed.** A catalog value or prior example is not an authoritative customer quote. Require a current server-issued quote and approved pricing policy before presenting a credit cost or submitting a paid generation.
 10. **Shared environment.** The functions belong to the shared AI Platform. This review has not proven isolation of users, wallets, provider credentials, storage, job records, or billing from production.
 
+## Vercel staging configuration check — 2026-10-10
+
+Read-only inspection of Vercel project `obitrend-movie-ai-v2` found:
+- Latest deployment: `dpl_J9SVYtqkQPcsKgS9BLaWKMPUsXpV`
+- Deployment state: `READY`
+- Target: `staging`
+- Source branch: `feat/obitrend-v2-structural-prototype`
+- Source commit: `6febd67411c55f442204ef887a6dbe6019d313cf`
+- Project environment-variable inventory returned `envs: []` and `hiddenProductionEnvCount: 0`.
+
+This inventory does **not** prove that a safe isolated backend exists. It only reports that this Vercel project has no project environment variables visible through the read-only inventory at the time checked. Do not add credentials or point the prototype at shared services as a workaround. The prototype should remain demo-only until isolation and contracts are independently verified.
+
 ## Required safe next step
 
 Continue read-only source review and contract documentation. If an isolated non-production environment is not already available and proven, stop and request explicit authorization before any backend or provider test. Do not create another Supabase project/branch.
