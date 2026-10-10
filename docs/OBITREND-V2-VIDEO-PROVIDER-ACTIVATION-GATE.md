@@ -36,3 +36,19 @@
 ## Safe next action
 
 Obtain and review current official provider API documentation and prepare a non-executing contract test plan. Keep the V2 UI demo-only until isolation and all activation gates are proven.
+
+## Additional Flixly contract review (2026-10-10)
+
+Official references reviewed:
+- https://www.flixly.ai/developers
+- https://www.flixly.ai/models/seedance-2-mini
+
+The provider docs say asynchronous video requests can return HTTP 202 with `status: "processing"`; the client should poll `status_url` until completion or failure. Seedance 2.0 Mini lists 480p/720p, ratios 16:9, 9:16, 1:1, 21:9, 4:3, 3:4, and durations 4–15 seconds.
+
+Read-only gateway source review found:
+- The Flixly payload builder clamps duration to 1–30 seconds, which does not match the documented 4–15 second range.
+- The submission path accepts task IDs and returns `processing` for non-completed responses.
+- A Flixly-specific polling path for the documented `status_url` was not identified in the reviewed gateway source. This must be resolved before activation.
+- Resolution and aspect ratio should be validated against the model's supported values rather than forwarded without validation.
+
+These findings are source/documentation observations, not a live integration test. No provider request was sent. Keep generation disabled until duration validation, async polling, output persistence, and credit settlement/release have been verified in an explicitly isolated test environment.
