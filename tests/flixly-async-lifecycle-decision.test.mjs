@@ -43,3 +43,28 @@ test("unknown provider state stays processing rather than settling credits", () 
     httpStatus: 200, payload: { status: "queued" }
   }), { state: "processing", action: "continue_polling", reservation: "retain" });
 });
+
+test("HTTP 202 with status_url keeps reservation while endpoint choice remains unverified", () => {
+  assert.deepEqual(decideFlixlyLifecycle({
+    httpStatus: 202,
+    payload: {
+      status: "processing",
+      id: "fixture-status-url",
+      status_url: "https://www.flixly.ai/api/v1/generations/fixture-status-url"
+    }
+  }), { state: "processing", action: "continue_polling", reservation: "retain" });
+});
+
+test("HTTP 429 is ambiguous and does not release reservation", () => {
+  assert.deepEqual(decideFlixlyLifecycle({
+    httpStatus: 429,
+    payload: { status: "failed", error: { message: "rate limited fixture" } }
+  }), { state: "ambiguous", action: "reconcile", reservation: "retain" });
+});
+
+test("HTTP 201 with completed output follows persist-before-commit decision", () => {
+  assert.deepEqual(decideFlixlyLifecycle({
+    httpStatus: 201,
+    payload: { status: "succeeded", video_url: "https://fixture.invalid/video.mp4" }
+  }), { state: "completed", action: "persist_then_commit_once", reservation: "retain_until_persisted_and_committed" });
+});
