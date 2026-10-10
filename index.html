@@ -1185,8 +1185,8 @@ body{padding-top:0!important}
 </style></head><script id="android-desktop-site-mode">
 (()=>{const root=document.documentElement,key="obitrend_android_layout_mode_v1";const ua=navigator.userAgent||"",isAndroid=/Android/i.test(ua),touchDevice=(navigator.maxTouchPoints||0)>0;const androidLike=()=>isAndroid||(touchDevice&&/Linux|X11/i.test(ua));const wide=()=>androidLike()&&Math.max(window.innerWidth,document.documentElement.clientWidth)>=760;const mode=()=>wide()?"desktop":"mobile";const apply=()=>root.classList.toggle("ob-android-desktop",wide());const current=mode();apply();try{const previous=sessionStorage.getItem(key);if(previous&&previous!==current){sessionStorage.setItem(key,current);setTimeout(()=>location.reload(),80)}else sessionStorage.setItem(key,current)}catch{}let timer=0;window.addEventListener("resize",()=>{clearTimeout(timer);timer=setTimeout(()=>{const next=mode();apply();try{const previous=sessionStorage.getItem(key);if(previous&&previous!==next){sessionStorage.setItem(key,next);location.reload()}}catch{}},180)},{passive:true});window.addEventListener("orientationchange",()=>setTimeout(()=>{apply()},250),{passive:true})})();
 </script><body><a class="a11y-skip" href="#main">Skip to main content</a><div id="obitrendLoading" aria-live="polite" aria-busy="true"><div id="obitrendLoadingCard"><div id="obitrendLoadingSpinner"></div><div id="obitrendLoadingText">Loading…</div><div id="obitrendLoadingHint">Please wait — your request is still working.</div></div></div><script>window.obitrendSetLoading=function(on,text){const b=document.getElementById("obitrendLoading"),m=document.getElementById("obitrendLoadingText");if(m&&text)m.textContent=text;if(b)b.classList.toggle("open",!!on)};</script><button id="phase3MenuBtn" aria-label="Open OBITREND menu" aria-controls="phase3Drawer" aria-expanded="false"><span></span></button><div id="phase3Shade" aria-hidden="true"></div><aside id="phase3Drawer" aria-label="OBITREND Phase 3 menu" aria-hidden="true"><button id="phase3Close" aria-label="Close menu">×</button><div class="p3brand">OBITREND<small>Movie AI V2 · Creator</small></div><nav class="p3nav ob-flixly-nav">
-<button class="p3-home-link" data-p3="home">⌂ Home</button>
 <details class="p3-group" open><summary>⌁ MAIN NAVIGATION <span>4</span></summary>
+<button class="p3-home-link" data-p3="home" data-ob-menu-key="home">⌂ Home</button>
 <button data-p3="home" data-ob-menu-key="history">◷ History</button>
 <button data-p3="home" data-ob-menu-key="explore">◎ Explore</button>
 <button data-p3="home" data-ob-menu-key="compare">⑂ Compare</button>
@@ -3010,7 +3010,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  const toolNames={"long-video":"Long Video Generator","story":"Story Creator","montage":"Montage Studio","manga":"Manga Creator","motion":"Motion Studio","poster":"Motion Poster","motion-type":"Motion Type Studio","thumbnail":"Thumbnail Generator","stop-motion":"Stop Motion Studio","social-posts":"Social Media Posts"};
  const buttons=[...drawer.querySelectorAll("button[data-p3]")].filter(b=>b.dataset.p3!=="home");
  buttons.forEach((b,index)=>{
-  const key=b.dataset.studioTool||b.dataset.p3, data=info[key]||info[b.dataset.p3]; if(!data)return;
+  const key=b.dataset.studioTool||b.dataset.obMenuKey||b.dataset.p3, data=info[key]||info[b.dataset.p3]; if(!data)return;
   const panel=document.createElement("section");panel.className="p3-tool-guide";panel.hidden=true;
   panel.innerHTML='<div class="p3-guide-title"></div><p></p><div class="p3-guide-actions"><button type="button" class="p3-guide-primary"></button><button type="button" class="p3-guide-output-toggle">Output panel ⌄</button></div><div class="p3-guide-output" hidden><strong>Where to find results</strong><span></span></div>';
   panel.querySelector(".p3-guide-title").textContent=data[0];panel.querySelector("p").textContent=data[1];panel.querySelector(".p3-guide-primary").textContent=(["movies","saved","projects","media","models","settings","credits","account"].includes(key)?data[2]:(key==="home"?"Open Home":"Generate / Open"));
@@ -3026,6 +3026,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
   panel.querySelector(".p3-guide-primary").addEventListener("click",e=>{
    e.stopPropagation();
    const route=toolRoute[key]||b.dataset.p3;
+   if(b.dataset.obMenuKey&&!toolNames[key]&&!["home","movies","saved","projects","media","models","settings","credits","account"].includes(key)){window.dispatchEvent(new CustomEvent("obitrend-tool-requested",{detail:{key,label:data[0],route}}));}
    drawer.querySelector("#phase3Close")?.click();
    if(window.obitrendNavigate)window.obitrendNavigate(route);
    if(toolNames[key])setTimeout(()=>window.dispatchEvent(new CustomEvent("obitrend-creator-tool-start",{detail:key})),100);
