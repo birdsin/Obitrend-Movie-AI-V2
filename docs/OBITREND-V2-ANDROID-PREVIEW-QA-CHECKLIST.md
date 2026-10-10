@@ -38,6 +38,34 @@ Status: manual QA checklist for the isolated structural prototype only. User con
 - [ ] Check small Android viewport, browser address bar expanded/collapsed, and on-screen keyboard open.
 - [ ] Refresh the page; verify no demo project or output is falsely described as saved or persisted.
 
+## Android staging smoke test — user-confirmed PASS — 2026-10-10
+
+The user completed the six-step smoke test on the fresh staging preview and reported:
+
+- [x] Dashboard opens: PASS
+- [x] Video Generator opens: PASS
+- [x] Empty prompt shows validation: PASS
+- [x] Demo-only message appears for a test prompt: PASS
+- [x] Clear inputs resets the form: PASS
+- [x] Refresh does not claim demo data was saved: PASS
+- Visible issue: not specified
+
+These are user-reported manual results for the six listed checks. They do not establish that all 20 navigation destinations or all 35 tools have passed QA.
+
+## Static source audit — prototype only — 2026-10-10
+
+Read-only source inspection of `prototypes/obitrend-v2-structural-prototype.html` found:
+
+- [x] 20 navigation definitions.
+- [x] 35 tool definitions with 35 unique IDs.
+- [x] Mobile menu and overlay close handlers are present.
+- [x] Clear-input handler resets prompt, select values, and local reference selection.
+- [x] Reference previews use a browser-local object URL and label the source as not uploaded.
+- [x] Download, Save, and Retry output actions are disabled in the prototype.
+- [x] Static source scan found no literal `fetch(` call, `XMLHttpRequest`, or external script `src` in this HTML file.
+
+Evidence limit: this is a pattern-based source inspection, not a runtime network capture, accessibility audit, or click-through of every destination/tool. It does not prove absence of every possible network request or establish backend integration.
+
 ## Integration readiness — blocked
 
 Do not wire the prototype to live services until all of the following are independently verified and explicitly authorized:
@@ -77,9 +105,9 @@ The model selector reports “No verified AI model connected.” This is expecte
 ## Next-run Android smoke test — user execution
 
 Use the staging preview only:
-https://obitrend-movie-ai-v2-f6jvbq80y-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
+https://obitrend-movie-ai-v2-b8vury0cx-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
 
-Run this short pass before the full 20-destination / 35-tool review:
+The six-step smoke test above is now complete. Continue with the full 20-destination / 35-tool review:
 
 1. Open the URL in Chrome on Android and wait for the dashboard to finish rendering.
 2. Open the menu, choose **Video Generator**, and verify the page changes.
@@ -88,7 +116,7 @@ Run this short pass before the full 20-destination / 35-tool review:
 5. Tap Clear inputs. Expected: the prompt and local reference selection reset.
 6. Refresh once. Expected: no claim that demo project/output data was saved.
 
-Record the result in the next chat message using:
+For the remaining full review, record results in the next chat message using:
 - Dashboard opens: PASS / FAIL
 - Video Generator opens: PASS / FAIL
 - Empty-prompt validation: PASS / FAIL
