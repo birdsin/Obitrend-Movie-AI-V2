@@ -3191,10 +3191,16 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
     card.querySelector("strong").textContent=label;
     card.querySelector("small").textContent=descriptions[key]||"Open tool workspace";
     card.addEventListener("click",()=>{
-      menuButton.click();
+      const navDestinations={home:"home",history:"movies",explore:"models",compare:"models"};
+      const destination=navDestinations[key];
+      if(destination){
+        window.obitrendNavigate?.(destination);
+        return;
+      }
       const guide=menuButton.nextElementSibling;
       const action=guide?.classList.contains("p3-tool-guide")?guide.querySelector(".p3-guide-primary"):null;
       if(action){action.click();return;}
+      menuButton.click();
       const route=menuButton.dataset.p3||"creator";
       window.obitrendNavigate?.(route);
     });
