@@ -48,3 +48,25 @@ Do not wire the prototype to live services until all of the following are indepe
 ## Evidence limits
 
 Screenshot review verifies visible layout and safety labels only. It does not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
+
+
+## Android Video Generator test evidence — 2026-10-10
+
+Observed in the user-provided Android screenshots:
+
+- [x] Video Generator section opens and displays the reference picker, model selector, duration, aspect ratio, generation status, and Clear inputs control.
+- [x] With no prompt entered, the UI asks for a video description rather than treating a reference image as sufficient.
+- [x] With a prompt entered but no verified model selected/connected, the UI states that it cannot generate a video yet.
+- [x] The visible safety copy says no provider is called and no credits are used in demo mode.
+- [x] Duration currently displays 5 seconds and aspect ratio displays 16:9 Landscape as UI selections only; these are not evidence of provider support or a successful generation.
+- [x] The UI does not claim a video was generated.
+
+### Current blocker
+
+The model selector reports “No verified AI model connected.” This is expected until the model catalogue and quote are verified from a safe backend. The candidate Flixly Video / `flixly-video` catalogue entry remains disabled in the shared catalogue, and the listed 8-credit value is not an authoritative live quote. Do not enable the browser Generate action or connect it to the shared production gateway.
+
+### Remaining safe next steps
+
+1. Identify and prove an already-existing isolated non-production backend target, without creating a Supabase project or branch.
+2. Confirm the Flixly model mapping and authoritative server-side price/quote using read-only source review or an approved test environment.
+3. Only after explicit authorization, run integration tests using a dedicated non-production account and test data.
