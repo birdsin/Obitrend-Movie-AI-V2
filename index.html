@@ -3726,3 +3726,26 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  loadModel();syncGenerate();
 })();
 </script><script id="motion-poster-actions">(()=>{const $=id=>document.getElementById(id);const ref=$("posterReference"),brief=$("posterBrief"),render=$("posterRender"),animate=$("posterAnimate");const sync=()=>{render.disabled=!(ref?.files?.length&&brief?.value.trim());};ref?.addEventListener("change",sync);brief?.addEventListener("input",()=>{$("posterBriefCount").textContent=brief.value.length+" / 500";sync()});$("posterBack")?.addEventListener("click",()=>window.obitrendNavigate?.("home"));document.querySelectorAll(".poster-preset").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".poster-preset").forEach(x=>x.classList.remove("active"));b.classList.add("active")}));$("posterWarm")?.addEventListener("click",e=>{const on=e.currentTarget.getAttribute("aria-pressed")==="true";e.currentTarget.setAttribute("aria-pressed",String(!on));e.currentTarget.classList.toggle("active",!on)});render?.addEventListener("click",()=>{if(render.disabled)return;render.textContent="Rendering Poster…";render.disabled=true;setTimeout(()=>{render.textContent="✓ Poster Render Requested";$("posterImageEmpty").textContent="Poster generation request is ready for the connected image pipeline.";animate.disabled=false},500)});animate?.addEventListener("click",()=>{animate.textContent="Animation Requested ✓";animate.disabled=true});})();</script>
+<!-- Reliable touch/click routing for the four Main Navigation cards -->
+<style id="obitrend-main-navigation-tap-fix">
+#obitrendToolHome .ob-toolhome-category:first-of-type,
+#obitrendToolHome .ob-toolhome-category:first-of-type .ob-toolhome-grid,
+#obitrendToolHome .ob-toolhome-category:first-of-type .ob-toolhome-card{position:relative;pointer-events:auto}
+#obitrendToolHome .ob-toolhome-category:first-of-type .ob-toolhome-card{touch-action:manipulation;z-index:2;cursor:pointer}
+</style>
+<script id="obitrend-main-navigation-tap-fix-script">
+(()=> {
+ const routeByKey={home:"home",history:"movies",explore:"models",compare:"models"};
+ document.addEventListener("click",event=>{
+   const card=event.target.closest("#obitrendToolHome .ob-toolhome-card");
+   if(!card)return;
+   const search=card.dataset.search||"";
+   const key=Object.keys(routeByKey).find(k=>new RegExp("\\b"+k+"\\b","i").test(search));
+   if(!key)return;
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   if(typeof window.obitrendNavigate==="function")window.obitrendNavigate(routeByKey[key]);
+   else window.location.hash=routeByKey[key];
+ },true);
+})();
+</script>
