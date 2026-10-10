@@ -132,3 +132,17 @@ test("failed terminal result asks for at most one mock release", () => {
   releaseOnce("fixture-job-failed");
   assert.equal(releases, 1);
 });
+
+test("completed status is case- and whitespace-normalized", () => {
+  const result = normalizeFlixlyResponse({
+    status: "  COMPLETED  ",
+    videoUrl: "https://fixture.invalid/case-normalized.mp4"
+  });
+  assert.equal(result.status, "completed");
+  assert.equal(result.hasOutput, true);
+  assert.equal(result.malformedTerminalSuccess, false);
+});
+
+test("failed status remains a terminal failure with mixed casing", () => {
+  assert.equal(normalizeFlixlyResponse({ status: " Failed " }).status, "failed");
+});
