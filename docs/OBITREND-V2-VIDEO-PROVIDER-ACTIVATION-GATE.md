@@ -157,3 +157,10 @@ This clarifies that the generation-ID endpoint is documented, but the async over
 Added `tests/helpers/flixly-lifecycle-decision.mjs` and `tests/flixly-async-lifecycle-decision.test.mjs`. These test-only fixtures assert conservative decisions for processing, success with output, terminal success without output, confirmed failure, timeout, non-2xx response, and unknown states. The expected invariant is that uncertain outcomes retain reservations for reconciliation; only a provider-confirmed failure requests one release, while success requires output persistence before one-time commit. These are decision-model unit tests, not tests of deployed Supabase RPC idempotency or actual storage/credit operations.
 
 The workflow was updated to run the lifecycle decision tests alongside the three existing suites. **CI result for this newest workflow change is pending verification.** The shared provider gateway, status function, catalogue, credits, and payments remain untouched; V2 remains demo-only.
+
+
+## Latest CI verification (2026-10-10)
+
+GitHub Actions run [38092043516](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38092043516) completed successfully for commit `45fa8086cebb1b4f8ec358b63302108198b32f0f`. The `Mock-only Flixly contract fixtures` job and its `Run isolated mock fixtures` step both succeeded. The workflow command includes the response fixture, request-settings validator, status-URL safety, and async lifecycle decision suites.
+
+This is a successful CI result for isolated test-only code. It does not execute the deployed Supabase function, call Flixly, verify real storage/RPC/credit behavior, or clear the activation gate. The V2 prototype remains demo-only; shared backend and payment systems remain untouched.
