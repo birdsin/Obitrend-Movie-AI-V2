@@ -136,6 +136,6 @@ The combined CI run [38090969977](https://github.com/birdsin/Obitrend-Movie-AI-V
 A further test-only safety layer has now been added:
 - `tests/helpers/validate-flixly-status-url.mjs` accepts only HTTPS URLs whose origin exactly matches the current allowlist (`https://www.flixly.ai`), and rejects malformed URLs, HTTP, deceptive hosts/subdomains, nonstandard ports, embedded credentials, and relative URLs.
 - `tests/flixly-status-url-validation.test.mjs` covers these URL-policy cases.
-- The workflow was updated to run this new test file as well. **The CI result for this latest addition is pending verification.**
+- The workflow was updated to run this new test file as well. **CI verification for this addition passed:** run [38091915529](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38091915529) completed successfully, including the test step for the combined mock suites.
 
 This helper only validates a candidate URL; it does not fetch it, does not prove the provider requires `status_url`, and is not wired into the shared function. The exact allowlisted origin must be checked against current provider documentation before any production use. No provider request or shared backend operation was performed.
