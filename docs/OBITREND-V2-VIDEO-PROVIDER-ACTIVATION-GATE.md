@@ -52,3 +52,44 @@ Read-only gateway source review found:
 - Resolution and aspect ratio should be validated against the model's supported values rather than forwarded without validation.
 
 These findings are source/documentation observations, not a live integration test. No provider request was sent. Keep generation disabled until duration validation, async polling, output persistence, and credit settlement/release have been verified in an explicitly isolated test environment.
+
+
+## Follow-up read-only status-function audit and mock-only test plan (2026-10-10)
+
+A read-only inspection of the existing shared `ai-job-status` Edge Function (version 24) found a Flixly-specific status branch. For a job whose execution provider is `flixly` and whose `provider_job_id` is present, it calls:
+
+`GET https://www.flixly.ai/api/v1/generations/{provider_job_id}`
+
+with a server-side Bearer key, then normalizes several response shapes and maps completed/failed/other states. Therefore, the earlier statement that no Flixly-specific polling branch was identified is superseded: **a polling branch exists**. However, the inspected code polls the generation-ID endpoint; it does not visibly follow a provider-returned `status_url`. Confirm whether this endpoint is the documented supported equivalent and whether its response schema matches the parser before activation.
+
+Additional source-level items to verify (no requests or writes performed):
+- The parser recognizes several state/output aliases but should be checked against actual documented response envelopes and terminal status values.
+- If completion arrives without an output URL, the branch falls through to `processing`; decide how malformed terminal responses should be surfaced without incorrectly releasing reserved credits.
+- The fallback recorded model label is `seedance-2-5`, although the gateway payload builder reviewed earlier selects `seedance-2-mini`. Verify this telemetry label before relying on model-level cost reports.
+- Output is recorded as a provider URL; confirm retention, access control, expiry, and storage requirements before product launch.
+- The branch includes credit commit/release and cost-recording calls. Their behavior must be tested with isolated fixtures/mocks, not against shared user jobs.
+
+### Non-executing contract fixture matrix
+
+Use unit tests with mocked fetch responses and mocked database/RPC/storage calls only. Tests must not use live credentials, real provider endpoints, shared user/job IDs, or shared credit ledgers.
+
+| Fixture | Expected contract assertion |
+|---|---|
+| HTTP 200, completed + output URL | Normalize to success; write output; only then settle mocked reservation once |
+| HTTP 202, processing + task ID | Return processing; keep mocked reservation reserved |
+| HTTP 202, processing + status_url | Confirm whether status_url must be followed; do not silently assume generation-ID polling is equivalent |
+| Completed but missing output URL | Never report success; retain reservation and surface an explicit ambiguous/contract-error state |
+| Failed terminal response | Mark failure and request one idempotent mock release |
+| Network timeout / non-OK status | Treat status as unconfirmed; do not release reservation based only on uncertainty |
+| Missing provider task ID | Do not poll an empty/invalid identifier; surface submission ambiguity for reconciliation |
+| Output persistence failure | Do not report success or commit mocked credits; preserve reconciliation state |
+| Execution finalization failure | Preserve ambiguous state; prevent duplicate settlement |
+| Credit commit/release RPC failure | Report reconciliation-required; do not claim the ledger is settled |
+| Duplicate status poll | Assert idempotent output/settlement behavior |
+| Unsupported duration/resolution/ratio | Reject before provider submission once model contract validation is implemented |
+
+This matrix is a proposed test plan, not evidence that tests have run or passed.
+
+## Current disposition
+
+The status-function audit narrows one uncertainty: Flixly polling code exists. It does **not** clear activation. Duration validation remains mismatched; use of `status_url` remains unconfirmed; response/output handling, storage policy, idempotency, and credit settlement remain untested end-to-end. Keep the V2 prototype demo-only and retain all no-go conditions above.
