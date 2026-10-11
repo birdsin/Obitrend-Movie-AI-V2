@@ -34,3 +34,40 @@ test("prototype source contains no direct network primitives or remote script in
   assert.doesNotMatch(html, /\bXMLHttpRequest\b/);
   assert.doesNotMatch(html, /<script\b[^>]*\bsrc\s*=/i);
 });
+
+test("every registered tool has a complete, valid workspace contract", () => {
+  const match = html.match(/const tools\s*=\s*\[([\s\S]*?)\n\];/);
+  assert.ok(match, "tools array must exist");
+  const objects = [...match[1].matchAll(/\{id:"([^"]+)",name:"([^"]+)",nav:(\d+),icon:"([^"]*)",desc:"([^"]*)",type:"([^"]+)",input:"([^"]+)",output:"([^"]+)",fields:\[([^\]]*)\]\}/g)];
+  assert.equal(objects.length, 35, "each tool must use the expected complete record shape");
+  for (const [, id, name, , , desc, type, input, output, fields] of objects) {
+    assert.ok(id && name && desc && output, "tool identity, description, and output label are required");
+    assert.ok(["video", "image", "3d", "audio", "text"].includes(type), `${id} has a recognized tool type`);
+    assert.ok(["prompt", "text"].includes(input), `${id} has a recognized input mode`);
+    assert.ok(fields.trim().length > 0, `${id} has at least one settings field`);
+  }
+  const navIndexes = objects.map(([, , , , , , , , ,]) => Number.NaN);
+  assert.equal(navIndexes.length, 35);
+});
+
+test("workspace actions keep demo generation local and output actions disabled", () => {
+  assert.match(html, /No AI request sent/i);
+  assert.match(html, /no AI request was sent/i);
+  assert.match(html, /\$\("download"\)\.disabled=\$\("save"\)\.disabled=\$\("retry"\)\.disabled=true/);
+  assert.match(html, /URL\.createObjectURL\(file\)/);
+  assert.match(html, /URL\.revokeObjectURL\(previewObjectUrl\)/);
+});
+
+test("mobile navigation has explicit menu toggle and overlay close handlers", () => {
+  assert.match(html, /\$\("menu"\)\.onclick=\(\)=>/);
+  assert.match(html, /\$\("overlay"\)\.onclick=closeMenu/);
+  assert.match(html, /if\(window\.innerWidth<760\)closeMenu\(\)/);
+});
+
+test("clear action resets prompt, settings, file selection, and local preview URL", () => {
+  assert.match(html, /\$\("clear"\)\.onclick=\(\)=>/);
+  assert.match(html, /if\(p\)p\.value=""/);
+  assert.match(html, /querySelectorAll\("select"\)\.forEach\(s=>s\.selectedIndex=0\)/);
+  assert.match(html, /if\(fileInput\)fileInput\.value=""/);
+  assert.match(html, /URL\.revokeObjectURL\(previewObjectUrl\)/);
+});
