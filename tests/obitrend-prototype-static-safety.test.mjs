@@ -121,3 +121,20 @@ test("Android QA checklist keeps the 35-tool matrix and current deployment evide
   assert.match(checklist, /newer source changes are not confirmed deployed/i);
   assert.match(checklist, /not a runtime network capture/i);
 });
+
+test("Movie Creator opens the three-step local-only project workflow", () => {
+  assert.match(html, /if\(i===1\)\{renderMovieWorkflow\(\)\}/);
+  assert.match(html, /function renderMovieWorkflow\(\)/);
+  assert.match(html, /Project setup/);
+  assert.match(html, /Story &amp; script|Story & script/);
+  assert.match(html, /Scene breakdown/);
+  assert.match(html, /function captureMovieStep\(\)/);
+  assert.match(html, /function updateMovieTotal\(\)/);
+});
+
+test("movie workflow labels reviews as demo-only and keeps generated-output actions disabled", () => {
+  assert.match(html, /LOCAL DRAFT · DEMO ONLY/);
+  assert.match(html, /No AI request, upload, save, or credit deduction occurred/);
+  assert.match(html, /\$\("download"\)\.disabled=\$\("save"\)\.disabled=\$\("retry"\)\.disabled=true/);
+  assert.match(html, /No actual generation or account save is connected/);
+});
