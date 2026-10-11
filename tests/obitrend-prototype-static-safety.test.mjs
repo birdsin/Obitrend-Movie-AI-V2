@@ -70,7 +70,11 @@ test("workspace actions keep demo generation local and output actions disabled",
 });
 
 test("mobile navigation has explicit menu toggle and overlay close handlers", () => {
-  assert.match(html, /\$\("menu"\)\.onclick=\(\)=>/);
+  assert.match(html, /function toggleMenu\(\)/);
+  assert.match(html, /\$\("menu"\)\.onclick=toggleMenu/);
+  assert.match(html, /aria-expanded/);
+  assert.match(html, /aria-current="page"/);
+  assert.match(html, /e\.key==="Escape"/);
   assert.match(html, /\$\("overlay"\)\.onclick=closeMenu/);
   assert.match(html, /if\(window\.innerWidth<760\)closeMenu\(\)/);
 });
