@@ -1,27 +1,19 @@
 # OBITREND Movie AI V2 — QA Progress
 
-Checked: 2026-10-11 (refreshed after checklist CI passed) (updated after CI run 69)  
+Checked: 2026-10-11 (latest CI and staging inventory rechecked)  
 Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` only.
 
 ## Automated checks
 
-- [x] Push workflow passed for commit `ae4bbf625a6bf7e7bbd378a0bf4e6f2299b237e2`: [run 51](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38112887281).
-- [x] Pull-request workflow passed for the same commit: [run 52](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38112889846).
-- [x] Push workflow passed for commit `c7e2cf2870852e2b4a38d3eff0c8202e5c7e8d6b`: [run 64](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114378216).
-- [x] Pull-request workflow passed for the same commit: [run 65](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114380898).
-- [x] Pull-request workflow passed for documentation commit `f20a54d6f6abe61046fde33869d8466d51316c5d`: [run 67](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116648106). This is mock/static CI, not a browser or provider integration test.
-- [x] Two workflow runs passed for test-strengthening commit `76c1dce86bcb9cfd9e49bbe9bd1e92c28527fb79`: [run 68](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116868670) and [run 69](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116871834). The added assertions cover demo Generate feedback on standard sidebar sections, special-section demo actions, and mobile drawer closing. These are static/mock checks, not browser testing.
-- [x] QA report update commit `f515963804b49cfd234246e8134b4c12472d47d7` passed: [run 70](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117553253).
-- [x] Android QA checklist reference update commit `6e8c0ac6728776c8d29c2027f0efcdd299629487` passed: [run 71](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117665797).
-- [x] Corrected staging-reference commit `9bc303d0eb872121a85f144d4077fdd0ba9ebf9c` passed: [run 72](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117673629).
-- [x] Static prototype safety test counts 20 inline navigation entries and checks 35 unique tool IDs.
-- [x] Static safety test checks for demo-only/local-only safety copy and scans the prototype HTML for literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns.
+- [x] Latest branch-head QA report commit `fa540ddb94e12d6569109ddbf123a938ee034bb4` passed GitHub Actions: [run 73](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117742684).
+- [x] Prior documentation/checklist workflow runs also passed: [run 70](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117553253), [run 71](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117665797), and [run 72](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117673629).
+- [x] Static prototype checks verify 20 primary navigation entries, 35 unique tool IDs, complete tool workspace contracts, demo-only feedback, local reference-preview cleanup, mobile drawer handlers, and absence of literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns in the prototype HTML.
 
-These checks are automated source/mock tests. They are not provider integration tests, an automated browser run, a full accessibility audit, or proof that every control works at runtime.
+These are source/mock tests. They are not provider integration tests, an automated browser run, a full accessibility audit, or proof that every control works at runtime.
 
 ## Manual QA still outstanding
 
-Use the [Android preview QA checklist](OBITREND-V2-ANDROID-PREVIEW-QA-CHECKLIST.md) and record actual observed results. In particular:
+Use the [Android preview QA checklist](OBITREND-V2-ANDROID-PREVIEW-QA-CHECKLIST.md) and record actual observed results:
 
 1. Click through all 20 navigation destinations on Android.
 2. Exercise each of the 35 tool panels and verify its input controls and output label.
@@ -29,11 +21,13 @@ Use the [Android preview QA checklist](OBITREND-V2-ANDROID-PREVIEW-QA-CHECKLIST.
 4. Check Search, Clear, demo workflow buttons, mobile scrolling, keyboard-open layout, and refresh behavior.
 5. Capture screenshots for failures and mark only observed results as passed.
 
-The existing six-step smoke test was user-confirmed on 2026-10-10. It does not replace the full click-through matrix.
+The six-step smoke test was user-confirmed on 2026-10-10; it does not replace the full click-through matrix.
 
 ## Deployment status
 
-The latest READY staging deployment found in the Vercel inventory references commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` (message: `Allow demo input review without verified model`). It does not match the latest branch documentation commit `2587d49f2c83d288cf49bf515d52c4f3d3ca4d8b`. The latest branch source is therefore not confirmed deployed. As of this update, branch head `9bc303d0eb872121a85f144d4077fdd0ba9ebf9c` is not among the latest READY staging deployment SHAs checked. Do not claim it is deployed until a matching deployment is verified.
+- Latest checked branch head before this report refresh: `fa540ddb94e12d6569109ddbf123a938ee034bb4`.
+- Latest READY staging deployment found in Vercel inventory: commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`, URL [staging prototype](https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html).
+- These SHAs do not match. The latest branch source is **not confirmed deployed**. Do not claim deployment until a matching READY deployment is verified.
 
 ## Safety boundaries
 
