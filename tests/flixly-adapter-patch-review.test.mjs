@@ -94,3 +94,29 @@ test("status URL validation rejects credentials, nonstandard ports, and malforme
   assert.equal(validateFlixlyStatusUrl("").valid, false);
   assert.equal(validateFlixlyStatusUrl(null).valid, false);
 });
+
+test("normalizer recognizes every supported output URL alias", () => {
+  for (const key of ["output_url", "outputUrl", "url", "video_url", "videoUrl"]) {
+    const response = normalizeFlixlyResponse({
+      status: "completed",
+      [key]: "https://fixture.invalid/output.mp4"
+    });
+    assert.equal(response.hasOutput, true, key);
+    assert.equal(response.outputUrl, "https://fixture.invalid/output.mp4", key);
+  }
+});
+
+test("normalizer reads a nested output when the status is at the top level", () => {
+  const response = normalizeFlixlyResponse({
+    status: "processing",
+    result: { status: "completed", outputUrl: "https://fixture.invalid/nested.mp4" }
+  });
+  assert.equal(response.status, "processing");
+  assert.equal(response.hasOutput, true);
+});
+
+test("lifecycle decision retains reservations for transport errors and malformed HTTP status", () => {
+  assert.equal(decideFlixlyLifecycle({ transportError: true, httpStatus: 200, payload: { status: "failed" } }).action, "reconcile");
+  assert.equal(decideFlixlyLifecycle({ httpStatus: null, payload: { status: "failed" } }).action, "reconcile");
+  assert.equal(decideFlixlyLifecycle({ httpStatus: 202, payload: { status: "processing" } }).reservation, "retain");
+});
