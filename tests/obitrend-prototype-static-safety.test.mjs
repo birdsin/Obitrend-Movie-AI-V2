@@ -40,14 +40,20 @@ test("every registered tool has a complete, valid workspace contract", () => {
   assert.ok(match, "tools array must exist");
   const objects = [...match[1].matchAll(/\{id:"([^"]+)",name:"([^"]+)",nav:(\d+),icon:"([^"]*)",desc:"([^"]*)",type:"([^"]+)",input:"([^"]+)",output:"([^"]+)",fields:\[([^\]]*)\]\}/g)];
   assert.equal(objects.length, 35, "each tool must use the expected complete record shape");
-  for (const [, id, name, , , desc, type, input, output, fields] of objects) {
+  for (const [, id, name, nav, , desc, type, input, output, fields] of objects) {
     assert.ok(id && name && desc && output, "tool identity, description, and output label are required");
+    assert.ok(Number(nav) >= 0 && Number(nav) < 20, `${id} references a valid navigation destination`);
     assert.ok(["video", "image", "3d", "audio", "text"].includes(type), `${id} has a recognized tool type`);
     assert.ok(["prompt", "text"].includes(input), `${id} has a recognized input mode`);
     assert.ok(fields.trim().length > 0, `${id} has at least one settings field`);
   }
-  const navIndexes = objects.map(([, , , , , , , , ,]) => Number.NaN);
-  assert.equal(navIndexes.length, 35);
+  const navMatch = html.match(/const navItems\\s*=\\s*\\[([\\s\\S]*?)\\n\\];/);
+  assert.ok(navMatch, "navItems array must exist");
+  const navLabels = [...navMatch[1].matchAll(/\\["([^"]+)"/g)].map((item) => item[1]);
+  assert.equal(navLabels.length, 20);
+  for (const [, id, , nav] of objects) {
+    assert.ok(navLabels[Number(nav)], `${id} maps to a named navigation destination`);
+  }
 });
 
 test("workspace actions keep demo generation local and output actions disabled", () => {
