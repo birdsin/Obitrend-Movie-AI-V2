@@ -6,7 +6,7 @@ Status: manual QA checklist for the isolated structural prototype only. User con
 
 - Repository: `birdsin/Obitrend-Movie-AI-V2`
 - Working branch: `feat/obitrend-v2-structural-prototype`
-- Latest checked READY staging URL: `https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest checked READY staging URL (still serving older source; latest PR head is not confirmed deployed): `https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
 - Latest checked READY deployment source commit: `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`
 - User confirmed the current preview is working on 2026-10-10.
 - This checklist does not authorize production release, real generation, uploads, account writes, credit deductions, or payment actions.
@@ -87,7 +87,7 @@ Do not wire the prototype to live services until all of the following are indepe
 
 ## Evidence limits
 
-The latest checked READY staging deployment in the current Vercel inventory is commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` at the preview URL listed above. Current branch head as of 2026-10-11 is `57d1cfcc62fe178b6d4c5d09bba17ecefbf7340e`; these do not match, so newer source changes are not confirmed deployed. The user-confirmed Android smoke test and earlier screenshots support only the specific visible checks recorded here. They do not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
+The latest checked READY staging deployment in the current Vercel inventory is commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` at the preview URL listed above. Current PR #6 head reverified on 2026-10-11 is `1a8f0af7dd7a458ccbd089db78496d4c4c865713`; the latest READY staging deployment still uses `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`. These do not match, so newer source changes are not confirmed deployed. The user-confirmed Android smoke test and earlier screenshots support only the specific visible checks recorded here. They do not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
 
 ## Android Video Generator test evidence — 2026-10-10
 
