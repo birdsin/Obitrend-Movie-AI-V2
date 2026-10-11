@@ -6,8 +6,8 @@ Status: manual QA checklist for the isolated structural prototype only. User con
 
 - Repository: `birdsin/Obitrend-Movie-AI-V2`
 - Working branch: `feat/obitrend-v2-structural-prototype`
-- Latest checked READY staging URL: `https://obitrend-movie-ai-v2-ij6726og1-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
-- Latest verified deployment source commit: `6febd67411c55f442204ef887a6dbe6019d313cf`
+- Latest checked READY staging URL: `https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest checked READY deployment source commit: `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`
 - User confirmed the current preview is working on 2026-10-10.
 - This checklist does not authorize production release, real generation, uploads, account writes, credit deductions, or payment actions.
 - Do not create a Supabase project or branch. Do not change production services. Keep PR #6 draft and unmerged.
