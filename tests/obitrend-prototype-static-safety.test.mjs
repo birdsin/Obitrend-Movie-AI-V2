@@ -148,3 +148,15 @@ test("movie workflow preserves current inputs when switching steps and renders a
   assert.match(html, /escMovie\(sc\.description\|\|"No scene description entered\."\)/);
   assert.match(html, /This is a plan summary, not a generated movie/);
 });
+
+test("movie draft uses tab-scoped session persistence with explicit restore and clear controls", () => {
+  assert.match(html, /const MOVIE_DRAFT_KEY="obitrend-v2-movie-draft-session"/);
+  assert.match(html, /sessionStorage\.setItem\(MOVIE_DRAFT_KEY,JSON\.stringify\(movieDraft\)\)/);
+  assert.match(html, /sessionStorage\.getItem\(MOVIE_DRAFT_KEY\)/);
+  assert.match(html, /sessionStorage\.removeItem\(MOVIE_DRAFT_KEY\)/);
+  assert.match(html, /restoreMovieDraftSession\(\);renderNav\(\)/);
+  assert.match(html, /SESSION DRAFT · DEMO ONLY/);
+  assert.match(html, /Clear entire movie draft/);
+  assert.doesNotMatch(html, /localStorage\.(?:setItem|getItem)\(/);
+  assert.doesNotMatch(html, /\bfetch\s*\(/);
+});
