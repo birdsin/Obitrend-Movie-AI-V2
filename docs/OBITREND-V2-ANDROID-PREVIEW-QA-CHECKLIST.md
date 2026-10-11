@@ -54,6 +54,8 @@ These are user-reported manual results for the six listed checks. They do not es
 
 ## Latest static CI safety checks — 2026-10-11
 
+- [x] QA progress report refresh commit `57d1cfcc62fe178b6d4c5d09bba17ecefbf7340e` passed mock/static CI: [run 38119252556](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119252556).
+
 - [x] Mock/static CI passed for the additional sidebar demo-action, special-section demo-action, and mobile drawer assertions in commit `76c1dce86bcb9cfd9e49bbe9bd1e92c28527fb79`: [run 68](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116868670) and [run 69](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116871834).
 - [x] QA progress documentation CI passed for commit `f515963804b49cfd234246e8134b4c12472d47d7`: [run 70](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117553253).
 - [x] Refreshed QA progress report commit `2b4c9306535a861c1f3caca104555e1bef04e702` passed mock/static CI: [run 74](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38118445991).
@@ -85,7 +87,7 @@ Do not wire the prototype to live services until all of the following are indepe
 
 ## Evidence limits
 
-The latest checked READY staging deployment in the current Vercel inventory is commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` at the preview URL listed above. It does not match the current branch head, so newer source changes are not confirmed deployed. The user-confirmed Android smoke test and earlier screenshots support only the specific visible checks recorded here. They do not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
+The latest checked READY staging deployment in the current Vercel inventory is commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` at the preview URL listed above. Current branch head as of 2026-10-11 is `57d1cfcc62fe178b6d4c5d09bba17ecefbf7340e`; these do not match, so newer source changes are not confirmed deployed. The user-confirmed Android smoke test and earlier screenshots support only the specific visible checks recorded here. They do not prove every button works, all 20 destinations or 35 tools pass manual testing, or any backend integration works end to end.
 
 ## Android Video Generator test evidence — 2026-10-10
 
