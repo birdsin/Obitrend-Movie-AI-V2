@@ -1,6 +1,6 @@
 # OBITREND Movie AI V2 — QA Progress
 
-Checked: 2026-10-11 (updated after CI run 69)  
+Checked: 2026-10-11 (refreshed after checklist CI passed) (updated after CI run 69)  
 Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` only.
 
 ## Automated checks
@@ -11,6 +11,9 @@ Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` 
 - [x] Pull-request workflow passed for the same commit: [run 65](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114380898).
 - [x] Pull-request workflow passed for documentation commit `f20a54d6f6abe61046fde33869d8466d51316c5d`: [run 67](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116648106). This is mock/static CI, not a browser or provider integration test.
 - [x] Two workflow runs passed for test-strengthening commit `76c1dce86bcb9cfd9e49bbe9bd1e92c28527fb79`: [run 68](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116868670) and [run 69](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116871834). The added assertions cover demo Generate feedback on standard sidebar sections, special-section demo actions, and mobile drawer closing. These are static/mock checks, not browser testing.
+- [x] QA report update commit `f515963804b49cfd234246e8134b4c12472d47d7` passed: [run 70](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117553253).
+- [x] Android QA checklist reference update commit `6e8c0ac6728776c8d29c2027f0efcdd299629487` passed: [run 71](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117665797).
+- [x] Corrected staging-reference commit `9bc303d0eb872121a85f144d4077fdd0ba9ebf9c` passed: [run 72](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117673629).
 - [x] Static prototype safety test counts 20 inline navigation entries and checks 35 unique tool IDs.
 - [x] Static safety test checks for demo-only/local-only safety copy and scans the prototype HTML for literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns.
 
@@ -30,7 +33,7 @@ The existing six-step smoke test was user-confirmed on 2026-10-10. It does not r
 
 ## Deployment status
 
-The latest READY staging deployment found in the Vercel inventory references commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` (message: `Allow demo input review without verified model`). It does not match the latest branch documentation commit `2587d49f2c83d288cf49bf515d52c4f3d3ca4d8b`. The latest branch source is therefore not confirmed deployed. As of this update, branch head `76c1dce86bcb9cfd9e49bbe9bd1e92c28527fb79` is not among the latest READY staging deployment SHAs checked. Do not claim it is deployed until a matching deployment is verified.
+The latest READY staging deployment found in the Vercel inventory references commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` (message: `Allow demo input review without verified model`). It does not match the latest branch documentation commit `2587d49f2c83d288cf49bf515d52c4f3d3ca4d8b`. The latest branch source is therefore not confirmed deployed. As of this update, branch head `9bc303d0eb872121a85f144d4077fdd0ba9ebf9c` is not among the latest READY staging deployment SHAs checked. Do not claim it is deployed until a matching deployment is verified.
 
 ## Safety boundaries
 
