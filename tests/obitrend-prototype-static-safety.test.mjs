@@ -11,7 +11,7 @@ const html = readFileSync(htmlPath, "utf8");
 test("structural prototype declares exactly 20 primary navigation destinations", () => {
   const match = html.match(/const navItems\s*=\s*\[([\s\S]*?)\n\];/);
   assert.ok(match, "navItems array must exist");
-  const entries = match[1].match(/^\s*\["[^"]+"/gm) || [];
+  const entries = match[1].match(/\["[^"]+"/g) || [];
   assert.equal(entries.length, 20);
 });
 
