@@ -138,3 +138,13 @@ test("movie workflow labels reviews as demo-only and keeps generated-output acti
   assert.match(html, /\$\("download"\)\.disabled=\$\("save"\)\.disabled=\$\("retry"\)\.disabled=true/);
   assert.match(html, /No actual generation or account save is connected/);
 });
+
+test("movie workflow preserves current inputs when switching steps and renders a detailed plan review", () => {
+  assert.match(html, /captureMovieStep\(\);movieDraft\.step=Number\(b\.dataset\.movieStep\);renderMovieWorkflow\(\)/);
+  assert.match(html, /Project name/);
+  assert.match(html, /Story title/);
+  assert.match(html, /Scene breakdown · /);
+  assert.match(html, /Total estimated scene duration/);
+  assert.match(html, /escMovie\(sc\.description\|\|"No scene description entered\."\)/);
+  assert.match(html, /This is a plan summary, not a generated movie/);
+});
