@@ -7,6 +7,8 @@ import { dirname, resolve } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 const htmlPath = resolve(here, "../prototypes/obitrend-v2-structural-prototype.html");
 const html = readFileSync(htmlPath, "utf8");
+const checklistPath = resolve(here, "../docs/OBITREND-V2-ANDROID-PREVIEW-QA-CHECKLIST.md");
+const checklist = readFileSync(checklistPath, "utf8");
 
 test("structural prototype declares exactly 20 primary navigation destinations", () => {
   const match = html.match(/const navItems\s*=\s*\[([\s\S]*?)\n\];/);
@@ -102,4 +104,15 @@ test("sidebar destinations close the mobile drawer after selection", () => {
   assert.match(html, /if\(window\.innerWidth<760\)closeMenu\(\)/);
   assert.match(html, /function closeMenu\(\)/);
   assert.match(html, /\$\("overlay"\)\.onclick=closeMenu/);
+});
+
+
+test("Android QA checklist keeps the 35-tool matrix and current deployment evidence accurate", () => {
+  const matrix = checklist.match(/## Full 35-tool click-through matrix[\\s\\S]*?(?=\\n## |$)/);
+  assert.ok(matrix, "the full tool click-through matrix must exist");
+  const rows = [...matrix[0].matchAll(/^\\|\\s*\\d+\\s*\\|/gm)];
+  assert.equal(rows.length, 35, "the manual QA matrix must list all 35 tools");
+  assert.match(checklist, /Latest checked READY deployment source commit: `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`/);
+  assert.match(checklist, /newer source changes are not confirmed deployed/i);
+  assert.match(checklist, /not a runtime network capture/i);
 });
