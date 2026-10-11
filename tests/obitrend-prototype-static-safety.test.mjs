@@ -80,3 +80,26 @@ test("clear action resets prompt, settings, file selection, and local preview UR
   assert.match(html, /if\(fileInput\)fileInput\.value=""/);
   assert.match(html, /URL\.revokeObjectURL\(previewObjectUrl\)/);
 });
+
+test("each standard sidebar section exposes a demo Generate action and output-panel feedback", () => {
+  assert.match(html, /function selectNav\(i\)/);
+  assert.match(html, /id='sectionGenerate'/);
+  assert.match(html, /\$\("sectionGenerate"\)\.onclick=\(\)=>/);
+  assert.match(html, /\$\("preview"\)\.innerHTML=.*output preview/s);
+  assert.match(html, /No AI request, upload, project save, or credit deduction occurred/);
+});
+
+test("special sections keep explicit demo-only actions and honest integration boundaries", () => {
+  assert.match(html, /function renderHistoryPanel\(\)/);
+  assert.match(html, /function renderSectionPanel\(i\)/);
+  assert.match(html, /Generate \(demo only\)/);
+  assert.match(html, /Review history workflow \(demo only\)/);
+  assert.match(html, /Live endpoints are not called in this prototype/);
+  assert.match(html, /Authenticated backend integration is required/);
+});
+
+test("sidebar destinations close the mobile drawer after selection", () => {
+  assert.match(html, /if\(window\.innerWidth<760\)closeMenu\(\)/);
+  assert.match(html, /function closeMenu\(\)/);
+  assert.match(html, /\$\("overlay"\)\.onclick=closeMenu/);
+});
