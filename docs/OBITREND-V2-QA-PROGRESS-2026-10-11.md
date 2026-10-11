@@ -1,6 +1,6 @@
 # OBITREND Movie AI V2 — QA Progress
 
-Checked: 2026-10-11 (reverified PR head and CI run #88; staging inventory still shows older source)  
+Checked: 2026-10-11 (user-confirmed full Android QA on staging; deployment verified READY)  
 Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` only.
 
 ## Automated checks
@@ -11,30 +11,34 @@ Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` 
 - [x] Corrected regression-test commit `6b40f6f2431d8ddcb662dcee2e052f271d1ea6cc` passed both CI runs: [run 38119037533](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119037533) and [run 38119039605](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119039605).
 - [x] QA report commit `57d1cfcc62fe178b6d4c5d09bba17ecefbf7340e` passed mock/static CI: [run 38119252556](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119252556).
 - [x] Earlier branch-head documentation commit `9acbcbb42e8364592e0accae239afce21a3b5fce` passed mock/static CI: [run 38119295053](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119295053).
-- [x] Current PR head `7f5f2acceabd653a4b20b8ccab1de54086d7268d` passed mock/static CI: [run 38123859021](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38123859021), run #88.
+- [x] Commit `7f5f2acceabd653a4b20b8ccab1de54086d7268d` passed mock/static CI: [run 38123859021](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38123859021), run #88.
+- [x] User confirmed Android staging QA passed for all 20 sidebar sections, expected workspaces, all 35 tool cards, search and clear, local reference preview, mobile output panel layout, and demo-only/no-credit behavior.
 - [x] Accessible mobile-navigation source changes were added with Escape-to-close, `aria-expanded`, and active destination indication. An initial CI run failed because a static test still expected the previous menu handler; the test was updated to assert the new behavior. Run #88 passed on the updated head.
 - [x] Static source tests check 20 navigation entries, 35 unique tool IDs, complete tool workspace contracts, demo-only feedback, local reference-preview cleanup, mobile drawer handlers, and absence of literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns in the prototype HTML.
 - [x] Checklist regression test checks that the manual QA matrix contains 35 tool rows and that staging evidence wording remains accurate.
 
-These are source/mock tests. They are not provider integration tests, an automated browser run, a full accessibility audit, or proof that every control works at runtime.
+These are source/mock tests. They are not provider integration tests, an automated browser run, or a full accessibility audit. The separate Android manual QA results above are user-confirmed.
 
-## Manual QA still outstanding
+## Manual QA results
 
-Use the [Android preview QA checklist](OBITREND-V2-ANDROID-PREVIEW-QA-CHECKLIST.md) and record actual observed results:
+User-confirmed Android staging QA on 2026-10-11:
 
-1. Click through all 20 navigation destinations on Android.
-2. Exercise each of the 35 tool panels and verify its input controls and output label.
-3. Verify local-only reference preview and confirm no upload/network call using available browser tooling.
-4. Check Search, Clear, demo workflow buttons, mobile scrolling, keyboard-open layout, and refresh behavior.
-5. Capture screenshots for failures and mark only observed results as passed.
+- [x] All 20 sidebar sections open correctly.
+- [x] Each section displays its expected workspace.
+- [x] All 35 tool cards open the right input panel.
+- [x] Search finds tools and Clear inputs resets fields.
+- [x] Reference image/video preview stays local.
+- [x] Output panel remains visible and usable on mobile.
+- [x] No false success message or real credit deduction.
 
-The six-step smoke test was user-confirmed on 2026-10-10; it does not replace the full click-through matrix.
+This is user-observed mobile QA, not an automated browser test or provider integration test. Continue regression checks after further code changes.
 
 ## Deployment status
 
-- Current verified PR #6 head: `7f5f2acceabd653a4b20b8ccab1de54086d7268d` (PR remains open, draft, and unmerged).
-- Latest READY staging deployment found in the Vercel inventory: commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`, URL [staging prototype](https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html). Rechecked on 2026-10-11; it is still the latest READY staging deployment in the returned inventory.
-- These SHAs do not match. The latest branch source is **not confirmed deployed**. The live preview URL returned HTTP 200 and served the prototype HTML, but this does not mean it contains the latest branch commit. Do not claim deployment until a matching READY deployment is verified.
+- Latest verified staging deployment: [open staging prototype](https://obitrend-movie-ai-v2-99yoelrg0-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html).
+- Vercel reports deployment `dpl_EXmgwpa8HctPJ3Kao2mxXZGs6AZ9` as `READY`, target `staging`, for commit `219d921759082bd28b73bc849c4835bc9a28e508` on `feat/obitrend-v2-structural-prototype`.
+- The prototype URL returned HTTP 200 and its served HTML contains the accessible mobile navigation behavior. User subsequently confirmed the navigation works on Android and reported all 20 sections and 35 tool panels passed manual QA.
+- PR #6 remains open, draft, and unmerged.
 
 ## Safety boundaries
 
