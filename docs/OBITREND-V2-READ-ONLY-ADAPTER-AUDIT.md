@@ -1,0 +1,109 @@
+# OBITREND V2 — Read-Only Adapter Audit
+
+Date: 2026-10-10
+Branch: `feat/obitrend-v2-structural-prototype`
+Status: **SOURCE REVIEW ONLY — NO PROVIDER CALLS OR BACKEND CHANGES**
+
+## Scope
+
+Reviewed the currently deployed source text for the shared Supabase AI Platform Edge Functions:
+- `ai-provider-gateway` (version 27)
+- `ai-job-status` (version 24)
+- `credit-engine` (version 15)
+
+This is source inspection only. No function was invoked to create a job, upload media, call Flixly, poll a live job, or mutate credit state. Function versions and source observed do not prove a successful end-to-end generation.
+
+## Observed Flixly gateway behavior
+
+- Gateway accepts `mode`, `model_id`, prompt/settings, and input asset data, then creates/reserves a job through database RPCs before dispatching by provider.
+- Flixly branch reads `FLIXLY_API_KEY` server-side and posts to `https://www.flixly.ai/api/v1/generate`.
+- The payload mapper selects upstream model `seedance-2-mini`, infers text-to-video vs image-to-video from mode/assets, clamps duration to 1–30 seconds, and forwards aspect ratio/resolution settings.
+- Network ambiguity retains the reservation; a definitive HTTP/provider failure attempts to release credits.
+- A synchronous completed response with output URL attempts to write output and commit credits; a task ID response is recorded and returned as processing.
+- Several RPC results around settlement/recording are not all checked uniformly. This deserves a dedicated failure-path review before any integration test.
+
+## Observed status behavior
+
+- `ai-job-status` authenticates the caller, fetches the job constrained by both job ID and user ID, and fetches the provider execution constrained by job ID and user ID.
+- A Flixly polling branch exists and calls `GET https://www.flixly.ai/api/v1/generations/{id}` for submitted jobs.
+- The source includes output handling and settlement logic, but this inspection does not prove all status transitions, output storage, signed URL handling, and settlement cases are correct under live provider responses.
+- The status function's Flixly success path uses `seedance-2-5` as a fallback model label when the provider response contains no model identifier. That fallback can mislabel a `seedance-2-mini` job and should be replaced by the persisted selected model or a neutral unknown value.
+
+## Follow-up comparison with current official Flixly docs
+
+Official references checked on 2026-10-10:
+- https://www.flixly.ai/developers
+- https://www.flixly.ai/models/seedance-2-mini
+- https://www.flixly.ai/api-docs
+
+The official developer docs describe `POST /api/v1/generate`, asynchronous video responses, and `GET /api/v1/generations/{id}`. The Seedance 2.0 Mini model page lists durations from 4 through 15 seconds, resolutions 480p/720p, and supported aspect ratios 16:9, 9:16, 1:1, 21:9, 4:3, and 3:4.
+
+### Confirmed source-to-doc mismatches or unresolved assumptions
+
+1. **Duration validation mismatch.** The gateway clamps the selected duration to 1–30 seconds. For `seedance-2-mini`, reject unsupported durations and accept only model-supported values (4–15 seconds according to the current model page). Do not silently clamp because it can generate a different duration than the user selected. Use model-specific capabilities rather than one global range.
+2. **Request type and image field need verification.** The mapper sends `type: TEXT_TO_VIDEO` or `IMAGE_TO_VIDEO` and optionally `image_url`. The public model page confirms text/image-to-video capabilities, but this source review has not established that every submitted field, combination, and image URL format matches the current authenticated Flixly schema.
+3. **Response schema assumptions.** The gateway accepts task identifiers from `id`, `task_id`, or `generation_id`, and recognizes only selected status/output aliases. The public docs show examples but do not prove all live response envelopes or terminal status spellings. Confirm the exact response schema before enabling.
+4. **Polling contract.** The status function calls the documented generation endpoint but interprets response envelopes and status values locally. Verify exact terminal states, nested output fields, and error shape against the current API contract and a permitted isolated test.
+5. **Incorrect fallback model label.** The status function can label a successful result `seedance-2-5` when no model is returned, despite the selected adapter model being `seedance-2-mini`. Persist the selected model and use it as the source of truth; otherwise use `unknown`, not a different model.
+6. **Asset ownership and access.** V2 currently has a local browser preview, not a validated server-owned asset ID or controlled provider-readable HTTPS URL. Do not pass arbitrary URLs through to the provider; validate scheme, ownership, file type, size, and allowed storage host.
+7. **Settlement failures.** Audit every RPC result for reservation, execution state changes, output persistence, commit, and release. Any failure after a provider may have accepted a request must remain recoverable and idempotent; do not silently release or charge twice.
+8. **Output trust and retention.** Validate provider output URLs and content type, ownership, retention, safe storage, and signed-download behavior before Save/Download is enabled.
+9. **Pricing is unconfirmed.** A catalog value or prior example is not an authoritative customer quote. Require a current server-issued quote and approved pricing policy before presenting a credit cost or submitting a paid generation.
+10. **Shared environment.** The functions belong to the shared AI Platform. This review has not proven isolation of users, wallets, provider credentials, storage, job records, or billing from production.
+
+## Vercel staging configuration check — 2026-10-10
+
+Read-only inspection of Vercel project `obitrend-movie-ai-v2` found:
+- Latest deployment: `dpl_J9SVYtqkQPcsKgS9BLaWKMPUsXpV`
+- Deployment state: `READY`
+- Target: `staging`
+- Source branch: `feat/obitrend-v2-structural-prototype`
+- Source commit: `6febd67411c55f442204ef887a6dbe6019d313cf`
+- Project environment-variable inventory returned `envs: []` and `hiddenProductionEnvCount: 0`.
+
+This inventory does **not** prove that a safe isolated backend exists. It only reports that this Vercel project has no project environment variables visible through the read-only inventory at the time checked. Do not add credentials or point the prototype at shared services as a workaround. The prototype should remain demo-only until isolation and contracts are independently verified.
+
+## Required safe next step
+
+Continue read-only source review and contract documentation. If an isolated non-production environment is not already available and proven, stop and request explicit authorization before any backend or provider test. Do not create another Supabase project/branch.
+
+## Decision
+
+**NO-GO for connecting OBITREND V2 to the shared gateway or enabling real generation.**
+
+Allowed: review-only documentation and UI-only prototype changes that remain clearly in demo mode.
+
+Not performed: provider calls, live jobs, uploads, credit/payment operations, database mutations, Edge Function deployments, PR merge, or production deployment.
+
+
+## Additional status-adapter findings (read-only, 2026-10-10)
+
+Re-read the currently deployed `ai-job-status` source (version 24) and compared its exact status normalization branch with the documented Flixly terminal states. This remains source inspection only; no function invocation or provider request was made.
+
+1. **Documented `completed` status is not recognized as success in the polling branch.** The branch maps `complete`, `succeeded`, `success`, and `done` to `completed`, but does not include the literal `completed`. A provider response using the documented spelling can therefore fall through to `processing` even if it includes an output URL.
+2. **Documented `failed` status is not recognized as failure in the polling branch.** The branch maps `error`, `cancelled`, and `canceled` to `failed`, but omits the literal `failed`. A provider response using that spelling can fall through to `processing` rather than releasing a reservation after a confirmed failure.
+3. **Polling still constructs the generation-ID endpoint.** The function does not visibly retain or follow a provider-returned `status_url`. The public docs mention both the generation-ID endpoint and `status_url` polling guidance, so the exact required behavior should be confirmed against the current provider response contract.
+4. **Gateway HTTP error settlement needs separate treatment.** The gateway releases on every non-OK response. HTTP status alone does not universally prove that a generation was not accepted (particularly server errors or intermediary failures); before production use, classify errors according to the provider contract and retain/reconcile reservations whenever acceptance is uncertain.
+5. **Input URL guard is weak.** The gateway accepts asset URLs using a `startsWith("http")` check, which also accepts non-HTTPS schemes such as `http://` and does not establish asset ownership or allowed host. This is not a sufficient production URL/SSRF boundary.
+
+These are code-path observations and risk findings, not evidence of a live failure. They strengthen the **NO-GO** decision. Do not patch or deploy the shared function without explicit authorization and a reviewed isolated rollout plan. The V2 prototype remains demo-only.
+
+## Follow-up compatibility review (read-only, 2026-10-11)
+
+Re-fetched the current deployed source for shared project functions `ai-provider-gateway` (version 27) and `ai-job-status` (version 24). This was a source-only review; neither function was invoked and no provider request, job, upload, credit action, or payment operation was performed.
+
+### Prioritized findings
+
+- **P0 — terminal status handling:** the status adapter's normalized success aliases omit literal `completed`; its failure aliases omit literal `failed`. Both spellings should be covered by a shared, testable normalizer and mapped to terminal decisions without ambiguity. The existing branch does not import the test-only normalizer, so green mock tests do not fix the deployed function.
+- **P0 — non-OK submission response:** the gateway attempts credit release on every non-OK Flixly submission response. The safe policy must distinguish a provider-confirmed rejection from a response where job acceptance is uncertain. For uncertain outcomes, preserve the reservation and reconcile; do not infer non-acceptance from HTTP status alone.
+- **P0 — request duration:** the gateway currently rounds/clamps duration to 1–30 seconds while the reviewed model page lists 4–15 seconds. Validate the exact user-selected value against the selected model contract before creating/submitting a paid job; do not silently transform it.
+- **P0 — asset URL boundary:** `startsWith("http")` does not enforce HTTPS, an allowed host, or asset ownership. A production path needs server-verified asset IDs/ownership and a narrow URL policy before forwarding an image URL.
+- **P1 — polling contract:** the status adapter constructs the generation-ID endpoint and does not visibly follow `status_url`. Public docs mention both mechanisms; confirm the required behavior against a documented response example/provider clarification before implementation.
+- **P1 — output and settlement:** output persistence, execution finalization, and credit commit/release failures need injected-failure and duplicate-poll tests against a shared pure decision layer. The current test helpers express expected decisions only; they do not execute the deployed function or database RPCs.
+- **P1 — telemetry model label:** status polling uses `seedance-2-5` as a fallback model label, inconsistent with the gateway's `seedance-2-mini` mapping. Prefer the persisted selected model or a neutral unknown value.
+
+### Safe next action
+
+Keep the V2 prototype demo-only. Prepare a proposed patch and mock fixtures for these exact findings, then require explicit review and a proven isolated test environment before any shared function deployment or provider test. Do not create a Supabase project/branch, enable the model, invoke provider sync, or perform live credit/payment operations as part of this work.
+
+**Disposition remains NO-GO for live generation.** The successful GitHub Actions runs verify the isolated mock suite only; they do not change the deployed adapter or clear these findings.
