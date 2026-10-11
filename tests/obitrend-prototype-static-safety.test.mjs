@@ -52,7 +52,7 @@ test("every registered tool has a complete, valid workspace contract", () => {
   const navEnd = html.indexOf("\\n];", navStart);
   assert.notEqual(navEnd, -1, "navItems array must terminate");
   const navSource = html.slice(navStart, navEnd);
-  const navLabels = [...navSource.matchAll(/\\["([^"]+)"/g)].map((item) => item[1]);
+  const navLabels = navSource.split('["').slice(1).map((item) => item.split('"')[0]);
   assert.equal(navLabels.length, 20);
   for (const [, id, , nav] of objects) {
     assert.ok(navLabels[Number(nav)], `${id} maps to a named navigation destination`);
