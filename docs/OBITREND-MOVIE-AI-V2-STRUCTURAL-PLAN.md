@@ -101,6 +101,39 @@ Each tool should provide:
 8. Render/export through supported services.
 9. Save project state and media references.
 
+## Movie-workflow UX contract (next safe phase)
+
+This phase is design and validation only. It does not call providers, create jobs, upload media, persist projects, or touch credits/payments.
+
+### Workspace sequence
+1. **Project setup** — local/demo project title, aspect ratio, target duration, language, and intended platform. Clearly label unsaved demo state.
+2. **Story & script** — prompt, genre, tone, synopsis, and script draft fields. Any generated-looking text must be labelled sample/demo unless a real service is separately approved.
+3. **Scene breakdown** — scene cards with scene number, purpose, location, time of day, characters, action, dialogue/voiceover, and target clip duration.
+4. **Character references** — local-only reference selection and character description; show the selected file preview, filename, and a “not uploaded” indicator.
+5. **Shot planning** — per-scene shot type, camera movement, framing, lighting, aspect ratio, and continuity notes. Only offer settings supported by the eventual connected service.
+6. **Clip queue (demo)** — ordered scene list with explicit demo states: Draft, Ready for review, Demo queued, Demo complete, Demo failed. Do not imply a provider job was submitted.
+7. **Timeline & assembly** — scene clips as labelled placeholders on a visual timeline; include estimated total duration calculated from entered clip durations, with no claim that a render exists.
+8. **Continuity review** — flag missing references, inconsistent character/location descriptions, empty scenes, and duration mismatches using deterministic local checks only.
+9. **Export review** — show planned format, aspect ratio, scene count, and estimated duration. Keep Export disabled until a real export implementation is separately approved.
+
+### Required interaction rules
+- Each stage has a clear title, one primary next action, Back/Next navigation, and visible stage progress.
+- Preserve user-entered fields when moving between stages within the current page session; explicitly label the prototype as non-persistent.
+- Validate required fields inline and focus the first invalid field; never show a success state for a blocked or demo-only action.
+- Keep the output/status panel visible and understandable on mobile; stack it below inputs on narrow screens.
+- Make scene order and status text understandable without relying on color alone.
+- Provide “Reset demo workflow” with confirmation if it would clear entered data.
+- Keep all actions local-only. No fetch/XHR, upload, backend persistence, provider job, credit reservation, payment, or real export.
+- Add tests for stage order, required-field validation, duration totals, continuity warnings, keyboard navigation, mobile-safe layout, and honest demo labels.
+
+### Acceptance criteria before any real integration
+- A user can move through all stages on Android without losing current-session form state.
+- Scene cards can be added, edited, reordered, and removed locally, with deterministic duration totals.
+- Continuity checks explain each warning and can be rerun without side effects.
+- Every queued/complete/failed state is clearly marked demo-only.
+- Automated tests cover normal, empty, invalid, and repeated-click cases.
+- This UX contract is reviewed before any separate integration proposal; real generation stays disabled.
+
 ## Core service and safety boundaries
 - UI additions must not silently replace or bypass existing AI gateway/provider integrations.
 - Never display an unconnected model as available.
