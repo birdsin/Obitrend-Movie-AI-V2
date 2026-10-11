@@ -7,8 +7,9 @@ Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` 
 
 - [x] Push workflow passed for commit `ae4bbf625a6bf7e7bbd378a0bf4e6f2299b237e2`: [run 51](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38112887281).
 - [x] Pull-request workflow passed for the same commit: [run 52](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38112889846).
-- [x] Latest push workflow passed for commit `c7e2cf2870852e2b4a38d3eff0c8202e5c7e8d6b`: [run 64](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114378216).
-- [x] Latest pull-request workflow passed for the same commit: [run 65](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114380898).
+- [x] Push workflow passed for commit `c7e2cf2870852e2b4a38d3eff0c8202e5c7e8d6b`: [run 64](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114378216).
+- [x] Pull-request workflow passed for the same commit: [run 65](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114380898).
+- [x] Latest observed pull-request workflow passed for documentation commit `2587d49f2c83d288cf49bf515d52c4f3d3ca4d8b`: [run 67](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38114459250). This is mock/static CI, not a browser or provider integration test.
 - [x] Static prototype safety test counts 20 inline navigation entries and checks 35 unique tool IDs.
 - [x] Static safety test checks for demo-only/local-only safety copy and scans the prototype HTML for literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns.
 
@@ -28,7 +29,7 @@ The existing six-step smoke test was user-confirmed on 2026-10-10. It does not r
 
 ## Deployment status
 
-The latest known READY Vercel deployment references commit `6febd67411c55f442204ef887a6dbe6019d313cf`, not the latest source commit `c7e2cf2870852e2b4a38d3eff0c8202e5c7e8d6b`. The newest source commit is not confirmed deployed. Do not claim it is deployed until a matching deployment is verified.
+The latest READY staging deployment found in the Vercel inventory references commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c` (message: `Allow demo input review without verified model`). It does not match the latest branch documentation commit `2587d49f2c83d288cf49bf515d52c4f3d3ca4d8b`. The latest branch source is therefore not confirmed deployed. Do not claim it is deployed until a matching deployment is verified.
 
 ## Safety boundaries
 
