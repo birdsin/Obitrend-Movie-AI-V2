@@ -49,7 +49,7 @@ test("every registered tool has a complete, valid workspace contract", () => {
   }
   const navStart = html.indexOf("const navItems=");
   assert.notEqual(navStart, -1, "navItems array must exist");
-  const navEnd = html.indexOf("\\n];", navStart);
+  const navEnd = html.indexOf("\n];", navStart);
   assert.notEqual(navEnd, -1, "navItems array must terminate");
   const navSource = html.slice(navStart, navEnd);
   const navLabels = navSource.split('["').slice(1).map((item) => item.split('"')[0]);
