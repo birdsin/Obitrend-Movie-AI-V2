@@ -6,7 +6,7 @@ Status: manual QA checklist for the isolated structural prototype only. User con
 
 - Repository: `birdsin/Obitrend-Movie-AI-V2`
 - Working branch: `feat/obitrend-v2-structural-prototype`
-- Latest verified staging test URL: `https://obitrend-movie-ai-v2-ij6726og1-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
+- Latest checked READY staging URL: `https://obitrend-movie-ai-v2-ij6726og1-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html`
 - Latest verified deployment source commit: `6febd67411c55f442204ef887a6dbe6019d313cf`
 - User confirmed the current preview is working on 2026-10-10.
 - This checklist does not authorize production release, real generation, uploads, account writes, credit deductions, or payment actions.
@@ -51,6 +51,12 @@ The user completed the six-step smoke test on the fresh staging preview and repo
 - Visible issue: not specified
 
 These are user-reported manual results for the six listed checks. They do not establish that all 20 navigation destinations or all 35 tools have passed QA.
+
+## Latest static CI safety checks — 2026-10-11
+
+- [x] Mock/static CI passed for the additional sidebar demo-action, special-section demo-action, and mobile drawer assertions in commit `76c1dce86bcb9cfd9e49bbe9bd1e92c28527fb79`: [run 68](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116868670) and [run 69](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38116871834).
+- [x] QA progress documentation CI passed for commit `f515963804b49cfd234246e8134b4c12472d47d7`: [run 70](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117553253).
+- These are not runtime browser tests; all 20 destinations and 35 tools remain pending full manual click-through.
 
 ## Static source audit — prototype only — 2026-10-10
 
@@ -160,8 +166,8 @@ Record failures by tool name and screenshot. Do not mark a tool as passed based 
 
 ## Next-run Android smoke test — user execution
 
-Use the staging preview only:
-https://obitrend-movie-ai-v2-ij6726og1-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
+Use the latest checked READY staging preview only (source commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`; newer branch commits are not confirmed deployed):
+https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html
 
 The six-step smoke test above is now complete. Continue with the full 20-destination / 35-tool review:
 
