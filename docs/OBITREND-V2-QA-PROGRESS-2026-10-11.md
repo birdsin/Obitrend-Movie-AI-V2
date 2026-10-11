@@ -1,13 +1,16 @@
 # OBITREND Movie AI V2 — QA Progress
 
-Checked: 2026-10-11 (latest CI and staging inventory rechecked)  
+Checked: 2026-10-11 (latest branch, CI, and staging inventory rechecked)  
 Scope: isolated structural prototype on `feat/obitrend-v2-structural-prototype` only.
 
 ## Automated checks
 
-- [x] Latest branch-head QA report commit `fa540ddb94e12d6569109ddbf123a938ee034bb4` passed GitHub Actions: [run 73](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117742684).
-- [x] Prior documentation/checklist workflow runs also passed: [run 70](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117553253), [run 71](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117665797), and [run 72](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38117673629).
-- [x] Static prototype checks verify 20 primary navigation entries, 35 unique tool IDs, complete tool workspace contracts, demo-only feedback, local reference-preview cleanup, mobile drawer handlers, and absence of literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns in the prototype HTML.
+- [x] QA report refresh commit `2b4c9306535a861c1f3caca104555e1bef04e702` passed mock/static CI: [run 38118445991](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38118445991).
+- [x] Android checklist correction commit `8f8411520ca7ee01141c450ba6c566bbdb841e06` passed mock/static CI: [run 38118815739](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38118815739).
+- [x] A first attempt at the new checklist regression test failed because its regular-expression patterns were over-escaped: [run 38118864202](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38118864202). This failure was investigated and the patterns corrected.
+- [x] Corrected regression-test commit `6b40f6f2431d8ddcb662dcee2e052f271d1ea6cc` passed both CI runs: [run 38119037533](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119037533) and [run 38119039605](https://github.com/birdsin/Obitrend-Movie-AI-V2/actions/runs/38119039605).
+- [x] Static source tests check 20 navigation entries, 35 unique tool IDs, complete tool workspace contracts, demo-only feedback, local reference-preview cleanup, mobile drawer handlers, and absence of literal `fetch(`, `XMLHttpRequest`, and external script `src` patterns in the prototype HTML.
+- [x] Checklist regression test checks that the manual QA matrix contains 35 tool rows and that staging evidence wording remains accurate.
 
 These are source/mock tests. They are not provider integration tests, an automated browser run, a full accessibility audit, or proof that every control works at runtime.
 
@@ -25,8 +28,8 @@ The six-step smoke test was user-confirmed on 2026-10-10; it does not replace th
 
 ## Deployment status
 
-- Latest checked branch head before this report refresh: `fa540ddb94e12d6569109ddbf123a938ee034bb4`.
-- Latest READY staging deployment found in Vercel inventory: commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`, URL [staging prototype](https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html).
+- Current branch head: `6b40f6f2431d8ddcb662dcee2e052f271d1ea6cc`.
+- Latest READY staging deployment found in the Vercel inventory: commit `7c6b21cad8c16418f19a8f5b3ab9fbaf3900ea7c`, URL [staging prototype](https://obitrend-movie-ai-v2-fao2gwmht-birdsins-projects.vercel.app/prototypes/obitrend-v2-structural-prototype.html).
 - These SHAs do not match. The latest branch source is **not confirmed deployed**. Do not claim deployment until a matching READY deployment is verified.
 
 ## Safety boundaries
