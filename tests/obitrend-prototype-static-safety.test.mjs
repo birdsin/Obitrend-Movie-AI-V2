@@ -47,9 +47,12 @@ test("every registered tool has a complete, valid workspace contract", () => {
     assert.ok(["prompt", "text"].includes(input), `${id} has a recognized input mode`);
     assert.ok(fields.trim().length > 0, `${id} has at least one settings field`);
   }
-  const navMatch = html.match(/const navItems\\s*=\\s*\\[([\\s\\S]*?)\\n\\];/);
-  assert.ok(navMatch, "navItems array must exist");
-  const navLabels = [...navMatch[1].matchAll(/\\["([^"]+)"/g)].map((item) => item[1]);
+  const navStart = html.indexOf("const navItems=");
+  assert.notEqual(navStart, -1, "navItems array must exist");
+  const navEnd = html.indexOf("\\n];", navStart);
+  assert.notEqual(navEnd, -1, "navItems array must terminate");
+  const navSource = html.slice(navStart, navEnd);
+  const navLabels = [...navSource.matchAll(/\\["([^"]+)"/g)].map((item) => item[1]);
   assert.equal(navLabels.length, 20);
   for (const [, id, , nav] of objects) {
     assert.ok(navLabels[Number(nav)], `${id} maps to a named navigation destination`);
