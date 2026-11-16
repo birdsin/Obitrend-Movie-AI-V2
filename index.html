@@ -2949,7 +2949,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  const tokens=t=>String(t||"").toLowerCase().match(/[a-z0-9']+/g)||[];
  function classify(text,genre){
   const w=tokens(text),rank=moods.map(m=>({m,score:m.words.reduce((n,k)=>n+w.filter(x=>x===k||x.startsWith(k)).length,0)})).sort((a,b)=>b.score-a.score);
-  const best=rank[0];return best&&best.score>0?{...best.m}:({...((genres[genre]||genres.adventure))});
+  const best=rank[0];return best&&best.score>0?{...best.m}:{...((genres[genre]||genres.adventure))};
  }
  function readScenes(){
   return Array.from(document.querySelectorAll("#p8Scenes .p8-scene")).map((node,i)=>{
@@ -2961,7 +2961,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
  function build(){
   const genre=$("p8MusicGenre")?.value||"auto",override=$("p8MusicStyle")?.value||"auto",prompt=$("prompt")?.value||"",extra=$("p8MusicNotes")?.value||"",scenes=readScenes();
   const text=[prompt,extra,...scenes.flatMap(x=>[x.title,x.description,...x.shots.map(q=>q.note)])].filter(Boolean).join("\n");
-  const base=classify(text,genre),global={...base};
+  const base=genre==="auto"?classify(text,"auto"):{...(genres[genre]||genres.adventure)},global={...base};
   if(genre!=="auto"&&genres[genre]&&(!text.trim()||tokens(text).length<3))Object.assign(global,genres[genre]);
   if(!text.trim()&&genre==="auto")Object.assign(global,{mood:"cinematic",bpm:92,style:"Cinematic orchestral",instruments:"warm strings, soft piano, restrained percussion",root:110,scale:[0,4,7,9]});
   if(styles[override]){global.style=styles[override][0];global.instruments=styles[override][1]}
