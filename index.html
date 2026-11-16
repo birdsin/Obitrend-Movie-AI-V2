@@ -2966,7 +2966,7 @@ body.obitrend-home-dashboard #creditSummary.live-wallet{display:flex!important}
   if(!text.trim()&&genre==="auto")Object.assign(global,{mood:"cinematic",bpm:92,style:"Cinematic orchestral",instruments:"warm strings, soft piano, restrained percussion",root:110,scale:[0,4,7,9]});
   if(styles[override]){global.style=styles[override][0];global.instruments=styles[override][1]}
   const list=(scenes.length?scenes:[{index:1,title:"Overall story",description:text,shots:[],duration:20}]).map(scene=>{
-   const local=classify([scene.title,scene.description,...scene.shots.map(x=>x.note)].join(" "),genre),style=styles[override];
+   const localText=[scene.title,scene.description,...scene.shots.map(x=>x.note)].join(" "),local=localText.trim()?classify(localText,genre):base,style=styles[override];
    return {scene:scene.index,title:scene.title,mood:local.mood,style:style?style[0]:local.style,bpm:local.bpm,instruments:style?style[1]:local.instruments,root:local.root,scale:local.scale,duration:scene.duration||20,transition:"4-second crossfade",dialogue_ducking:"Reduce music to 30–35% while dialogue is present"};
   });
   return {enabled:true,selection_mode:override==="auto"?"automatic":"manual-style-override",genre:genre==="auto"?"auto-detected":genre,mood:global.mood,style:global.style,bpm:global.bpm,instruments:global.instruments,emotion:"matched from script language and scene actions",transition:"Crossfade scene cues over 4 seconds",dialogue_ducking:"Reduce score to 30–35% during dialogue",script_analyzed:Boolean(text.trim()),scenes:list};
